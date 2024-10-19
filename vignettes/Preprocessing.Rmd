@@ -25,7 +25,8 @@ DISCLAIMER: R is not optimized for rendering large amounts of data in plots. If 
 Run this code in R to open the `import_wave_app`, which will allow you to select, name and import sound files as R objects of class "Wave". This app is based on `bioacoustics`' `read_audio()` function.
 
 ```{r, echo=TRUE, eval = FALSE}
-library(Rthoptera)
+remotes::install_github("naturewaves/RthopteraSounds")
+library(RthopteraSounds)
 import_wave_app()
 ```
 

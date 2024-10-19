@@ -2,7 +2,7 @@ Package: Rthoptera
 Type: Package
 Title: Standardized Insect Bioacoustics
 Version: 0.1.0
-Depends: R (>= 3.5.0)
+Depends: R (>= 3.5.0), shinyBS
 Authors@R: c(
             person("Anonymous", "Anonymous", email = "frivasfu@purdue.edu",
                     role = c("cre", "aut"), comment = c(ORCID = "0000-0000-0000-0000")),
@@ -15,10 +15,8 @@ LazyData: true
 RoxygenNote: 7.3.2
 LazyDataCompression: xz
 Imports:
-  shiny (>= 1.0.0),
   bioacoustics,
   shinyjs,
-  shinyBS,
   ggplot2 (>= 3.0),
   seewave,
   dplyr,
@@ -41,6 +39,7 @@ Imports:
   shinycssloaders
 Suggests: 
     knitr,
+    shiny (>= 1.0.0),
     RthopteraSounds,
     rmarkdown,
     markdown,
