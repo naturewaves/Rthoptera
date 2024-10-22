@@ -251,7 +251,7 @@ band_pass_filter_app <- function(launch.browser = FALSE) {
     observeEvent(input$applyFilter, {
       req(waveObject())
       tryCatch({
-        filtered_wave <- seewave::ffilter(
+        filtered_wave <- seewave::fir(
           waveObject(),
           from = isolate(input$highpass) * 1000,
           to = isolate(input$lowpass) * 1000,

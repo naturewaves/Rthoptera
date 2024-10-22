@@ -6,16 +6,18 @@ Depends: R (>= 3.5.0), shinyBS
 Authors@R: c(
             person("Anonymous", "Anonymous", email = "frivasfu@purdue.edu",
                     role = c("cre", "aut"), comment = c(ORCID = "0000-0000-0000-0000")),
-            person("Anonymous2", "Anonymous2", role = c("aut")))
-Maintainer: Anonymous  <frivasfu@purdue.edu>
-Description: The package provides a set of interactive functions (each one is a Shiny App) to analyze insect acoustic signals, including preprocessing (e.g., high-pass filter, remove DC offset, down-sampling, etc.). Analytical functions allow the user to automatically extract relevant acoustic features in both spectral and temporal dimensions. 
+            person("Anonymous2", "Anonymous2", role = c("ctb")))
+Description: The package provides functions (each one with a Shiny App version) to analyze insect acoustic signals, including preprocessing (e.g., high-pass filter, remove DC offset, down-sampling, etc.). Analytical functions allow the user to automatically extract relevant acoustic features in both spectral and temporal dimensions. 
 License: CC BY-NC 4.0
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2
 LazyDataCompression: xz
+Remotes: naturewaves/RthopteraSounds
 Imports:
+  RthopteraSounds,
   bioacoustics,
+  shiny (>= 1.0.0),
   shinyjs,
   ggplot2 (>= 3.0),
   seewave,
@@ -39,8 +41,6 @@ Imports:
   shinycssloaders
 Suggests: 
     knitr,
-    shiny (>= 1.0.0),
-    RthopteraSounds,
     rmarkdown,
     markdown,
     testthat (>= 3.0.0)

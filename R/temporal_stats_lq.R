@@ -173,13 +173,13 @@ temporal_stats_lq <- function(wave,
       train.start = round(min(peak.time),4),
       train.end = round(max(peak.time),4),
       train.dur = round((train.end - train.start),3),
-      n.peaks = n()
+      n.peaks = n(),
+      mean.amp = round(mean(peak.amp),3)
     ) %>%
     mutate(peak.rate = round(((n.peaks-1) / train.dur),1)) %>%
     ungroup() %>%
-    # Set last train.period of each motif to NA and round to 3 decimals
     mutate(train.period = ifelse(is.na(lead(motif.id)) | lead(motif.id) != motif.id, NA, lead(train.start) - train.start),
-           train.gap = round(lead(train.start) - train.end, 3)        # Gap: next train.start - current train.end
+           train.gap = round(lead(train.start) - train.end, 3)
     ) %>%
     relocate(train.period, .after = train.dur) %>%
     relocate(train.gap, .after = train.period) %>%
@@ -188,7 +188,6 @@ temporal_stats_lq <- function(wave,
 
 
   # Calculate temporal excursion (variability in timing of peaks, per train)
-
   # Add peak period column in milliseconds
   peak_data$peak.period.ms <- round((peak_data$peak.period * 1000), 4)
 
@@ -210,8 +209,8 @@ temporal_stats_lq <- function(wave,
   # Sum the absolute differences for each train.id
   dyn_exc_data <- peak_dyn_data %>%
     group_by(train.id) %>%
-    summarize(dyn.exc = sum(peak.diff, na.rm = TRUE))%>%
-    mutate(dyn.exc = round(dyn.exc,3))# Sum the absolute peak differences for each train
+    summarize(dyn.exc = round(sum(peak.diff, na.rm = TRUE), 3))
+    # mutate(dyn.exc = round(dyn.exc,3))
 
   # Add dyn.exc to train_data by matching train.id
   train_data <- train_data %>%
@@ -291,15 +290,24 @@ temporal_stats_lq <- function(wave,
     select(specimen.id, motif.id, pci, everything(), -proportions, proportions)
 
   summary_data <- tibble(
-    mean.pci = round(mean(motif_data$pci),2),
-    mean.tem.exc = round(mean(motif_data$tem.exc.mean),2),
-    mean.dyn.exc = round(mean(motif_data$dyn.exc.mean),2),
-    mean.motif.dur = round(mean(motif_data$motif.dur),2),
-    mean.n.trains = round(mean(motif_data$n.trains),2),
-    mean.train.rate = round(mean(motif_data$train.rate),2),
-    mean.duty.cycle = round(mean(motif_data$duty.cycle),2),
-    mean.entropy = round(mean(motif_data$props.ent),2)
+    mean.pci = round(mean(motif_data$pci),3),
+    sd.pci = round(sd(motif_data$pci, na.rm = TRUE),3),
+    mean.tem.exc = round(mean(train_data$tem.exc),3),
+    sd.tem.exc = round(sd(train_data$tem.exc, na.rm = TRUE),3),
+    mean.dyn.exc = round(mean(train_data$dyn.exc),3),
+    sd.dyn.exc = round(sd(train_data$dyn.exc, na.rm = TRUE),3),
+    mean.motif.dur = round(mean(motif_data$motif.dur),3),
+    sd.motif.dur = round(sd(motif_data$motif.dur, na.rm = TRUE),3),
+    mean.n.trains = round(mean(motif_data$n.trains),3),
+    sd.n.trains = round(sd(motif_data$n.trains, na.rm = TRUE),3),
+    mean.train.rate = round(mean(motif_data$train.rate),3),
+    sd.train.rate = round(sd(motif_data$train.rate, na.rm = TRUE),3),
+    mean.duty.cycle = round(mean(motif_data$duty.cycle),3),
+    sd.duty.cycle = round(sd(motif_data$duty.cycle, na.rm = TRUE),3),
+    mean.entropy = round(mean(motif_data$props.ent),3),
+    sd.entropy = round(sd(motif_data$props.ent, na.rm = TRUE),3)
   )
+
   # Prepare annotations for the plot
   annotations <- list(
     list(

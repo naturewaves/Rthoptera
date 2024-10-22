@@ -10,8 +10,6 @@ vignette: >
 ---
 
 
-
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -22,17 +20,13 @@ There are many reasons why bioacousticians edit their recordings before analyzin
 
 DISCLAIMER: R is not optimized for rendering large amounts of data in plots. If you have long sound files (> 1 min) recorded at high sampling rates (> 48 kHz), you might want to subset them with a dedicated audio software before importing them into R, unless you have a lot of patience or a very capable computer. A popular free audio editor is Audacity. 
 
-Run this code in R to open the `import_wave_app`, which will allow you to select, name and import sound files as R objects of class "Wave". This app is based on `bioacoustics`' `read_audio()` function.
 
+
+
+In this guide, we will work with the example Wave objects included in the package. To load all of them, run this:
 ```{r, echo=TRUE, eval = FALSE}
 remotes::install_github("naturewaves/RthopteraSounds")
 library(RthopteraSounds)
-import_wave_app()
-```
-
-In this guide, we will work with the example Wave objects included in the package. To load all of them, run this:
-
-```{r, echo=TRUE, eval=FALSE}
 load_wave_data()
 ```
 
@@ -41,6 +35,8 @@ If occasionally you want to work with a single file of the included data, you ca
 data("tettigonia")
 ```
 which will make the song of *Tettigonia cantans* available in the R environment. 
+
+To use your own recordings you should run the `import_wave_app()`, which will allow you to select, name and import sound files as R objects of class "Wave". This app is based on `bioacoustics`' `read_audio()` function.
 
 Now you can use the different functions to preprocess the Wave before analysis, including trimming, filtering, and downsampling. All the preprocessing apps in ***Rthoptera*** produce blueprint-like plots to remind users that these are not intended for publication, but instead to aid in decision-making on the edits. 
 

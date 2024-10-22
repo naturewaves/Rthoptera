@@ -49,15 +49,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/Intro_to_Rthoptera.html">Introduction to Rthoptera</a>
-    </li>
-    <li>
       <a href="../articles/Preprocessing.html">Preprocessing Audio</a>
     </li>
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/naturewaves/Rthoptera/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -75,7 +79,7 @@
             
             <h4 data-toc-skip class="date">2024-10-02</h4>
       
-
+      <small class="dont-index">Source: <a href="https://github.com/naturewaves/Rthoptera/blob/HEAD/vignettes/Preprocessing.Rmd" class="external-link"><code>vignettes/Preprocessing.Rmd</code></a></small>
       <div class="hidden name"><code>Preprocessing.Rmd</code></div>
 
     </div>
@@ -103,23 +107,22 @@ sampling rates (&gt; 48 kHz), you might want to subset them with a
 dedicated audio software before importing them into R, unless you have a
 lot of patience or a very capable computer. A popular free audio editor
 is Audacity.</p>
-<p>Run this code in R to open the <code>import_wave_app</code>, which
-will allow you to select, name and import sound files as R objects of
-class “Wave”. This app is based on <code>bioacoustics</code>’
-<code>read_audio()</code> function.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">Rthoptera</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/import_wave_app.html">import_wave_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>In this guide, we will work with the example Wave objects included in
 the package. To load all of them, run this:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/load_wave_data.html">load_wave_data</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"naturewaves/RthopteraSounds"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">RthopteraSounds</span><span class="op">)</span></span>
+<span><span class="fu">load_wave_data</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>If occasionally you want to work with a single file of the included
 data, you can run, for example:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"tettigonia"</span><span class="op">)</span></span></code></pre></div>
 <p>which will make the song of <em>Tettigonia cantans</em> available in
 the R environment.</p>
+<p>To use your own recordings you should run the
+<code><a href="../reference/import_wave_app.html">import_wave_app()</a></code>, which will allow you to select, name and
+import sound files as R objects of class “Wave”. This app is based on
+<code>bioacoustics</code>’ <code>read_audio()</code> function.</p>
 <p>Now you can use the different functions to preprocess the Wave before
 analysis, including trimming, filtering, and downsampling. All the
 preprocessing apps in <strong><em>Rthoptera</em></strong> produce
@@ -134,7 +137,7 @@ optimize processing time for the other editing steps.</p>
 <div class="section level3">
 <h3 id="trim">Trim<a class="anchor" aria-label="anchor" href="#trim"></a>
 </h3>
-<p>This app is based on <code>tuneR</code>’s <code>extractWave()</code>
+<p>This app is based on <code>tuneR</code>’s <code><a href="https://rdrr.io/pkg/tuneR/man/extractWave.html" class="external-link">extractWave()</a></code>
 function. To trim a Wave, run the <code><a href="../reference/trim_app.html">trim_app()</a></code>, plot the
 oscillogram, select the portion you want to save, type a name for it,
 and save it. You can overwrite the original Wave by assigning the same
@@ -143,7 +146,7 @@ environment), or assign a new name to create a new Wave object.If you
 want to save several snippets of the same length, just drag the first
 selection to the desired position and assign a new name before
 saving.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/trim_app.html">trim_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>For the downsampling and band-passing examples, we will use the
 included “platycleis” Wave, a recording of <em>Platycleis grisea</em>
@@ -165,7 +168,7 @@ frequency of interest (MaxFOI) by hovering over the Mean Power Spectrum.
 If the MaxFOI is less than half of the Nyquist (maximum visible
 frequency in the plot), you can consider downsampling. Select the
 closest available value above the MaxFOI and click “Downsample”.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/downsample_app.html">downsample_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -187,7 +190,7 @@ to render, the spectrogram view may be necessary for field recordings
 where multiple species are detected, as it allows for visual
 discrimination of the SOI from non-target signals by inspecting their
 temporal patterns, which are not visible in the mean power spectrum.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/band_pass_filter_app.html">band_pass_filter_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -203,7 +206,7 @@ temporal patterns, which are not visible in the mean power spectrum.</p>
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Anonymous Anonymous, Anonymous2 Anonymous2.</p>
+<p>Developed by Anonymous Anonymous.</p>
 </div>
 
 <div class="pkgdown">

@@ -33,13 +33,16 @@ The function leverages the `meanspec` function from the `seewave` package to com
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/Intro_to_Rthoptera.html">Introduction to Rthoptera</a>
-    </li>
-    <li>
       <a href="../articles/Preprocessing.html">Preprocessing Audio</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/naturewaves/Rthoptera/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -49,7 +52,7 @@ The function leverages the `meanspec` function from the `seewave` package to com
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Spectrum Table (Tibble, Data Frame)</h1>
-
+    <small class="dont-index">Source: <a href="https://github.com/naturewaves/Rthoptera/blob/HEAD/R/spectrum_df.R" class="external-link"><code>R/spectrum_df.R</code></a></small>
     <div class="hidden name"><code>spectrum_df.Rd</code></div>
     </div>
 
@@ -77,6 +80,10 @@ The function leverages the `meanspec` function from the `seewave` package to com
 <dt id="arg-fun">fun<a class="anchor" aria-label="anchor" href="#arg-fun"></a></dt>
 <dd><p>Character string indicating the summary function to be applied for computing the mean spectrum. Default is `'mean'`. Other options include `'median'` for median, `'sd'` for standard deviation, or `'var'` for variance.</p></dd>
 
+
+<dt id="arg-wn">wn<a class="anchor" aria-label="anchor" href="#arg-wn"></a></dt>
+<dd><p>Window filtering function. Choices are:  bartlett, blackman, flattop, hamming, hanning, or rectangle. Default is `hanning`.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -100,7 +107,7 @@ The `frequency` column contains the frequencies in Hertz (Hz), and the `amplitud
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Anonymous Anonymous, Anonymous2 Anonymous2.</p>
+  <p></p><p>Developed by Anonymous Anonymous.</p>
 </div>
 
 <div class="pkgdown">

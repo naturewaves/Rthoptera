@@ -35,157 +35,123 @@ multi_meanspectra_app <- function(launch.browser = FALSE) {
       fluidPage(
         useShinyjs(),
         extendShinyjs(text = jscode, functions = c("closeWindow")),
-        tags$head(tags$style(
-          HTML(
-            "
-              /* General body styling */
+        tags$head(
+          tags$style(
+            HTML(
+              "
+                /* General body styling */
+                body {
+                  background-color: #252626;
+                  color: #ffffff;
+                  margin: 5px;
+                }
 
-              body {
-                background-color: #252626;
-                color: #ffffff;
-                margin: 5px;
+                /* Styling for the inputs */
+                .form-control {
+                  background-color: #495057;
+                  border: 1px solid #6c757d;
+                  color: #ffffff;
+                }
+
+                 .btn-info {
+                  background-color: #252626 !important;
+                  border-color: #252626 !important;
+                  color: #ffffff;
+                }
+
+                /* Styling for buttons */
+                .btn {
+                  background-color: #343a40;
+                  border-color: #6c757d;
+                  color: #ffffff;
+                }
+
+                .row {
+                  margin-bottom: 10px; /* Adds vertical space between rows */
+                }
+
+                /* Consistent button layout */
+                .btn-space {
+                  margin-right: 5px;
+                  border: 2px solid green;
+                }
+
+                .btn-down {
+                  margin-right: 5px;
+                  border: 2px solid dodgerblue;
+                }
+
+                   #close {
+                border: 2px solid red; /* Red contour */
+                padding: 5px 5px; /* Button (inside) padding */
+                border-radius: 5px; /* Optional: Rounded corners */
               }
 
-              /* Styling for the inputs */
-              .form-control {
-                background-color: #495057;
-                border: 1px solid #6c757d;
-                color: #ffffff;
-              }
-
-               .btn-info {
-                background-color: #252626 !important;
-                border-color: #252626 !important;
-                color: #ffffff;
-              }
-
-              /* Styling for buttons */
-              .btn {
-                background-color: #343a40;
-                border-color: #6c757d;
-                color: #ffffff;
-              }
-
-              .btn-group-vertical > .btn {
-                margin-bottom: 10px; /* Adds space between vertical buttons */
-              }
-              .row {
-                margin-bottom: 10px; /* Adds vertical space between rows */
-              }
-              .shiny-input-container {
-                margin-right: 10px; /* Increases horizontal space between inputs */
-              }
-
-
-              /* Styling for dialog boxes */
-              .modal-dialog {
-                border-radius: 10px !important; /* This applies rounding to the outer modal container */
-              }
-
-              .modal-content {
-                background-color: #252626;
-                color: #ffffff;
-                border-radius: 15px !important; /* Rounded content container */
-                overflow: hidden; /* Ensure content follows the rounded corners */
-                box-shadow: 0 5px 15px rgba(0,0,0,.5); /* Optional: add a shadow */
-              }
-              .modal-header, .modal-footer {
-                background-color: #343a40;
-                color: #ffffff;
-                border-top: none;
-                border-bottom: none;
-                border-radius: 15px 15px 0 0 !important;
-              }
-
-              .modal-footer {
-                border-radius: 0 0 15px 15px !important; /* Round bottom corners */
-              }
-
-              .modal-body {
-                 background-color: #252626;
-                 color: #ffffff;
-              }
-
-
-
-              #plot_button {
-            border: 2px solid forestgreen; /* Contour color */
-            padding: 15px 25px; /* Button (inside) padding */
-            border-radius: 5px; /* Optional: Rounded corners */
-              }
-
-             #add_selection {
-            border: 2px solid forestgreen; /* Contour color */
-            padding: 15px 25px; /* Button (inside) padding */
-            border-radius: 5px; /* Optional: Rounded corners */
-            }
-
-              #download_oscillogram {
-            border: 2px solid dodgerblue; /* Blue contour */
-            padding: 5px 5px; /* Button (inside) padding */
-            border-radius: 5px; /* Optional: Rounded corners */
-              }
-
-               #download_power_spectra {
-            border: 2px solid dodgerblue; /* Blue contour */
-            padding: 5px 5px; /* Button (inside) padding */
-            border-radius: 5px; /* Optional: Rounded corners */
-               }
-
-              #close {
-            border: 2px solid red; /* Red contour */
-            padding: 5px 5px; /* Button (inside) padding */
-            border-radius: 5px; /* Optional: Rounded corners */
-              }
-
-
-              #oscillogram {
-            margin-left: 10px;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            }
-
-              #mean_spectrum {
-            margin-left: 10px;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            }
-
-             "
+                /* Adjust container for better fit */
+                .container-fluid {
+                  max-width: 99%;
+                  max-height: 99%;
+                  padding-left: 5px;
+                  padding-right: 5px;
+                }
+              "
+            )
           )
-        ))),
-
-
-      fluidRow(
-        column(11,
-               div(style = "display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap;",
-                   div(style = "margin-right: 5px;", selectInput("wave_select", "Select a Wave Object:", choices = NULL, width = '100%')),
-                   div(style = "margin-right: 5px;", selectInput("wl", "Window Length: ", selected = 4096, choices = c(512,1024,2048,4096,8192), width='80%')),
-                   div(style = "margin-right: 5px;", actionButton("plot_button", "Plot", class = "btn-small")),
-                   div(style = "margin-right: 5px;", actionButton("add_selection", "Add Selection", class = "btn-small")),
-                   div(style = "margin-right: 5px;", numericInput("alpha", "Fill Opacity", value = 0.9, min = 0.1, max = 1, step = 0.1), width='60%'),
-                   div(style = "margin-right: 5px;", downloadButton("download_oscillogram", "Download Oscillogram", class = "btn-small")),
-                   div(downloadButton("download_power_spectra", "Download Power Spectra", class = "btn-small"))
-               )
         ),
-        column(1, useShinyjs(),
-               extendShinyjs(text = jscode, functions = c("closeWindow")),
-               actionButton("close", "Close App"))
 
-      ),
+        fluidRow(
+          column(2,
+                 div(style = "margin-right: 5px;", selectInput("wave_select", "Select a Wave Object:", choices = NULL, width = '100%'))
+          ),
+          column(1,
+                 div(style = "margin-right: 5px;", selectInput("wl", "Window Length: ", selected = 4096, choices = c(512,1024,2048,4096,8192), width='90%'))
+          ),
+          column(2,
+                 verticalLayout(
+                   div(style = "margin-right: 5px;", textInput("plot_title", "Plot Title:", value = "", width = '100%')),
+                   div(style = "margin-right: 5px;",
+                       selectInput("selection_choice", "Selection Name:",
+                                   choices = c("closing", "opening", "male", "female", "Custom..."),
+                                   selected = "closing", width = '100%')
+                   ),
+                   conditionalPanel(
+                     condition = "input.selection_choice == 'Custom...'",
+                     div(style = "margin-right: 5px;",
+                         textInput("custom_selection_name", "Custom Name:", value = "", width = '100%'))
+                   )
+                 )
+          ),
+          column(1,
+                 verticalLayout(
+                   div(style = "margin-right: 5px;", actionButton("plot_button", "Plot", class = "btn-space")),
+                   div(style = "margin-right: 5px;", actionButton("add_selection", "Add Selection", class = "btn-space"))
+                 )
+          ),
+          column(1,
+                 div(style = "margin-right: 5px;", numericInput("alpha", "Opacity", value = 0.9, min = 0.1, max = 1, step = 0.1), width='60%')
+          ),
+          column(2,
+                 div(style = "margin-right: 5px;", textInput("file_name", "File prefix:", value = "", width = '70%'))
+          ),
+          column(2,
+                 verticalLayout(
+                   div(style = "margin-bottom: 5px;", downloadButton("download_oscillogram", "Download Oscillogram", class = "btn-down")),
+                   div(style = "margin-bottom: 5px;", downloadButton("download_power_spectra", "Download Power Spectra", class = "btn-down")),
+                   div(style = "margin-right: 5px;", actionButton("close", "Close App"))
+                 )
+          )
+        ),
 
-      fluidRow(
-        mainPanel(
-
-          plotOutput("oscillogram", height = "200px", width = "98%",
-                     brush = brushOpts(id = "wave_brush", direction = "x")),
-          width = 12),
-
-        mainPanel(
-          withSpinner(plotlyOutput("mean_spectrum", height = "450px", width = "98%")),
-          width = 12)
-
-      ),
+        fluidRow(
+          column(12,
+            plotOutput("oscillogram", height = "150px", width = "100%",
+                       brush = brushOpts(id = "wave_brush", direction = "x"))
+            ),
+          column(12,
+            withSpinner(plotlyOutput("mean_spectrum", height = "350px", width = "100%"))
+            )
+        )
+      )
     )
   }
 
@@ -193,7 +159,6 @@ multi_meanspectra_app <- function(launch.browser = FALSE) {
 
     selected_wave <- reactiveVal()
     brushed_ranges <- reactiveVal(list())
-
 
     # Function to extract a data frame from a Wave object
     wave_df <- function(wave){
@@ -214,7 +179,7 @@ multi_meanspectra_app <- function(launch.browser = FALSE) {
       time_range <- range(tbl$time)
 
       p <- ggplot(tbl, aes(x = time, y = amplitude)) +
-        geom_line(color = "black", size = 0.5) +
+        geom_line(color = "black", linewidth = 0.5) +
         theme_minimal() +
         theme(
           legend.position = "none",
@@ -233,7 +198,7 @@ multi_meanspectra_app <- function(launch.browser = FALSE) {
           range <- brush_data[[i]]
           selected_data <- tbl %>% dplyr::filter(time >= range[1] & time <= range[2])
           p <- p + geom_line(data = selected_data, aes(x = time, y = amplitude),
-                             color = colors[i], size = 0.5)
+                             color = colors[i], linewidth = 0.5)
         }
       }
 
@@ -248,23 +213,24 @@ multi_meanspectra_app <- function(launch.browser = FALSE) {
       return(full_spec_df)
     }
 
-    # Function to plot an interactive mean spectrum using spectrum_df and plotly
-    meanspec_plotly <- function(wave, wl = as.numeric(input$wl)) {
-      full_spec <- spectrum_df(wave, wl = as.numeric(input$wl))
+    meanspec_plotly <- function(wave, wl, title) {
+      full_spec <- spectrum_df(wave, wl = as.numeric(wl))
 
       p <- plot_ly(full_spec, x = ~frequency, y = ~amplitude, type = 'scatter',
                    mode = 'lines',
-                   line = list(color = 'black'),
+                   line = list(color = 'black', shape = 'spline'),
                    name = 'Mean',
                    hovertemplate = 'Amplitude: %{y:.2f}'
       ) %>%
         config(displayModeBar = TRUE) %>%
-        plotly::layout(hovermode = 'x')
-
-
-
-      p <- p %>%
         layout(
+          hovermode = 'x',
+          title = list(
+            text = title,
+            x = 0.3,
+            xanchor = "left"
+          ),
+          showlegend = TRUE,
           xaxis = list(
             title = list(text = "Frequency (Hz)", standoff = 10),
             ticklen = 5,
@@ -280,7 +246,7 @@ multi_meanspectra_app <- function(launch.browser = FALSE) {
             orientation = "h",
             x = 0.5,
             y = 1.1,
-            xanchor = "center"
+            xanchor = "right"
           ),
           margin = list(
             l = 50,
@@ -289,11 +255,8 @@ multi_meanspectra_app <- function(launch.browser = FALSE) {
             t = 50
           )
         )
-
       return(p)
     }
-
-
 
     # Automatic color stacking using a colorblind-safe palette
     brush_colors <- reactiveVal(c("#0072B2","#E69F00","#009E73", "#CC79A7",
@@ -307,6 +270,7 @@ multi_meanspectra_app <- function(launch.browser = FALSE) {
         wave_obj <- get(input$wave_select, envir = .GlobalEnv)
         selected_wave(wave_obj)
         brushed_ranges(list())
+        updateTextInput(session, "file_name", value = isolate(input$wave_select))
       }
     })
 
@@ -326,18 +290,26 @@ multi_meanspectra_app <- function(launch.browser = FALSE) {
       p
     })
 
-
     output$mean_spectrum <- renderPlotly({
       req(input$plot_button)
       req(selected_wave())
       wave <- selected_wave()
-      p <- meanspec_plotly(wave, wl = as.numeric(input$wl))
+      p <- meanspec_plotly(wave,
+                           wl = as.numeric(isolate(input$wl)),
+                           title = isolate(input$plot_title))
       plotly_obj(p)
       p
     })
 
     observeEvent(input$add_selection, {
       req(input$wave_brush)
+
+      # Get the selected name or custom name
+      selection_name <- if (input$selection_choice == "Custom...") {
+        input$custom_selection_name
+      } else {
+        input$selection_choice
+      }
 
       # Round xmin and xmax to avoid floating-point precision issues
       brush <- input$wave_brush
@@ -362,21 +334,21 @@ multi_meanspectra_app <- function(launch.browser = FALSE) {
       wave <- selected_wave()
       range <- c(brush$xmin, brush$xmax)
 
-      spec <- spectrum_df(wave, from = range[1], to = range[2], wl = as.numeric(input$wl))
+      spec <- spectrum_df(wave, from = range[1], to = range[2], wl = as.numeric(isolate(input$wl)))
       spec$amplitude <- spec$amplitude * max(wave_df(wave) %>%
                                                dplyr::filter(time >= range[1] & time <= range[2]) %>%
                                                pull(amplitude))
 
       colors <- brush_colors()
-      selection_number <- length(brush_data)
-      selection_name <- paste("Selection", selection_number)
+      # selection_name <- isolate(input$selection_name)
 
       plotlyProxy("mean_spectrum", session) %>%
         plotlyProxyInvoke("addTraces", list(
           x = spec$frequency, y = spec$amplitude, type = 'scatter',
-          mode = 'none',
+          mode = 'lines',
+          line = list(shape = 'spline', color = 'transparent'),
           fill = 'tozeroy',
-          fillcolor = toRGB(colors[selection_number], alpha = input$alpha),
+          fillcolor = toRGB(colors[length(brush_data)], alpha = isolate(input$alpha)),
           name = selection_name,
           hovertemplate = 'Amplitude: %{y:.2f}'
         ))
@@ -385,51 +357,15 @@ multi_meanspectra_app <- function(launch.browser = FALSE) {
       p <- plotly_obj()
       p <- p %>%
         add_trace(x = spec$frequency, y = spec$amplitude, type = 'scatter', mode = 'none',
-                  fill = 'tozeroy', fillcolor = toRGB(colors[selection_number], alpha = input$alpha),
+                  fill = 'tozeroy', fillcolor = toRGB(colors[length(brush_data)], alpha = isolate(input$alpha)),
                   name = selection_name,
                   hovertemplate = 'Amplitude: %{y:.2f}', line = list(color = 'rgba(0,0,0,0)'))
       plotly_obj(p)
     })
 
-    # observeEvent(input$add_selection, {
-    #   req(input$wave_brush)
-    #   brush <- input$wave_brush
-    #   brush_data <- brushed_ranges()
-    #   brush_data <- append(brush_data, list(c(brush$xmin, brush$xmax)))
-    #   brushed_ranges(brush_data)
-    #
-    #   wave <- selected_wave()
-    #   range <- c(brush$xmin, brush$xmax)
-    #   spec <- spectrum_df(wave, from = range[1], to = range[2], wl = as.numeric(input$wl))
-    #   spec$amplitude <- spec$amplitude * max(wave_df(wave) %>% dplyr::filter(time >= range[1] & time <= range[2]) %>% pull(amplitude))
-    #   colors <- brush_colors()
-    #
-    #   selection_number <- length(brush_data)
-    #   selection_name <- paste("Selection", selection_number)
-    #
-    #   plotlyProxy("mean_spectrum", session) %>%
-    #     plotlyProxyInvoke("addTraces", list(
-    #       x = spec$frequency, y = spec$amplitude, type = 'scatter',
-    #       mode = 'none',
-    #       fill = 'tozeroy',
-    #       fillcolor = toRGB(colors[selection_number],
-    #                         alpha = input$alpha), name = selection_name,
-    #       hovertemplate = 'Amplitude: %{y:.2f}'
-    #     ))
-    #
-    #   # Update plotly object with new trace
-    #   p <- plotly_obj()
-    #   p <- p %>%
-    #     add_trace(x = spec$frequency, y = spec$amplitude, type = 'scatter', mode = 'none',
-    #               fill = 'tozeroy', fillcolor = toRGB(colors[selection_number], alpha = input$alpha),
-    #               name = selection_name,
-    #               hovertemplate = 'Amplitude: %{y:.2f}', line = list(color = 'rgba(0,0,0,0)'))
-    #   plotly_obj(p)
-    # })
-
     output$download_oscillogram <- downloadHandler(
       filename = function() {
-        paste0("oscillogram_", Sys.Date(), ".png")
+        paste0(input$file_name,"_oscillogram.png")
       },
       content = function(file) {
         req(selected_wave())
@@ -445,8 +381,9 @@ multi_meanspectra_app <- function(launch.browser = FALSE) {
     )
 
     output$download_power_spectra <- downloadHandler(
+
       filename = function() {
-        paste0("meanpowerspectra_", Sys.Date(), ".html")
+        paste0(input$file_name,"_meanpowerspectra.html")
       },
       content = function(file) {
         req(plotly_obj())
@@ -455,28 +392,19 @@ multi_meanspectra_app <- function(launch.browser = FALSE) {
     )
 
 
-    # Add this inside the server
     observeEvent(input$close, {
       shinyjs::runjs("window.close();")
       stopApp()
     })
 
-    # Stop app when the tab is closed with the "X" button
     session$onSessionEnded(function() {
       stopApp()
     })
-
-
   }
 
   if(launch.browser){
-
     shinyApp(ui = ui, server = server, options = list(launch.browser = browser))
-
   } else {
-
     shinyApp(ui = ui, server = server)
-
   }
-
 }

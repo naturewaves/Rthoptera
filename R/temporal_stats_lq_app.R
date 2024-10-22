@@ -438,7 +438,6 @@ temporal_stats_lq_app <- function(launch.browser = FALSE) {
 
   server <- function(input, output, session) {
 
-
     # Observer to update available wave objects in the environment
     observe({
       wave_names <- ls(envir = .GlobalEnv)
@@ -474,7 +473,6 @@ temporal_stats_lq_app <- function(launch.browser = FALSE) {
 
 
       } else if (input$preset == "Tettigoniidae") {
-
         # updateTextInput(session, "specimen_id", value = "")
         updateNumericInput(session, "ssmooth", value = 100)
         updateNumericInput(session, "peakfinder_ws", value = 50)
@@ -488,10 +486,34 @@ temporal_stats_lq_app <- function(launch.browser = FALSE) {
     })
 
     output$audioPlot <- renderPlotly({
-      req(result())
-      result()$plot %>%
-        layout(title = input$specimen_id,
-               margin = list(l = 80, r = 0, t = 80, b = 80))
+      req(result())  # Ensure result is valid
+
+      # Check if result()$plot is valid and catch potential errors
+      tryCatch({
+        plot_obj <- result()$plot
+
+        # Ensure plot_obj is a plotly object
+        if (inherits(plot_obj, "plotly")) {
+          plot_obj %>%
+            layout(title = input$specimen_id,
+                   margin = list(l = 80, r = 0, t = 80, b = 80))
+
+          # Save the plot to a temporary HTML file for download
+          temp_file <- tempfile(fileext = ".html")
+          htmlwidgets::saveWidget(plot_obj, temp_file, selfcontained = TRUE)
+          temp_file <<- temp_file
+
+          return(plot_obj)  # Return the valid plot
+        } else {
+          showNotification("The plot object is invalid or missing.", type = "error")
+          return(NULL)  # Prevent rendering of invalid plot objects
+        }
+
+      }, error = function(e) {
+        # Handle any errors gracefully and notify the user
+        showNotification(paste("An error occurred:", e$message), type = "error")
+        return(NULL)
+      })
     })
 
 

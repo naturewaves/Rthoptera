@@ -40,11 +40,19 @@ import_wave_app <- function(launch.browser = FALSE) {
               }
 
               /* Styling for the inputs */
-              .form-control {
-                background-color: #495057;
-                border: 1px solid #6c757d;
-                color: #ffffff;
-              }
+       /* Styling for the fileInput text (file name) */
+
+ /* Correct target for file input text color */
+    .form-control {
+      background-color: #495057;
+      border: 1px solid #6c757d;
+      color: #333333 !important; /* Dark grey for file name text */
+    }
+
+    /* Specifically targeting the 'Name for new wave' input */
+    #newName {
+      color: #ffffff !important; /* White text for the 'Name for new wave' input */
+    }
 
               .btn-info {
                 background-color: #252626 !important;

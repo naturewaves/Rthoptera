@@ -32,13 +32,16 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/Intro_to_Rthoptera.html">Introduction to Rthoptera</a>
-    </li>
-    <li>
       <a href="../articles/Preprocessing.html">Preprocessing Audio</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/naturewaves/Rthoptera/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -48,7 +51,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Extract the waveform values as a table</h1>
-
+    <small class="dont-index">Source: <a href="https://github.com/naturewaves/Rthoptera/blob/HEAD/R/wave_df.R" class="external-link"><code>R/wave_df.R</code></a></small>
     <div class="hidden name"><code>wave_df.Rd</code></div>
     </div>
 
@@ -79,9 +82,7 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">wave_df</span><span class="op">(</span><span class="va">wave</span>, norm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'object' in selecting a method for function 'normalize': object 'wave' not found</span>
-<span class="r-in"><span> <span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span> <span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">coryphoda</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">wave_df</span><span class="op">(</span><span class="va">coryphoda</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
@@ -95,7 +96,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Anonymous Anonymous, Anonymous2 Anonymous2.</p>
+  <p></p><p>Developed by Anonymous Anonymous.</p>
 </div>
 
 <div class="pkgdown">

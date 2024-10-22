@@ -84,7 +84,7 @@ meanspec_ggplot <- function(wave,
       axis.title = element_text(size = 12),
       axis.text.y = element_text(size = 10),
       axis.text.x = element_text(size = 10),
-      panel.border = element_rect(colour = "black", fill=NA, size=1),
+      panel.border = element_rect(colour = "black", fill=NA, linewidth=1),
       legend.position = "none"
     ) +
     labs(

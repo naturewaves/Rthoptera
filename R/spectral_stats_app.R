@@ -424,13 +424,16 @@ spectral_stats_app <- function(launch.browser = FALSE) {
 
   server = function(input, output, session) {
     # Function definition
-    specStats <- function(wave, specimen.id = "Specimen ID",
-                          total.range = FALSE,
-                          robust = FALSE, ampMax = 1,  dbth = -20,
-                          lines = TRUE,
-                          sound.type = "Call 1",
-                          temp = NULL,
-                          hpf = NULL) {
+    spectral_stats <- function(wave,
+                               specimen.id = "Specimen ID",
+                               total.range = FALSE,
+                               robust = FALSE,
+                               ampMax = 1,
+                               dbth = -20,
+                               lines = TRUE,
+                               sound.type = "Call 1",
+                               temp = NULL,
+                               hpf = NULL) {
 
       ampMax <- as.numeric(ampMax)
 
@@ -608,7 +611,7 @@ spectral_stats_app <- function(launch.browser = FALSE) {
     result <- eventReactive(input$run, {
       req(input$selectedWave)
       wave <- get(input$selectedWave, envir = .GlobalEnv)
-      specStats(
+      spectral_stats(
         wave = wave,
         specimen.id = input$specimen.id,
         sound.type = input$sound.type,
