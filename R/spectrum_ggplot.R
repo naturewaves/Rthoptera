@@ -54,11 +54,11 @@ spectrum_ggplot <- function(wave,
                            y.position = "left",
                            x.position = "bottom",
                            flip = FALSE,
-                           color.db = 'grey30',
-                           color.linear = 'black',
-                           color.carrier = 'dodgerblue',
-                           color.threshold = 'forestgreen',
-                           color.bandwidth = 'forestgreen',
+                           color.db = '#4d4d4d',  # Grey
+                           color.linear = '#000000',  # Black
+                           color.carrier = '#1e90ff',  # Dodger Blue
+                           color.threshold = '#228b22',  # Forest Green
+                           color.bandwidth = '#228b22',  # Forest Green
                            fun = "mean",
                            wn = "blackman",
                            show.x.title = TRUE,
@@ -207,7 +207,7 @@ spectrum_ggplot <- function(wave,
       axis.title = element_text(size = 12),
       axis.text.y = element_text(size = 10),
       axis.text.x = element_text(size = 10),
-      panel.border = element_rect(colour = "black", fill = NA, size = 1),
+      panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
       legend.position = "none",
       plot.title = element_text(face = if (italic.title) "italic" else "plain")
     ) +

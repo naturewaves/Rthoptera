@@ -33,7 +33,10 @@ merge_waves <- function(wave_list) {
       merged_wave@right <- c(merged_wave@right, current_wave@right)
     }
 
-    merged_wave <- tuneR::normalize(merged_wave, unit = "24", center = TRUE)
+    merged_wave <- tuneR::normalize(merged_wave,
+                                    unit = "24",
+                                    pcm = TRUE,
+                                    center = TRUE)
   }
 
   return(merged_wave)

@@ -39,7 +39,7 @@
 #' spectrum_plot(wave, win.size = 512, x.breaks = 5, fmin = 1, fmax = 10)
 #' }
 spectrum_plot <- function(wave,
-                           win.size = NULL,
+                           win.size = 512,
                            ovlp = 50,
                            x.breaks = 6,
                            y.position = "left",
@@ -58,8 +58,8 @@ spectrum_plot <- function(wave,
                            add.summary = TRUE,
                            plot.title = "",
                            italic.title = FALSE,
-                           fmin = NULL,
-                           fmax = NULL,
+                           fmin = 0,
+                           fmax = 20,
                            linewidth = 1,
                            total.bandwidth = FALSE,
                            show.lines = FALSE) {
@@ -199,7 +199,7 @@ spectrum_plot <- function(wave,
       axis.title = element_text(size = 12),
       axis.text.y = element_text(size = 10),
       axis.text.x = element_text(size = 10),
-      panel.border = element_rect(colour = "black", fill = NA, size = 1),
+      panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
       legend.position = "none",
       plot.title = element_text(face = if (italic.title) "italic" else "plain")
     ) +
@@ -211,11 +211,11 @@ spectrum_plot <- function(wave,
   if(show.lines){
 
     spectrum_plot <- spectrum_plot +
-      geom_vline(xintercept = carrier_freq, color = color.carrier, linetype = "solid", size = linewidth) +
+      geom_vline(xintercept = carrier_freq, color = color.carrier, linetype = "solid", linewidth = linewidth) +
       annotate("segment", x = low_freq, xend = high_freq, y = 0.1, yend = 0.1, color = color.threshold,
-               linetype = "dashed", size = linewidth) +
-      geom_vline(xintercept = low_freq, color = color.bandwidth, linetype = "solid", size = linewidth) +
-      geom_vline(xintercept = high_freq, color = color.bandwidth, linetype = "solid", size = linewidth)
+               linetype = "dashed", linewidth = linewidth) +
+      geom_vline(xintercept = low_freq, color = color.bandwidth, linetype = "solid", linewidth = linewidth) +
+      geom_vline(xintercept = high_freq, color = color.bandwidth, linetype = "solid", linewidth = linewidth)
 
   }
 
