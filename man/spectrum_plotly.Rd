@@ -87,7 +87,7 @@ spectrum_plotly(
 \item{linewidth}{Numeric, the width of the lines in the plot. Default is 1.}
 }
 \value{
-A Plotly object representing the interactive spectrum plot.
+A list including: a Plotly object, and a summary table (data frame).
 }
 \description{
 This function generates an interactive spectrum plot using Plotly, offering customizable options for windowing, overlap, amplitude shading (dB and linear), and the ability to display summary statistics and parameter annotations. The function supports both dB and linear scales, bandwidth calculations, and frequency markers.

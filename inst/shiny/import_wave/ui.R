@@ -2,7 +2,7 @@ jscode <- "shinyjs.closeWindow = function() { window.close(); }"
 
 ui = function(request) {
   shiny::tagList(
-    shiny::h1("Import", style = "font-size: 28px; margin-left: 15px; margin-top: 0px; margin-bottom: 2px;"),
+    shiny::h1("Import Wave", style = "font-size: 28px; margin-left: 15px; margin-top: 0px; margin-bottom: 2px;"),
     shiny::fluidPage(
       shinyjs::useShinyjs(),
       shinyjs::extendShinyjs(text = jscode, functions = c("closeWindow")),

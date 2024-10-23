@@ -29,7 +29,7 @@
 #' @param show.lines Logical, whether to show lines for the carrier frequency and bandwidths. Default is `FALSE`.
 #' @param linewidth Numeric, the width of the lines in the plot. Default is 1.
 #'
-#' @return A Plotly object representing the interactive spectrum plot.
+#' @return A list including: a Plotly object, and a summary table (data frame).
 #' @export
 #' @importFrom seewave meanspec spec sh sfm
 #' @importFrom magrittr %>%
@@ -110,20 +110,44 @@ spectrum_plotly <- function(wave,
     mean_amp_linear = meanspec_data_linear[, 2]
   )
 
-  meanspec_data$norm_amp_dB <- (meanspec_data$mean_amp_dB - min(meanspec_data$mean_amp_dB)) /
-    (max(meanspec_data$mean_amp_dB) - min(meanspec_data$mean_amp_dB))
+  ########
+  mean_amp_dB <- meanspec_data$mean_amp_dB
+  # Check if mean_amp_dB has non-NA values
+  if (all(is.na(mean_amp_dB)) || length(mean_amp_dB) == 0) {
+    warning("mean_amp_dB contains only NA or is empty.")
+    return(NULL)  # Or handle appropriately
+  }
 
-  minus20dB <- (-20 - min(meanspec_data$mean_amp_dB)) /
-    (max(meanspec_data$mean_amp_dB) - min(meanspec_data$mean_amp_dB))
+  min_amp <- min(mean_amp_dB, na.rm = TRUE)
+  max_amp <- max(mean_amp_dB, na.rm = TRUE)
+
+  # Avoid division by zero
+  if (max_amp - min_amp == 0) {
+    warning("max_amp and min_amp are equal; cannot normalize data.")
+    # Handle the case appropriately, e.g., set norm_amp_dB to zeros or return NULL
+    meanspec_data$norm_amp_dB <- rep(0, length(mean_amp_dB))
+  } else {
+    meanspec_data$norm_amp_dB <- (mean_amp_dB - min_amp) / (max_amp - min_amp)
+  }
+
+
+
+
+#
+#   meanspec_data$norm_amp_dB <- (meanspec_data$mean_amp_dB - min(meanspec_data$mean_amp_dB, na.rm = TRUE)) /
+#     (max(meanspec_data$mean_amp_dB, na.rm = TRUE) - min(meanspec_data$mean_amp_dB, na.rm = TRUE))
+
+  minus20dB <- (-20 - min(meanspec_data$mean_amp_dB, na.rm = TRUE)) /
+    (max(meanspec_data$mean_amp_dB, na.rm = TRUE) - min(meanspec_data$mean_amp_dB, na.rm = TRUE))
+
+
+  # meanspec_data$norm_amp_dB <- (meanspec_data$mean_amp_dB - min(meanspec_data$mean_amp_dB)) /
+  #   (max(meanspec_data$mean_amp_dB) - min(meanspec_data$mean_amp_dB))
+  #
+  # minus20dB <- (-20 - min(meanspec_data$mean_amp_dB)) /
+  #   (max(meanspec_data$mean_amp_dB) - min(meanspec_data$mean_amp_dB))
 
   carrier_freq <- meanspec_data$freq[which.max(meanspec_data$mean_amp_linear)]
-
-  # Define title font style based on italic.title
-  # title_font_style <- if (italic.title) {
-  #   list(size = 18, family = "Arial", color = "black", face = "italic")
-  # } else {
-  #   list(size = 18, family = "Arial", color = "black")
-  # }
 
   # Extract "Low" and "High" frequencies based on amplitude threshold (0.1 or -20 dB below the peak)
   if (total.bandwidth) {
@@ -169,8 +193,8 @@ spectrum_plotly <- function(wave,
     mutate(bandw = round(high.f-low.f,2))
 
 
-  plot.title <- if (italic.title) {
-    paste0("<i>", plot.title, "</i>")
+  if (italic.title) {
+    plot.title <- paste0("<i>", plot.title, "</i>")
   }
 
 
@@ -192,11 +216,11 @@ spectrum_plotly <- function(wave,
                   hovertemplate = "<b>Frequency:</b> %{x:.1f} kHz<br><b>Amplitude:</b>%{y:.1f}<br>") %>%
       layout(
         title = list(text = plot.title),
-        xaxis = list(title = if (show.x.title) "Frequency (kHz)" else NULL,
+        xaxis = list(title = if (show.x.title) "Frequency (kHz)" else "",
                      range = c(fmin, fmax),
                      tickvals = seq(fmin, fmax, length.out = x.breaks),
                      tickformat = ".0f"),
-        yaxis = list(title = "Relative Amplitude",
+        yaxis = list(title = if (show.y.title) "Relative Amplitude" else "",
                      range = c(0, 1),
                      tickvals = seq(0, 1, by = 0.2)),
         showlegend = FALSE
@@ -211,11 +235,13 @@ spectrum_plotly <- function(wave,
                   name = "Linear") %>%
       layout(
         title = list(text = plot.title),
-        xaxis = list(title = if (show.x.title) "Frequency (kHz)" else NULL,
+        xaxis = list(title = if (show.x.title) "Frequency (kHz)" else "",
+                     # side = x.position,
                      range = c(fmin, fmax),
                      tickvals = seq(fmin, fmax, length.out = x.breaks),
                      tickformat = ".0f"),
-        yaxis = list(title = "Amplitude",
+        yaxis = list(title = if (show.y.title) "Amplitude" else "",
+                     # side = y.position,
                      range = c(0, 1),
                      tickvals = seq(0, 1, by = 0.2)),
         showlegend = FALSE

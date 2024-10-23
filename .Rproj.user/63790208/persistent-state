@@ -1,6 +1,6 @@
 build-last-errors="[]"
-build-last-errors-base-dir=""
-build-last-outputs="[]"
+build-last-errors-base-dir="C:/Users/fcori/Desktop/R/Rthoptera/Rthoptera/tests/testthat/test-launchApp.R/"
+build-last-outputs="[{\"type\":0,\"output\":\"==> Testing R file using 'testthat'\\n\\n\"},{\"type\":1,\"output\":\"\\u001B[1m\\u001B[22m\\u001B[36mℹ\\u001B[39m Loading \\u001B[34mRthoptera\\u001B[39m\\r\\n\"},{\"type\":1,\"output\":\"\"},{\"type\":1,\"output\":\"\\r[ FAIL 0 | WARN 0 | SKIP 0 | \\u001B[32mPASS\\u001B[39m 0 ]\"},{\"type\":1,\"output\":\"Available apps:\\r\\n\"},{\"type\":1,\"output\":\" - app1\\r\\n\"},{\"type\":1,\"output\":\" - app2\\r\\n\"},{\"type\":1,\"output\":\"\"},{\"type\":1,\"output\":\"\\r[ FAIL 0 | WARN 0 | SKIP 0 | \\u001B[32mPASS\\u001B[39m 1 ]\\r[ FAIL 0 | WARN 0 | SKIP 0 | \\u001B[32mPASS\\u001B[39m 2 ]\"},{\"type\":1,\"output\":\"\\r[ FAIL 0 | WARN 0 | SKIP 0 | \\u001B[32mPASS\\u001B[39m 3 ]\\r[ FAIL 0 | WARN 0 | SKIP 0 | \\u001B[32mPASS\\u001B[39m 4 ]\\r[ FAIL 0 | WARN 0 | SKIP 0 | \\u001B[32mPASS\\u001B[39m 5 ]\"},{\"type\":1,\"output\":\"\\r\\n\"},{\"type\":1,\"output\":\"\\r\\n\"},{\"type\":1,\"output\":\"Execution halted\\r\\n\"},{\"type\":1,\"output\":\"\"},{\"type\":2,\"output\":\"\\nExited with status 1.\\n\\n\"}]"
 compile_pdf_state="{\"tab_visible\":false,\"running\":false,\"target_file\":\"\",\"output\":\"\",\"errors\":[]}"
 files.monitored-path=""
 find-in-files-state="{\"handle\":\"\",\"input\":\"\",\"path\":\"\",\"regex\":false,\"ignoreCase\":false,\"results\":{\"file\":[],\"line\":[],\"lineValue\":[],\"matchOn\":[],\"matchOff\":[],\"replaceMatchOn\":[],\"replaceMatchOff\":[]},\"running\":false,\"replace\":false,\"preview\":false,\"gitFlag\":false,\"replacePattern\":\"\"}"

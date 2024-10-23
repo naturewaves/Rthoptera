@@ -14,11 +14,10 @@ colorblind_safe_palette <- c(
 )
 
 ui <- fluidPage(
-  titlePanel("Color-coded Oscillogram"),
+  titlePanel("Color-code Oscillogram"),
   fluidPage(
     useShinyjs(),
     extendShinyjs(text = jscode, functions = c("closeWindow")),
-    # theme = bslib::bs_theme(bootswatch = "darkly"),
     tags$head(tags$style(
       HTML(
         "

@@ -7,7 +7,7 @@
 launchApp(app_name = NULL)
 }
 \arguments{
-\item{app_name}{The name of the Shiny app folder inside inst/shiny. If NULL, lists available apps.}
+\item{app_name}{The (partial or full) name of the Shiny app folder inside inst/shiny. If NULL, lists available apps.}
 }
 \value{
 Launches the Shiny app or lists available apps if no name is provided

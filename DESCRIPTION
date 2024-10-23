@@ -2,7 +2,7 @@ Package: Rthoptera
 Type: Package
 Title: Standardized Insect Bioacoustics
 Version: 0.1.0
-Depends: R (>= 3.5.0), shinyBS
+Depends: R (>= 3.5.0)
 Authors@R: c(
             person("Anonymous", "Anonymous", email = "frivasfu@purdue.edu",
                     role = c("cre", "aut"), comment = c(ORCID = "0000-0000-0000-0000")),
@@ -15,10 +15,7 @@ RoxygenNote: 7.3.2
 LazyDataCompression: xz
 Remotes: naturewaves/RthopteraSounds
 Imports:
-  RthopteraSounds,
-  bioacoustics,
   shiny (>= 1.0.0),
-  shinyjs,
   ggplot2 (>= 3.0),
   seewave,
   dplyr,
@@ -27,23 +24,28 @@ Imports:
   plotly,
   tuneR,
   warbleR,
-  DT,
-  bslib,
-  colourpicker,
-  cowplot,
-  htmlwidgets,
-  htmltools,
   magrittr,
   purrr,
   scales,
   tibble,
+  htmlwidgets
+Suggests:
+  mockery,
+  shinyBS,
+  shinyjs,
+  shinycssloaders,
   writexl,
-  shinycssloaders
-Suggests: 
-    knitr,
-    rmarkdown,
-    markdown,
-    testthat (>= 3.0.0)
+  RthopteraSounds,
+  bioacoustics,
+  bslib,
+  colourpicker,
+  cowplot,
+  htmltools,
+  knitr,
+  DT,
+  rmarkdown,
+  markdown,
+  testthat (>= 3.0.0)
 VignetteBuilder: knitr
 URL: https://github.com/naturewaves/Rthoptera
 BugReports: https://github.com/naturewaves/Rthoptera/issues 
