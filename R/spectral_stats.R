@@ -25,7 +25,7 @@
 #' result$plot
 #' }
 #'
-#' @importFrom dplyr as.data.frame mutate filter tibble
+#' @importFrom dplyr mutate filter tibble
 #' @importFrom seewave meanspec sh sfm
 #' @importFrom plotly plot_ly add_lines layout add_trace add_markers
 #' @importFrom tibble tibble

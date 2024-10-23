@@ -7,8 +7,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/naturewaves/Rthoptera/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/naturewaves/Rthoptera/actions/workflows/R-CMD-check.yaml)
-[![Codecov test
-coverage](https://codecov.io/gh/naturewaves/Rthoptera/branch/master/graph/badge.svg)](https://app.codecov.io/gh/naturewaves/Rthoptera?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/naturewaves/Rthoptera/branch/master/graph/badge.svg)](https://app.codecov.io/gh/naturewaves/Rthoptera?branch=master)
 
 <!-- badges: end -->
 

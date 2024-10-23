@@ -32,7 +32,7 @@
 #' @import ggplot2
 #' @importFrom seewave meanspec spec sh sfm
 #' @importFrom scales breaks_pretty label_number
-#' @noRd
+#' @export
 #'
 #' @examples
 #'  \dontrun{
@@ -167,11 +167,11 @@ spectrum_plot <- function(wave,
   spec.flat <- seewave::sfm(spec_linear)
 
   # Create the plot with normalized scales
-  spectrum_plot <- ggplot(meanspec_data, aes(x = freq)) +
+  plot <- ggplot(meanspec_data, aes(x = freq)) +
     theme_minimal(base_size = 15)
 
   # Primary y-axis with normalized dB scale
-  spectrum_plot <- spectrum_plot +
+  plot <- plot +
     geom_ribbon(aes(ymin = 0, ymax = norm_amp_dB), fill = color.db, alpha = 0.9) +
     geom_ribbon(aes(ymin = 0, ymax = norm_amp_linear), fill = color.linear, alpha = 0.9) +
     scale_y_continuous(
@@ -183,7 +183,7 @@ spectrum_plot <- function(wave,
     )
 
   # Set x-axis parameters
-  spectrum_plot <- spectrum_plot +
+  plot <- plot +
     scale_x_continuous(limits = c(fmin, fmax),  # Explicitly set x-axis limits
                        expand = c(0, 0),
                        position = x.position,
@@ -210,7 +210,7 @@ spectrum_plot <- function(wave,
 
   if(show.lines){
 
-    spectrum_plot <- spectrum_plot +
+    plot <- plot +
       geom_vline(xintercept = carrier_freq, color = color.carrier, linetype = "solid", linewidth = linewidth) +
       annotate("segment", x = low_freq, xend = high_freq, y = 0.1, yend = 0.1, color = color.threshold,
                linetype = "dashed", linewidth = linewidth) +
@@ -235,7 +235,7 @@ spectrum_plot <- function(wave,
              "\nWindow Overlap:", ovlp, "%"
       )
 
-    spectrum_plot <- spectrum_plot +
+    plot <- plot +
       annotate("label",
                x = Inf,
                y = Inf,
@@ -260,7 +260,7 @@ spectrum_plot <- function(wave,
              "\nLow F.: ", round(low_freq, 2), " kHz"
       )
 
-    spectrum_plot <- spectrum_plot +
+    plot <- plot +
       annotate("label",
                x= -Inf,
                y = Inf,
@@ -274,9 +274,9 @@ spectrum_plot <- function(wave,
   }
 
   if (flip) {
-    spectrum_plot <- spectrum_plot +
+    plot <- plot +
       coord_flip()
   }
 
-  return(list(spectrum_plot))
+  return(plot)
 }
