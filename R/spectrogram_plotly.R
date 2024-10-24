@@ -7,7 +7,8 @@
 #' @param hover_bgcolor Color for the hover background.
 #' @param hover_fontcolor Color for the hover text.
 #' @param overlap FFT overlap.
-#' @param zero_padding Number of zeroes to be added around the signal to improve frequency resolution.
+#' @param zero_padding Number of zeroes to be added around the signal to improve
+#' frequency resolution.
 #'
 #' @return An interactive spectrogram.
 #' @export
@@ -23,16 +24,13 @@
 #' }
 spectrogram_plotly <- function(wave,
                                floor = -50,
-                               background = '#274C77',
+                               background = "#274C77",
                                foreground = "white",
                                hover_bgcolor = "white",
                                hover_fontcolor = "black",
                                overlap = 50,
                                zero_padding = 0) {
-
-
-
-  wl = round(wave@samp.rate * sqrt(seewave::duration(wave))*20e-4)
+  wl <- round(wave@samp.rate * sqrt(seewave::duration(wave)) * 20e-4)
   # coerce wl to an even number
   if (wl %% 2 != 0) {
     wl <- wl + 1

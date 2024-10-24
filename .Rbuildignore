@@ -1,9 +1,11 @@
+^renv$
+^renv\.lock$
 ^.*\.Rproj$
+^.github$
+^Meta$
+^README\.Rmd$
 ^\.Rproj\.user$
+^\.github$
+^\.pre-commit-config\.yaml$
 ^doc$
 ^docs$
-^Meta$
-^.github$
-
-^\.github$
-^README\.Rmd$

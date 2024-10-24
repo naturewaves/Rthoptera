@@ -24,7 +24,8 @@
 #' @param norm.env A logical indicating whether to normalize the envelope (default: TRUE).
 #'
 #' @return A list with the following components:
-#' \item{plot}{An interactive `plotly` plot showing the signal envelope, detected trains, and motifs.}
+#' \item{plot}{An interactive `plotly` plot showing the signal envelope,
+#' detected trains, and motifs.}
 #' \item{summary_data}{A tibble with summary statistics of the acoustic motifs.}
 #' \item{train_data}{A tibble with details about the detected trains.}
 #' \item{motif_data}{A tibble with details about the detected motifs.}
@@ -52,7 +53,6 @@ temporal_stats_hq <- function(wave,
                               min_train_dur = 0.002,
                               max_train_gap = 0.08,
                               norm.env = TRUE) {
-
   # Store input parameters in a tibble
   params <- tibble(
     specimen.id = specimen.id,
@@ -73,7 +73,6 @@ temporal_stats_hq <- function(wave,
 
   # Get envelope of the wave
   envelope_vector <- seewave::env(wave, msmooth = msmooth_vec, plot = FALSE)
-  # envelope_vector <- warbleR::envelope(as.numeric(wave@left), ssmooth = msmooth_window)
 
   if (norm.env) {
     envelope_vector <- (envelope_vector - min(envelope_vector)) / (max(envelope_vector) - min(envelope_vector))
@@ -86,7 +85,7 @@ temporal_stats_hq <- function(wave,
 
   # Create the time vector
   sample_rate <- wave@samp.rate
-  time_vector <- seq(0, (length(wave@left) - 1) / sample_rate, length.out = length(envelope_vector))  # In seconds
+  time_vector <- seq(0, (length(wave@left) - 1) / sample_rate, length.out = length(envelope_vector)) # In seconds
 
   # Detect trains based on the amplitude lower_detection_threshold
   train_starts <- which(diff(c(0, envelope_vector >= amp_threshold, 0)) == 1)
@@ -120,8 +119,8 @@ temporal_stats_hq <- function(wave,
   # Calculate train.period and train.gap directly from train_data
   train_data <- train_data %>%
     mutate(
-      train.period = round(lead(train.start) - train.start, 3),  # Period: next train.start - current train.start
-      train.gap = round(lead(train.start) - train.end, 3)        # Gap: next train.start - current train.end
+      train.period = round(lead(train.start) - train.start, 3), # Period: next train.start - current train.start
+      train.gap = round(lead(train.start) - train.end, 3) # Gap: next train.start - current train.end
     )
 
   # Calculate train.id and motif.id based on train.gap and max_train_gap
@@ -139,24 +138,34 @@ temporal_stats_hq <- function(wave,
       motif.end = max(train.end),
       motif.dur = round(motif.end - motif.start, 3),
       n.trains = n(),
-      train.rate = round((n.trains-1) / motif.dur, 3),
+      train.rate = round((n.trains - 1) / motif.dur, 3),
       duty.cycle = round(sum(train.dur) / motif.dur * 100, 1)
     ) %>%
     ungroup()
 
   # Start the interactive plot
   p <- plot_ly() %>%
-    add_lines(x = ~time_vector, y = ~envelope_vector, name = "Summary Statistics",
-              hoverinfo = "none",  line = list(color = 'rgba(20, 20, 20, 0)',
-                                               width = 2), legendgroup = "Summary Stats") %>%
-    add_lines(x = ~time_vector, y = ~envelope_vector,
-              name = "Envelope",
-              hoverinfo = "none",
-              line = list(color = 'rgb(20, 20, 20)',
-                          width = 2,
-                          shape = 'spline')) %>%
-    add_lines(x = c(min(time_vector), max(time_vector)), y = c(lower_detection_threshold, lower_detection_threshold),
-              name = "Lower Threshold", line = list(color = "#D55E00", dash = "dash"), showlegend = TRUE)
+    add_lines(
+      x = ~time_vector, y = ~envelope_vector, name = "Summary Statistics",
+      hoverinfo = "none", line = list(
+        color = "rgba(20, 20, 20, 0)",
+        width = 2
+      ), legendgroup = "Summary Stats"
+    ) %>%
+    add_lines(
+      x = ~time_vector, y = ~envelope_vector,
+      name = "Envelope",
+      hoverinfo = "none",
+      line = list(
+        color = "rgb(20, 20, 20)",
+        width = 2,
+        shape = "spline"
+      )
+    ) %>%
+    add_lines(
+      x = c(min(time_vector), max(time_vector)), y = c(lower_detection_threshold, lower_detection_threshold),
+      name = "Lower Threshold", line = list(color = "#D55E00", dash = "dash"), showlegend = TRUE
+    )
 
   # Add train lines to the plot
   for (i in seq_len(nrow(train_data))) {
@@ -164,10 +173,12 @@ temporal_stats_hq <- function(wave,
     train_end_time <- train_data$train.end[i]
     show_legend <- if (i == 1) TRUE else FALSE
     p <- p %>%
-      add_lines(x = c(train_start_time, train_end_time), y = c(0.98, 0.98),
-                name = "Trains", line = list(color = "#009E73", width = 6),
-                showlegend = show_legend, legendgroup = "trains",
-                hoverinfo = "x", text = paste("Time:", round(c(train_start_time, train_end_time), 2)))
+      add_lines(
+        x = c(train_start_time, train_end_time), y = c(0.98, 0.98),
+        name = "Trains", line = list(color = "#009E73", width = 6),
+        showlegend = show_legend, legendgroup = "trains",
+        hoverinfo = "x", text = paste("Time:", round(c(train_start_time, train_end_time), 2))
+      )
   }
 
   # Add motif lines to the plot
@@ -176,10 +187,12 @@ temporal_stats_hq <- function(wave,
     motif_end_time <- motif_data$motif.end[i]
     show_legend <- if (i == 1) TRUE else FALSE
     p <- p %>%
-      add_lines(x = c(motif_start_time, motif_end_time), y = c(1, 1),
-                name = "Motifs", line = list(color = "#0072B2", width = 6),
-                showlegend = show_legend, legendgroup = "Motifs",
-                hoverinfo = "x", text = paste("Motif:", i))
+      add_lines(
+        x = c(motif_start_time, motif_end_time), y = c(1, 1),
+        name = "Motifs", line = list(color = "#0072B2", width = 6),
+        showlegend = show_legend, legendgroup = "Motifs",
+        hoverinfo = "x", text = paste("Motif:", i)
+      )
   }
 
   motif_data <- motif_data %>%
@@ -189,10 +202,18 @@ temporal_stats_hq <- function(wave,
   motif_data <- motif_data %>%
     mutate(
       proportions = map(motif.id, function(eid) {
-        train_durations <- train_data %>% filter(motif.id == eid) %>% pull(train.dur)
-        gap_durations <- train_data %>% filter(motif.id == eid) %>% pull(train.gap)
-        motif_start <- motif_data %>% filter(motif.id == eid) %>% pull(motif.start)
-        motif_end <- motif_data %>% filter(motif.id == eid) %>% pull(motif.end)
+        train_durations <- train_data %>%
+          filter(motif.id == eid) %>%
+          pull(train.dur)
+        gap_durations <- train_data %>%
+          filter(motif.id == eid) %>%
+          pull(train.gap)
+        motif_start <- motif_data %>%
+          filter(motif.id == eid) %>%
+          pull(motif.start)
+        motif_end <- motif_data %>%
+          filter(motif.id == eid) %>%
+          pull(motif.end)
         motif_duration <- motif_data$motif.dur[eid]
         proportions <- numeric(0)
 
@@ -202,8 +223,14 @@ temporal_stats_hq <- function(wave,
 
           # Check if the gap is not NA and falls within the motif start and end
           if (!is.na(gap_durations[i])) {
-            gap_start <- train_data %>% filter(motif.id == eid) %>% pull(train.end) %>% dplyr::nth(i)
-            gap_end <- train_data %>% filter(motif.id == eid) %>% pull(train.start) %>% dplyr::nth(i + 1)
+            gap_start <- train_data %>%
+              filter(motif.id == eid) %>%
+              pull(train.end) %>%
+              dplyr::nth(i)
+            gap_end <- train_data %>%
+              filter(motif.id == eid) %>%
+              pull(train.start) %>%
+              dplyr::nth(i + 1)
 
             # Check if gap_start, gap_end, motif_start, and motif_end are not NA
             if (!is.na(gap_start) && !is.na(gap_end) && !is.na(motif_start) && !is.na(motif_end)) {
@@ -218,13 +245,14 @@ temporal_stats_hq <- function(wave,
       })
     ) %>%
     rowwise() %>%
-    mutate(specimen.id = base::unique(train_data$specimen.id),
-           props.sd = round(sd(unlist(proportions)), 3),
-           props.ent = round(-sum(unlist(proportions)[unlist(proportions) > 0] * log(unlist(proportions)[unlist(proportions) > 0])), 3),
-           props.mean = round(mean(unlist(proportions)), 3),
-           props.cv = round((props.sd / props.mean), 3),
-           props.diff.sd = round(sd(diff(unlist(proportions))), 3),
-           pci = round((props.ent * props.cv + sqrt(n.trains)) /  (sqrt(motif.dur) + 1), 3)
+    mutate(
+      specimen.id = base::unique(train_data$specimen.id),
+      props.sd = round(sd(unlist(proportions)), 3),
+      props.ent = round(-sum(unlist(proportions)[unlist(proportions) > 0] * log(unlist(proportions)[unlist(proportions) > 0])), 3),
+      props.mean = round(mean(unlist(proportions)), 3),
+      props.cv = round((props.sd / props.mean), 3),
+      props.diff.sd = round(sd(diff(unlist(proportions))), 3),
+      pci = round((props.ent * props.cv + sqrt(n.trains)) / (sqrt(motif.dur) + 1), 3)
     ) %>%
     ungroup() %>%
     select(specimen.id, everything(), -proportions, proportions)
@@ -234,17 +262,17 @@ temporal_stats_hq <- function(wave,
     specimen.id = base::unique(train_data$specimen.id),
     n.motifs = nrow(motif_data),
     n.trains = nrow(train_data),
-    mean.pci = round(mean(motif_data$pci, na.rm = TRUE),2),
-    sd.pci = round(sd(motif_data$pci, na.rm = TRUE),2),
-    mean.duty.cycle = round(mean(motif_data$duty.cycle, na.rm = TRUE),1),
-    sd.duty.cycle = round(sd(motif_data$duty.cycle, na.rm = TRUE),1),
-    mean.ent = round(mean(motif_data$props.ent, na.rm = TRUE),1),
-    mean.trains.motif = round(mean(motif_data$n.trains, na.rm = TRUE),1),
-    sd.trains.motif = round(sd(motif_data$n.trains, na.rm = TRUE),1),
-    mean.motif.dur = round(mean(motif_data$motif.dur, na.rm = TRUE),3),
-    sd.motif.dur = round(sd(motif_data$motif.dur, na.rm = TRUE),3),
-    mean.train.rate = round(mean(motif_data$train.rate, na.rm = TRUE),1),
-    sd.train.rate = round(sd(motif_data$train.rate, na.rm = TRUE),1),
+    mean.pci = round(mean(motif_data$pci, na.rm = TRUE), 2),
+    sd.pci = round(sd(motif_data$pci, na.rm = TRUE), 2),
+    mean.duty.cycle = round(mean(motif_data$duty.cycle, na.rm = TRUE), 1),
+    sd.duty.cycle = round(sd(motif_data$duty.cycle, na.rm = TRUE), 1),
+    mean.ent = round(mean(motif_data$props.ent, na.rm = TRUE), 1),
+    mean.trains.motif = round(mean(motif_data$n.trains, na.rm = TRUE), 1),
+    sd.trains.motif = round(sd(motif_data$n.trains, na.rm = TRUE), 1),
+    mean.motif.dur = round(mean(motif_data$motif.dur, na.rm = TRUE), 3),
+    sd.motif.dur = round(sd(motif_data$motif.dur, na.rm = TRUE), 3),
+    mean.train.rate = round(mean(motif_data$train.rate, na.rm = TRUE), 1),
+    sd.train.rate = round(sd(motif_data$train.rate, na.rm = TRUE), 1),
     mean.train.dur = round(mean(train_data$train.dur, na.rm = TRUE), 3),
     sd.train.dur = round(sd(train_data$train.dur, na.rm = TRUE), 3),
     mean.train.per = round(mean(train_data$train.period[train_data$train.gap <= max_train_gap], na.rm = TRUE), 3),
@@ -257,24 +285,25 @@ temporal_stats_hq <- function(wave,
     list(
       x = 0.01,
       y = 0.01,
-      xref = 'paper',
-      yref = 'paper',
-      text = paste("<b> Summary Statistics</b>",
-                   "<br> N. motifs: ", summary_data$n.motifs,
-                   "<br> Mean trains/motif: ", summary_data$mean.trains.motif,
-                   "<br> Mean motif duration: ", summary_data$mean.motif.dur, "s",
-                   "<br> Mean train duration: ", summary_data$mean.train.dur, "s",
-                   "<br> Mean train gap: ", summary_data$mean.gap.dur, "s",
-                   "<br> Mean train rate: ", summary_data$mean.train.rate, "pps",
-                   "<br> Mean duty cycle: ", summary_data$mean.duty.cycle,"%",
-                   "<br> Mean entropy: ", summary_data$mean.ent,
-                   "<br> Mean PCI: ", summary_data$mean.pci
+      xref = "paper",
+      yref = "paper",
+      text = paste(
+        "<b> Summary Statistics</b>",
+        "<br> N. motifs: ", summary_data$n.motifs,
+        "<br> Mean trains/motif: ", summary_data$mean.trains.motif,
+        "<br> Mean motif duration: ", summary_data$mean.motif.dur, "s",
+        "<br> Mean train duration: ", summary_data$mean.train.dur, "s",
+        "<br> Mean train gap: ", summary_data$mean.gap.dur, "s",
+        "<br> Mean train rate: ", summary_data$mean.train.rate, "pps",
+        "<br> Mean duty cycle: ", summary_data$mean.duty.cycle, "%",
+        "<br> Mean entropy: ", summary_data$mean.ent,
+        "<br> Mean PCI: ", summary_data$mean.pci
       ),
       showarrow = FALSE,
       font = list(size = 12),
       align = "left",
-      bgcolor = 'rgba(255, 255, 255, 0.8)',
-      bordercolor = 'rgba(0, 0, 0, 0.5)',
+      bgcolor = "rgba(255, 255, 255, 0.8)",
+      bordercolor = "rgba(0, 0, 0, 0.5)",
       borderwidth = 1,
       opacity = 1,
       visible = TRUE
@@ -335,8 +364,10 @@ temporal_stats_hq <- function(wave,
   }
 ")
 
-  return(list(plot = p, summary_data = summary_data,
-              train_data = train_data,
-              motif_data = motif_data,
-              params = params))
+  return(list(
+    plot = p, summary_data = summary_data,
+    train_data = train_data,
+    motif_data = motif_data,
+    params = params
+  ))
 }

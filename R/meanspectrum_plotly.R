@@ -16,22 +16,25 @@
 #' meanspectrum_plotly(coryphoda)
 #' }
 meanspectrum_plotly <- function(wave,
-                                background = '#274C77',
+                                background = "#274C77",
                                 foreground = "white",
                                 hover_bgcolor = "white",
                                 hover_fontcolor = "black") {
   mean_spectrum <- seewave::meanspec(wave,
-                                     f = wave@samp.rate,
-                                     wl = 2048,
-                                     ovlp = 50,
-                                     plot = FALSE)
+    f = wave@samp.rate,
+    wl = 2048,
+    ovlp = 50,
+    plot = FALSE
+  )
   mean_spectrum_df <- data.frame(
     freq = mean_spectrum[, 1],
     mean_amp = mean_spectrum[, 2]
   )
 
-  plot_ly(data = mean_spectrum_df, x = ~freq, y = ~mean_amp, type = 'scatter', mode = 'lines', line = list(color = 'white')) %>%
-    add_ribbons(ymin = 0, ymax = ~mean_amp, fillcolor = foreground, line = list(color = foreground)) %>%
+  plot_ly(data = mean_spectrum_df, x = ~freq, y = ~mean_amp,
+          type = "scatter", mode = "lines", line = list(color = "white")) %>%
+    add_ribbons(ymin = 0, ymax = ~mean_amp, fillcolor = foreground,
+                line = list(color = foreground)) %>%
     layout(
       title = "",
       xaxis = list(
@@ -56,7 +59,7 @@ meanspectrum_plotly <- function(wave,
         tickcolor = foreground,
         tickwidth = 1,
         ticklen = 5,
-        rangemode= 'tozero',
+        rangemode = "tozero",
         linecolor = foreground,
         zeroline = FALSE,
         showline = TRUE

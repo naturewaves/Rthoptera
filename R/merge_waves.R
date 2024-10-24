@@ -1,11 +1,15 @@
 #' Merge Multiple Wave Objects into One
 #'
-#' This function takes a list of `Wave` objects and merges them over time into a single `Wave` object.
-#' It concatenates the left and right channels (if stereo) and normalizes the resulting `Wave` object.
+#' This function takes a list of `Wave` objects and merges them over time
+#' into a single `Wave` object.
+#' It concatenates the left and right channels (if stereo) and normalizes the
+#' resulting `Wave` object.
 #'
-#' @param wave_list A list of `Wave` objects to be merged. The objects should be compatible in terms of sample rate and number of channels (mono or stereo).
+#' @param wave_list A list of `Wave` objects to be merged. The objects should be
+#' compatible in terms of sample rate and number of channels (mono or stereo).
 #'
-#' @return A merged `Wave` object with the same sample rate as the input objects. The channels are concatenated over time.
+#' @return A merged `Wave` object with the same sample rate as the input
+#' objects. The channels are concatenated over time.
 #' Returns `NULL` if the input list is empty.
 #' @noRd
 #'
@@ -16,7 +20,9 @@
 #' merged_wave <- merge_waves(list(wave1, wave2))
 #' play(merged_wave)
 merge_waves <- function(wave_list) {
-  if (length(wave_list) == 0) return(NULL)  # If no waves are selected, return NULL
+  if (length(wave_list) == 0) {
+    return(NULL)
+  } # If no waves are selected, return NULL
 
   # Start with the first wave in the list
   merged_wave <- wave_list[[1]]
@@ -34,9 +40,10 @@ merge_waves <- function(wave_list) {
     }
 
     merged_wave <- tuneR::normalize(merged_wave,
-                                    unit = "24",
-                                    pcm = TRUE,
-                                    center = TRUE)
+      unit = "24",
+      pcm = TRUE,
+      center = TRUE
+    )
   }
 
   return(merged_wave)

@@ -50,7 +50,6 @@ temporal_stats_lq <- function(wave,
                               max_peak_gap = 0.01,
                               detection_threshold = 0.01,
                               norm_env = TRUE) {
-
   # Store input parameters in a tibble
   params <- tibble(
     specimen_id = specimen_id,
@@ -66,10 +65,7 @@ temporal_stats_lq <- function(wave,
 
   waveDuration <- seewave::duration(wave)
 
-  # envelope_vector <- seewave::env(wave, ssmooth = ssmooth, plot = FALSE)
-
-  # warbleR's envelope is faster
-  envelope_vector <- warbleR::envelope(as.numeric(wave@left), ssmooth = ssmooth)
+  envelope_vector <- seewave::env(wave, ssmooth = ssmooth, plot = FALSE)
 
   if (norm_env) {
     envelope_vector <- (envelope_vector - min(envelope_vector)) / (max(envelope_vector) - min(envelope_vector))
@@ -89,17 +85,16 @@ temporal_stats_lq <- function(wave,
 
   # Create the time vector
   sample_rate <- wave@samp.rate
-  time_vector <- seq(0, (length(wave@left) - 1) / sample_rate, length.out = length(envelope_vector))  # In seconds
-  # time_vector_ms <- time_vector * 1000  # Convert to milliseconds
+  time_vector <- seq(0, (length(wave@left) - 1) / sample_rate, length.out = length(envelope_vector)) # In seconds
 
   peaks <- peaks[peaks <= length(time_vector)]
 
 
   # Filter out peaks below the detection threshold
-  peak_amplitudes <- envelope_vector[peaks]  # Get amplitudes of the detected peaks
-  valid_peaks <- which(peak_amplitudes >= detection_threshold)  # Only keep peaks above threshold
-  peaks <- peaks[valid_peaks]  # Update the peaks list
-  peak_amplitudes <- peak_amplitudes[valid_peaks]  # Update amplitudes list
+  peak_amplitudes <- envelope_vector[peaks] # Get amplitudes of the detected peaks
+  valid_peaks <- which(peak_amplitudes >= detection_threshold) # Only keep peaks above threshold
+  peaks <- peaks[valid_peaks] # Update the peaks list
+  peak_amplitudes <- peak_amplitudes[valid_peaks] # Update amplitudes list
 
   peak_times <- time_vector[peaks]
 
@@ -113,7 +108,7 @@ temporal_stats_lq <- function(wave,
     peak.id = integer(length(peaks)),
     peak.time = peak_times,
     peak.period = c(peak_periods, NA),
-    peak.amp = round(peak_amplitudes,4)
+    peak.amp = round(peak_amplitudes, 4)
   )
 
   trains <- list()
@@ -124,12 +119,14 @@ temporal_stats_lq <- function(wave,
   current_motif <- list(c(train_start, NULL))
 
   peak_data <- peak_data %>%
-    mutate(motif.id = ifelse(row_number() == 1, motif_id, motif.id),
-           train.id = ifelse(row_number() == 1, train_id, train.id),
-           peak.id = ifelse(row_number() == 1, 1, peak.id))
+    mutate(
+      motif.id = ifelse(row_number() == 1, motif_id, motif.id),
+      train.id = ifelse(row_number() == 1, train_id, train.id),
+      peak.id = ifelse(row_number() == 1, 1, peak.id)
+    )
 
   peak_data <- peak_data %>%
-    mutate(peak.period = round(peak.period,4))
+    mutate(peak.period = round(peak.period, 4))
 
   peak_counter <- 1
 
@@ -152,9 +149,11 @@ temporal_stats_lq <- function(wave,
     }
     peak_counter <- peak_counter + 1
     peak_data <- peak_data %>%
-      mutate(motif.id = ifelse(peak.time == peak_times[i], motif_id, motif.id),
-             train.id = ifelse(peak.time == peak_times[i], train_id, train.id),
-             peak.id = ifelse(peak.time == peak_times[i], peak_counter, peak.id))
+      mutate(
+        motif.id = ifelse(peak.time == peak_times[i], motif_id, motif.id),
+        train.id = ifelse(peak.time == peak_times[i], train_id, train.id),
+        peak.id = ifelse(peak.time == peak_times[i], peak_counter, peak.id)
+      )
   }
 
   # Round peak.time to 4 decimals
@@ -163,27 +162,28 @@ temporal_stats_lq <- function(wave,
 
   train_end <- peaks[length(peaks)]
   trains <- append(trains, list(c(train_start, train_end)))
-  current_motif[[length(current_motif)]][2] = train_end
+  current_motif[[length(current_motif)]][2] <- train_end
   motifs <- append(motifs, list(current_motif))
 
   # Create tibble for peak train measurements
   train_data <- peak_data %>%
     group_by(specimen.id, motif.id, train.id) %>%
     summarize(
-      train.start = round(min(peak.time),4),
-      train.end = round(max(peak.time),4),
-      train.dur = round((train.end - train.start),3),
+      train.start = round(min(peak.time), 4),
+      train.end = round(max(peak.time), 4),
+      train.dur = round((train.end - train.start), 3),
       n.peaks = n(),
-      mean.amp = round(mean(peak.amp),3)
+      mean.amp = round(mean(peak.amp), 3)
     ) %>%
-    mutate(peak.rate = round(((n.peaks-1) / train.dur),1)) %>%
+    mutate(peak.rate = round(((n.peaks - 1) / train.dur), 1)) %>%
     ungroup() %>%
-    mutate(train.period = ifelse(is.na(lead(motif.id)) | lead(motif.id) != motif.id, NA, lead(train.start) - train.start),
-           train.gap = round(lead(train.start) - train.end, 3)
+    mutate(
+      train.period = ifelse(is.na(lead(motif.id)) | lead(motif.id) != motif.id, NA, lead(train.start) - train.start),
+      train.gap = round(lead(train.start) - train.end, 3)
     ) %>%
     relocate(train.period, .after = train.dur) %>%
     relocate(train.gap, .after = train.period) %>%
-    mutate(train.period = round(train.period,3))
+    mutate(train.period = round(train.period, 3))
 
 
 
@@ -193,7 +193,7 @@ temporal_stats_lq <- function(wave,
 
   tem_exc_data <- peak_data %>%
     group_by(train.id) %>%
-    summarize(tem.exc = round(sum(abs(diff(peak.period.ms)), na.rm = TRUE),3))
+    summarize(tem.exc = round(sum(abs(diff(peak.period.ms)), na.rm = TRUE), 3))
 
   train_data <- train_data %>%
     left_join(tem_exc_data, by = "train.id")
@@ -203,14 +203,14 @@ temporal_stats_lq <- function(wave,
   # Create the peak_dyn_data data frame
   peak_dyn_data <- peak_data %>%
     group_by(train.id) %>%
-    mutate(peak.diff = abs(peak.amp - lag(peak.amp))) %>%  # Calculate differences between consecutive peak.amp values
-    filter(!is.na(peak.diff))  # Remove rows where peak.diff is NA (first peak in each train)
+    mutate(peak.diff = abs(peak.amp - lag(peak.amp))) %>% # Calculate differences between consecutive peak.amp values
+    filter(!is.na(peak.diff)) # Remove rows where peak.diff is NA (first peak in each train)
 
   # Sum the absolute differences for each train.id
   dyn_exc_data <- peak_dyn_data %>%
     group_by(train.id) %>%
     summarize(dyn.exc = round(sum(peak.diff, na.rm = TRUE), 3))
-    # mutate(dyn.exc = round(dyn.exc,3))
+
 
   # Add dyn.exc to train_data by matching train.id
   train_data <- train_data %>%
@@ -226,19 +226,19 @@ temporal_stats_lq <- function(wave,
     reframe(
       motif.start = min(train.start),
       motif.end = max(train.end),
-      motif.dur = round(motif.end - motif.start,4),
-      motif.period = round((lead(motif.start) - motif.start),4),
+      motif.dur = round(motif.end - motif.start, 4),
+      motif.period = round((lead(motif.start) - motif.start), 4),
       n.trains = n(),
-      duty.cycle = round((sum(train.dur) / motif.dur)*100,2),
-      tem.exc.mean = round(mean(tem.exc),3),
-      tem.exc.var = round(var(tem.exc),3),
-      tem.exc.sd = round(sd(tem.exc),3),
-      dyn.exc.mean = round(mean(dyn.exc),3),
-      dyn.exc.var = round(var(dyn.exc),3),
-      dyn.exc.sd = round(sd(dyn.exc),3)
+      duty.cycle = round((sum(train.dur) / motif.dur) * 100, 2),
+      tem.exc.mean = round(mean(tem.exc), 3),
+      tem.exc.var = round(var(tem.exc), 3),
+      tem.exc.sd = round(sd(tem.exc), 3),
+      dyn.exc.mean = round(mean(dyn.exc), 3),
+      dyn.exc.var = round(var(dyn.exc), 3),
+      dyn.exc.sd = round(sd(dyn.exc), 3)
     ) %>%
     mutate(
-      train.rate = round((n.trains-1)/motif.dur)
+      train.rate = round((n.trains - 1) / motif.dur)
     ) %>%
     relocate(train.rate, .after = n.trains) %>%
     relocate(c(tem.exc.mean:dyn.exc.sd), .after = motif.id) %>%
@@ -249,10 +249,18 @@ temporal_stats_lq <- function(wave,
   motif_data <- motif_data %>%
     mutate(
       proportions = map(motif.id, function(eid) {
-        train_durations <- train_data %>% filter(motif.id == eid) %>% pull(train.dur)
-        gap_durations <- train_data %>% filter(motif.id == eid) %>% pull(train.gap)
-        motif_start <- motif_data %>% filter(motif.id == eid) %>% pull(motif.start)
-        motif_end <- motif_data %>% filter(motif.id == eid) %>% pull(motif.end)
+        train_durations <- train_data %>%
+          filter(motif.id == eid) %>%
+          pull(train.dur)
+        gap_durations <- train_data %>%
+          filter(motif.id == eid) %>%
+          pull(train.gap)
+        motif_start <- motif_data %>%
+          filter(motif.id == eid) %>%
+          pull(motif.start)
+        motif_end <- motif_data %>%
+          filter(motif.id == eid) %>%
+          pull(motif.end)
         motif_duration <- motif_data$motif.dur[eid]
         proportions <- numeric(0)
 
@@ -262,8 +270,14 @@ temporal_stats_lq <- function(wave,
 
           # Check if the gap is not NA and falls within the motif start and end
           if (!is.na(gap_durations[i])) {
-            gap_start <- train_data %>% filter(motif.id == eid) %>% pull(train.end) %>% nth(i)
-            gap_end <- train_data %>% filter(motif.id == eid) %>% pull(train.start) %>% nth(i + 1)
+            gap_start <- train_data %>%
+              filter(motif.id == eid) %>%
+              pull(train.end) %>%
+              nth(i)
+            gap_end <- train_data %>%
+              filter(motif.id == eid) %>%
+              pull(train.start) %>%
+              nth(i + 1)
 
             # Check if gap_start, gap_end, motif_start, and motif_end are not NA
             if (!is.na(gap_start) && !is.na(gap_end) && !is.na(motif_start) && !is.na(motif_end)) {
@@ -278,34 +292,35 @@ temporal_stats_lq <- function(wave,
       })
     ) %>%
     rowwise() %>%
-    mutate(specimen.id = base::unique(train_data$specimen.id),
-           props.sd = round(sd(unlist(proportions)), 3),
-           props.ent = round(-sum(unlist(proportions)[unlist(proportions) > 0] * log(unlist(proportions)[unlist(proportions) > 0])), 3),
-           props.mean = round(mean(unlist(proportions)), 3),
-           props.cv = round((props.sd / props.mean), 3),
-           props.diff.sd = round(sd(diff(unlist(proportions))), 3),
-           pci = round((props.ent * props.cv + sqrt(n.trains)) /  (sqrt(motif.dur) + 1), 3)
+    mutate(
+      specimen.id = base::unique(train_data$specimen.id),
+      props.sd = round(sd(unlist(proportions)), 3),
+      props.ent = round(-sum(unlist(proportions)[unlist(proportions) > 0] * log(unlist(proportions)[unlist(proportions) > 0])), 3),
+      props.mean = round(mean(unlist(proportions)), 3),
+      props.cv = round((props.sd / props.mean), 3),
+      props.diff.sd = round(sd(diff(unlist(proportions))), 3),
+      pci = round((props.ent * props.cv + sqrt(n.trains)) / (sqrt(motif.dur) + 1), 3)
     ) %>%
     ungroup() %>%
     select(specimen.id, motif.id, pci, everything(), -proportions, proportions)
 
   summary_data <- tibble(
-    mean.pci = round(mean(motif_data$pci),3),
-    sd.pci = round(sd(motif_data$pci, na.rm = TRUE),3),
-    mean.tem.exc = round(mean(train_data$tem.exc),3),
-    sd.tem.exc = round(sd(train_data$tem.exc, na.rm = TRUE),3),
-    mean.dyn.exc = round(mean(train_data$dyn.exc),3),
-    sd.dyn.exc = round(sd(train_data$dyn.exc, na.rm = TRUE),3),
-    mean.motif.dur = round(mean(motif_data$motif.dur),3),
-    sd.motif.dur = round(sd(motif_data$motif.dur, na.rm = TRUE),3),
-    mean.n.trains = round(mean(motif_data$n.trains),3),
-    sd.n.trains = round(sd(motif_data$n.trains, na.rm = TRUE),3),
-    mean.train.rate = round(mean(motif_data$train.rate),3),
-    sd.train.rate = round(sd(motif_data$train.rate, na.rm = TRUE),3),
-    mean.duty.cycle = round(mean(motif_data$duty.cycle),3),
-    sd.duty.cycle = round(sd(motif_data$duty.cycle, na.rm = TRUE),3),
-    mean.entropy = round(mean(motif_data$props.ent),3),
-    sd.entropy = round(sd(motif_data$props.ent, na.rm = TRUE),3)
+    mean.pci = round(mean(motif_data$pci), 3),
+    sd.pci = round(sd(motif_data$pci, na.rm = TRUE), 3),
+    mean.tem.exc = round(mean(train_data$tem.exc), 3),
+    sd.tem.exc = round(sd(train_data$tem.exc, na.rm = TRUE), 3),
+    mean.dyn.exc = round(mean(train_data$dyn.exc), 3),
+    sd.dyn.exc = round(sd(train_data$dyn.exc, na.rm = TRUE), 3),
+    mean.motif.dur = round(mean(motif_data$motif.dur), 3),
+    sd.motif.dur = round(sd(motif_data$motif.dur, na.rm = TRUE), 3),
+    mean.n.trains = round(mean(motif_data$n.trains), 3),
+    sd.n.trains = round(sd(motif_data$n.trains, na.rm = TRUE), 3),
+    mean.train.rate = round(mean(motif_data$train.rate), 3),
+    sd.train.rate = round(sd(motif_data$train.rate, na.rm = TRUE), 3),
+    mean.duty.cycle = round(mean(motif_data$duty.cycle), 3),
+    sd.duty.cycle = round(sd(motif_data$duty.cycle, na.rm = TRUE), 3),
+    mean.entropy = round(mean(motif_data$props.ent), 3),
+    sd.entropy = round(sd(motif_data$props.ent, na.rm = TRUE), 3)
   )
 
   # Prepare annotations for the plot
@@ -313,24 +328,25 @@ temporal_stats_lq <- function(wave,
     list(
       x = 0.01,
       y = 0.99,
-      xref = 'paper',
-      yref = 'paper',
-      text = paste("<b> Summary Statistics</b>",
-                   "<br> N. motifs:", length(motifs),
-                   "<br> Motif Dur.: ", round(mean(motif_data$motif.dur),3), "s",
-                   "<br> Duty Cycle: ", round(mean(motif_data$duty.cycle),1), "%",
-                   "<br> Trains/Motif:", round(mean(motif_data$n.trains),1),
-                   "<br> Train Rate: " , round(mean(motif_data$train.rate)), "tps",
-                   "<br> Train Dur.: ", round(mean(train_data$train.dur, na.rm = TRUE)), "ms",
-                   "<br> Peaks/Train: ", round(mean(train_data$n.peaks, na.rm = TRUE)),
-                   "<br> Peak Rate: ", round(mean(train_data$peak.rate, na.rm = TRUE)), "pps",
-                   "<br> PCI: ", mean(motif_data$pci, 3)),
-
+      xref = "paper",
+      yref = "paper",
+      text = paste(
+        "<b> Summary Statistics</b>",
+        "<br> N. motifs:", length(motifs),
+        "<br> Motif Dur.: ", round(mean(motif_data$motif.dur), 3), "s",
+        "<br> Duty Cycle: ", round(mean(motif_data$duty.cycle), 1), "%",
+        "<br> Trains/Motif:", round(mean(motif_data$n.trains), 1),
+        "<br> Train Rate: ", round(mean(motif_data$train.rate)), "tps",
+        "<br> Train Dur.: ", round(mean(train_data$train.dur, na.rm = TRUE)), "ms",
+        "<br> Peaks/Train: ", round(mean(train_data$n.peaks, na.rm = TRUE)),
+        "<br> Peak Rate: ", round(mean(train_data$peak.rate, na.rm = TRUE)), "pps",
+        "<br> PCI: ", mean(motif_data$pci, 3)
+      ),
       showarrow = FALSE,
       font = list(size = 12),
       align = "left",
-      bgcolor = 'rgba(255, 255, 255, 0.5)',
-      bordercolor = 'rgba(0, 0, 0, 0.5)',
+      bgcolor = "rgba(255, 255, 255, 0.5)",
+      bordercolor = "rgba(0, 0, 0, 0.5)",
       borderwidth = 1,
       opacity = 1,
       visible = TRUE
@@ -339,24 +355,34 @@ temporal_stats_lq <- function(wave,
 
   # Start the interactive plot
   p <- plot_ly() %>%
-    add_lines(x = ~time_vector, y = ~envelope_vector, name = "Summary Statistics",
-              hoverinfo = "none",  line = list(color = 'rgba(20, 20, 20, 0)',
-                                               width = 2), legendgroup = "Summary Stats") %>%
-    add_lines(x = ~time_vector, y = ~envelope_vector, name = "Envelope",
-              hoverinfo = "none",  line = list(color = 'rgb(20, 20, 20)',
-                                               width = 2,
-                                               shape = "spline"))
+    add_lines(
+      x = ~time_vector, y = ~envelope_vector, name = "Summary Statistics",
+      hoverinfo = "none", line = list(
+        color = "rgba(20, 20, 20, 0)",
+        width = 2
+      ), legendgroup = "Summary Stats"
+    ) %>%
+    add_lines(
+      x = ~time_vector, y = ~envelope_vector, name = "Envelope",
+      hoverinfo = "none", line = list(
+        color = "rgb(20, 20, 20)",
+        width = 2,
+        shape = "spline"
+      )
+    )
 
   # Add train lines to the plot
   for (i in seq_along(trains)) {
-    train_start_time <- train_data$train.start[i] #time_vector[trains[[i]][1]]
-    train_end_time <- train_data$train.end[i] # time_vector[trains[[i]][2]]
+    train_start_time <- train_data$train.start[i]
+    train_end_time <- train_data$train.end[i]
     show_legend <- if (i == 1) TRUE else FALSE
     p <- p %>%
-      add_lines(x = c(train_start_time, train_end_time), y = c(0.98, 0.98),
-                name = "Trains", line = list(color = "#009E73", width = 6),
-                showlegend = show_legend, legendgroup = "Trains",
-                hoverinfo = "x", text = paste("Time:", round(c(train_start_time, train_end_time), 2)))
+      add_lines(
+        x = c(train_start_time, train_end_time), y = c(0.98, 0.98),
+        name = "Trains", line = list(color = "#009E73", width = 6),
+        showlegend = show_legend, legendgroup = "Trains",
+        hoverinfo = "x", text = paste("Time:", round(c(train_start_time, train_end_time), 2))
+      )
   }
 
   # Add motif lines to the plot using motif_data
@@ -365,22 +391,25 @@ temporal_stats_lq <- function(wave,
     motif_end <- motif_data$motif.end[i]
     show_legend <- if (i == 1) TRUE else FALSE
     p <- p %>%
-      add_lines(x = c(motif_start, motif_end), y = c(1, 1),
-                name = "Motifs", line = list(color = "#0072B2", width = 6),
-                showlegend = show_legend, legendgroup = "motifs",
-                hoverinfo = "x", text = paste("Time:", round(c(motif_start, motif_end), 2)))
+      add_lines(
+        x = c(motif_start, motif_end), y = c(1, 1),
+        name = "Motifs", line = list(color = "#0072B2", width = 6),
+        showlegend = show_legend, legendgroup = "motifs",
+        hoverinfo = "x", text = paste("Time:", round(c(motif_start, motif_end), 2))
+      )
   }
 
   # Add peak markers
   p <- p %>%
-    add_markers(x = ~time_vector[peaks], y = ~envelope_vector[peaks],
-                name = "Peaks", marker = list(color = "#D55E00" , size = 8),
-                hoverinfo = "none")
+    add_markers(
+      x = ~ time_vector[peaks], y = ~ envelope_vector[peaks],
+      name = "Peaks", marker = list(color = "#D55E00", size = 8),
+      hoverinfo = "none"
+    )
 
   p <- p %>%
     layout(
       annotations = annotations,
-      # title = summary_data$specimen.id,
       xaxis = list(
         title = list(text = "Time (s)", standoff = 10),
         ticklen = 5,
@@ -388,17 +417,18 @@ temporal_stats_lq <- function(wave,
         zeroline = FALSE,
         showline = TRUE
       ),
-      yaxis = list(title = "Amplitude",
-                   rangemode = "tozero",
-                   ticklen = 5,
-                   showline = TRUE),
+      yaxis = list(
+        title = "Amplitude",
+        rangemode = "tozero",
+        ticklen = 5,
+        showline = TRUE
+      ),
       legend = list(
         orientation = "h",
         x = 0.5,
         y = 1.05,
         xanchor = "center",
         bgcolor = "rgba(0, 0, 0, 0)"
-
       ),
       margin = list(
         l = 70,
@@ -431,10 +461,12 @@ temporal_stats_lq <- function(wave,
 
   p
 
-  return(list(plot = p,
-              summary_data = summary_data,
-              motif_data = motif_data,
-              train_data = train_data,
-              peak_data = peak_data,
-              params = params))
+  return(list(
+    plot = p,
+    summary_data = summary_data,
+    motif_data = motif_data,
+    train_data = train_data,
+    peak_data = peak_data,
+    params = params
+  ))
 }

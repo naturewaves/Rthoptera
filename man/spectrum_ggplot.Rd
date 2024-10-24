@@ -93,7 +93,7 @@ spectrum_ggplot(
 \item{show.lines}{Logical. If `TRUE`, displays lines for the carrier frequency and bandwidth.}
 }
 \value{
-A list containing the `ggplot` object for the power spectrum plot.
+A `ggplot` object for the power spectrum plot.
 }
 \description{
 This function generates a power spectrum plot using `ggplot2` based on the provided waveform object (`wave`). The plot can display normalized amplitude values on both dB and linear scales, and includes options for customizing the display of the carrier frequency, bandwidth, and other spectral details.
@@ -101,5 +101,5 @@ This function generates a power spectrum plot using `ggplot2` based on the provi
 \examples{
 \dontrun{
 spectrum_ggplot(coryphoda)
- }
+}
 }
