@@ -1,0 +1,15 @@
+^renv$
+^renv\.lock$
+^.*\.Rproj$
+^\.github$
+^Meta$
+^README\.Rmd$
+^\.Rproj\.user$
+^\.pre-commit-config\.yaml$
+^doc$
+^docs$
+^\.lintr$
+^\.RData$
+^\.Rhistory$
+^\.git$
+^Rcheck$

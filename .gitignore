@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.github
+inst/doc
+/doc/
+/docs/
+/Meta/
+.Rcheck/
+tests/testthat/Rplots.pdf
