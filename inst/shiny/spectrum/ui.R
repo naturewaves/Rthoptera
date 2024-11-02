@@ -1,3 +1,5 @@
+jscode <- "shinyjs.closeWindow = function() { window.close(); }"
+
 ui <- function(request){
   shiny::tagList(
     shiny::h1("Spectrum", style = "font-size: 28px; margin-left: 15px;"),
