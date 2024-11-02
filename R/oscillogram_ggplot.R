@@ -3,6 +3,10 @@
 #' @param wave A Wave object
 #' @param y_title Character. A title for the Y-axis.
 #' @param x_title Character. A title for the X-axis.
+#' @param save Logical. If TRUE, the plot is saved in the working directory.
+#' Defaults to FALSE.
+#' @param file_name Character. Name for the PNG file to be saved. A suffix ("_oscillogram")
+#' is added by default.
 #'
 #' @return An oscillogram plot. This plot is meant to be used with other
 #' plots with matching the X-axis, therefore it lacks its labels.
@@ -14,14 +18,16 @@
 #' }
 oscillogram_ggplot <- function(wave,
                                y_title = "Relative Amplitude",
-                               x_title = "") {
+                               x_title = "",
+                               save = TRUE,
+                               file_name = "") {
   oscillo_df <- oscillo_df(wave)
 
   oscillo_plot <- ggplot(oscillo_df, aes(x = time, y = amplitude)) +
     geom_line(color = "black") +
     theme_minimal(base_size = 15) +
     scale_x_continuous(expand = c(0, 0)) +
-    scale_y_continuous(n.breaks = 3, expand = c(0.03, 0.03)) +
+    scale_y_continuous(n.breaks = 3, expand = c(0.1, 0.1)) +
     theme(
       plot.margin = margin(t = 0, r = 0, b = 0, l = 10, unit = "pt"),
       panel.grid = element_blank(),
@@ -37,5 +43,14 @@ oscillogram_ggplot <- function(wave,
     ) +
     labs(y = y_title, x = x_title)
 
+  if (save) {
+
+    ggsave(paste(file_name, "oscillogram.png", sep = "_"),
+           bg = "white", width = 2000, height = 800,
+           units = "px", dpi = 300)
+
+  }
+
   return(oscillo_plot)
+
 }
