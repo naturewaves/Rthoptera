@@ -49,7 +49,6 @@
 #' @return A list including: a Plotly object, and a summary table (data frame).
 #' @export
 #' @importFrom seewave meanspec spec sh sfm
-#' @importFrom magrittr %>%
 #' @importFrom plotly plot_ly add_ribbons layout add_segments add_annotations
 #' @importFrom scales breaks_pretty
 #' @importFrom dplyr mutate
@@ -200,7 +199,7 @@ spectrum_plotly <- function(wave,
     high.f = round(high_freq, 2)
   )
 
-  summary_df <- summary_df %>%
+  summary_df <- summary_df |>
     mutate(bandw = round(high.f - low.f, 2))
 
 
@@ -210,7 +209,7 @@ spectrum_plotly <- function(wave,
 
 
   if (db_shade) {
-    spectrum_plot <- plot_ly(x = ~meanspec_data$freq) %>%
+    spectrum_plot <- plot_ly(x = ~meanspec_data$freq) |>
       add_ribbons(ymin = 0, ymax = ~meanspec_data$norm_amp_dB,
                   fillcolor = color_db,
                   line = list(color = color_db),
@@ -218,7 +217,7 @@ spectrum_plotly <- function(wave,
                   name = "Scaled dB",
                   hoverinfo = "x+y",
                   hovertemplate = "<b>Frequency:</b> %{x:.1f}
-                  kHz<br><b>Amplitude:</b>%{y:.3f}<br>") %>%
+                  kHz<br><b>Amplitude:</b>%{y:.3f}<br>") |>
       add_ribbons(ymin = 0, ymax = ~meanspec_data$mean_amp_linear,
                   fillcolor = color_linear,
                   line = list(color = color_linear),
@@ -226,7 +225,7 @@ spectrum_plotly <- function(wave,
                   name = "Scaled Linear",
                   hoverinfo = "x+y",
                   hovertemplate = "<b>Frequency:</b> %{x:.1f}
-                  kHz<br><b>Amplitude:</b>%{y:.1f}<br>") %>%
+                  kHz<br><b>Amplitude:</b>%{y:.1f}<br>") |>
       layout(
         title = list(text = plot_title),
         xaxis = list(title = if (show_x_title) "Frequency (kHz)" else "",
@@ -240,12 +239,12 @@ spectrum_plotly <- function(wave,
       )
 
   } else {
-    spectrum_plot <- plot_ly(x = ~meanspec_data$freq) %>%
+    spectrum_plot <- plot_ly(x = ~meanspec_data$freq) |>
       add_ribbons(ymin = 0, ymax = ~meanspec_data$mean_amp_linear,
                   fillcolor = color_linear,
                   line = list(color = color_linear),
                   opacity = 0.9,
-                  name = "Linear") %>%
+                  name = "Linear") |>
       layout(
         title = list(text = plot_title),
         xaxis = list(title = if (show_x_title) "Frequency (kHz)" else "",                     range = c(fmin, fmax),
@@ -260,25 +259,25 @@ spectrum_plotly <- function(wave,
   }
 
   if (show_lines) {
-    spectrum_plot <- spectrum_plot %>%
+    spectrum_plot <- spectrum_plot |>
       add_segments(x = carrier_freq, xend = carrier_freq, y = 0, yend = 1,
                    line = list(color = color_carrier, width = linewidth),
                    name = "Carrier/Peak")
 
     if (db_shade) {
-      spectrum_plot <- spectrum_plot %>%
+      spectrum_plot <- spectrum_plot |>
         add_segments(x = low_freq, xend = high_freq, y = minus20dB, yend = minus20dB,
                      line = list(color = color_threshold, dash = "dash", width = linewidth),
                      name = "dB Threshold")
     }
 
-    spectrum_plot <- spectrum_plot %>%
+    spectrum_plot <- spectrum_plot |>
       add_segments(x = low_freq, xend = high_freq, y = 0.1, yend = 0.1,
                    line = list(color = color_threshold, dash = "dash", width = linewidth),
-                   name = "Linear Threshold") %>%
+                   name = "Linear Threshold") |>
       add_segments(x = low_freq, xend = low_freq, y = 0, yend = 1,
                    line = list(color = color_bandwidth, width = linewidth),
-                   name = "Low Frequency") %>%
+                   name = "Low Frequency") |>
       add_segments(x = high_freq, xend = high_freq, y = 0, yend = 1,
                    line = list(color = color_bandwidth, width = linewidth),
                    name = "High Frequency")
@@ -295,7 +294,7 @@ spectrum_plotly <- function(wave,
                            "\nTotal Bandwidth: ", total_bandwidth,
                            "\nIndex Limits: ", limit_indices)
 
-    spectrum_plot <- spectrum_plot %>%
+    spectrum_plot <- spectrum_plot |>
       add_annotations(
         x = 1, y = 1, text = params_text1, xref = "paper", yref = "paper",
         showarrow = FALSE, xanchor = "right", yanchor = "top", font = list(size = 12),
@@ -318,7 +317,7 @@ spectrum_plotly <- function(wave,
 
       )
 
-    spectrum_plot <- spectrum_plot %>%
+    spectrum_plot <- spectrum_plot |>
       add_annotations(
         x = 0.01, y = 1, text = measurements, xref = "paper", yref = "paper",
         showarrow = FALSE, xanchor = "left", yanchor = "top", font = list(size = 12),

@@ -11,7 +11,6 @@
 #'
 #' @return A Plotly object representing the interactive oscillogram.
 #' @export
-#' @importFrom magrittr %>%
 #' @importFrom plotly plot_ly
 #' @examples
 #' \dontrun{
@@ -29,7 +28,7 @@ oscillogram_plotly <- function(wave, title = "", line_color = "black") {
       shape = "spline",
       color = line_color
     )
-  ) %>%
+  ) |>
     layout(
       title = title,
       xaxis = list(title = "Time"),

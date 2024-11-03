@@ -79,7 +79,7 @@ spectrogram_plotly <- function(wave,
       "Freq: %{y:.1f} kHz<extra></extra>"
     ),
     showscale = FALSE
-  ) %>%
+  ) |>
     layout(
       xaxis = list(
         title = "Time (s)",
@@ -102,7 +102,7 @@ spectrogram_plotly <- function(wave,
       margin = list(t = 25, r = 15, b = 55, l = 25),
       title = "",
       showlegend = FALSE
-    ) %>%
+    ) |>
     style(
       hoverlabel = list(
         bgcolor = hover_bgcolor,

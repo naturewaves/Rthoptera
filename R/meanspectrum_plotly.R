@@ -32,9 +32,9 @@ meanspectrum_plotly <- function(wave,
   )
 
   plot_ly(data = mean_spectrum_df, x = ~freq, y = ~mean_amp,
-          type = "scatter", mode = "lines", line = list(color = "white")) %>%
+          type = "scatter", mode = "lines", line = list(color = "white")) |>
     add_ribbons(ymin = 0, ymax = ~mean_amp, fillcolor = foreground,
-                line = list(color = foreground)) %>%
+                line = list(color = foreground)) |>
     layout(
       title = "",
       xaxis = list(
@@ -88,8 +88,8 @@ meanspectrum_plotly <- function(wave,
         t = 50
       ),
       showlegend = FALSE
-    ) %>%
-    config(displayModeBar = TRUE) %>%
+    ) |>
+    config(displayModeBar = TRUE) |>
     style(
       hovertemplate = paste0(
         "Frequency: %{x:.1f} kHz<br>",

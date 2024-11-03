@@ -19,7 +19,6 @@ Imports:
   patchwork,
   plotly,
   tuneR,
-  magrittr,
   purrr,
   scales,
   tibble,

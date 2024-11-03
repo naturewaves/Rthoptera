@@ -5,7 +5,6 @@
 #' @return A tibble data frame.
 #' @export
 #'
-#' @importFrom magrittr %>%
 #' @importFrom tuneR normalize
 #' @importFrom seewave rmoffset
 #' @importFrom tibble tibble
@@ -30,10 +29,10 @@ wave_df <- function(wave, norm = TRUE){
   amplitude <- wave@left
 
   tbl <- tibble(amplitude = amplitude)
-  tbl <- tbl %>%
+  tbl <- tbl |>
     mutate(index = row_number(),
            time = (index-1 ) / srate)
-  tbl <- tbl %>%
+  tbl <- tbl |>
     select(c(amplitude, time))
 
   return(tbl)

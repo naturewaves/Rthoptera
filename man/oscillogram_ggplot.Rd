@@ -4,7 +4,13 @@
 \alias{oscillogram_ggplot}
 \title{Oscillogram with ggplot2}
 \usage{
-oscillogram_ggplot(wave, y_title = "Relative Amplitude", x_title = "")
+oscillogram_ggplot(
+  wave,
+  y_title = "Relative Amplitude",
+  x_title = "",
+  save = TRUE,
+  file_name = ""
+)
 }
 \arguments{
 \item{wave}{A Wave object}
@@ -12,6 +18,12 @@ oscillogram_ggplot(wave, y_title = "Relative Amplitude", x_title = "")
 \item{y_title}{Character. A title for the Y-axis.}
 
 \item{x_title}{Character. A title for the X-axis.}
+
+\item{save}{Logical. If TRUE, the plot is saved in the working directory.
+Defaults to FALSE.}
+
+\item{file_name}{Character. Name for the PNG file to be saved. A suffix ("_oscillogram")
+is added by default.}
 }
 \value{
 An oscillogram plot. This plot is meant to be used with other

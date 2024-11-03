@@ -203,7 +203,7 @@ spectral_stats <- function(wave,
     "<br> HPF:", hpf, "kHz"
   )
 
-  p <- p %>%
+  p <- p |>
     layout(
       yaxis = list(range = ifelse(db, c(-50, 0), c(0, 1))),
       margin = list(l = 50, r = 50, t = 100, b = 50),
@@ -226,7 +226,7 @@ spectral_stats <- function(wave,
     )
 
   if (lines) {
-    p <- p %>%
+    p <- p |>
       add_trace(
         x = c(minfreq, minfreq), y = c(min(spec_df$Amplitude), A_ref),
         type = "scatter", mode = "lines",
@@ -234,7 +234,7 @@ spectral_stats <- function(wave,
         name = "Min Frequency",
         hovertemplate = paste("MinFreq: %{x} kHz <extra></extra>"),
         showlegend = TRUE
-      ) %>%
+      ) |>
       add_trace(
         x = c(peak_frequency, peak_frequency), y = c(
           min(spec_df$Amplitude),
@@ -245,7 +245,7 @@ spectral_stats <- function(wave,
         name = "Peak Frequency",
         hovertemplate = paste("PeakFreq: %{x} kHz <extra></extra>"),
         showlegend = TRUE
-      ) %>%
+      ) |>
       add_trace(
         x = c(maxfreq, maxfreq), y = c(min(spec_df$Amplitude), A_ref),
         type = "scatter", mode = "lines",
@@ -253,7 +253,7 @@ spectral_stats <- function(wave,
         name = "Max Frequency",
         hovertemplate = paste("MaxFreq: %{x} kHz <extra></extra>"),
         showlegend = TRUE
-      ) %>%
+      ) |>
       add_trace(
         x = spec_df$Frequency, y = rep(A_ref, nrow(spec_df)),
         type = "scatter", mode = "lines",
@@ -267,7 +267,7 @@ spectral_stats <- function(wave,
       )
   }
 
-  p <- p %>% add_markers(
+  p <- p |> add_markers(
     x = peak_frequency, y = max(spec_df$Amplitude), type = "scatter",
     mode = "markers",
     marker = list(symbol = "triangle-down", color = "#EE0000", size = 10),

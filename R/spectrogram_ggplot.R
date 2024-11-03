@@ -67,7 +67,7 @@ spectrogram_ggplot <- function(wave,
 
   dyn <- as.numeric(cutoff)
 
-  spect_plot <- spect_df %>%
+  spect_plot <- spect_df |>
     ggplot(aes(time, freq)) +
     geom_raster(aes(fill = amp_cutoff)) +
     scale_fill_gradient(

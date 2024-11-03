@@ -26,7 +26,7 @@ spectro_df <- function(wave, cutoff = -35, overlap = 95, zeropad = 200) {
     wl <- wl + 1
   }
 
-  spect <- wave %>%
+  spect <- wave |>
     seewave::spectro(
       wl = wl,
       ovlp = overlap,
