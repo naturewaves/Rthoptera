@@ -4,7 +4,7 @@ author: "anonymous"
 date: "2024-10-02"
 output: html_document 
 vignette: >
-  %\VignetteIndexEntry{Introduction to Rthoptera}
+  %\VignetteIndexEntry{Preprocessing audio}
   %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
 ---
