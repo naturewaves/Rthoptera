@@ -4,8 +4,8 @@ server <- function(input, output, session) {
   wave_df <- function(wave) {
     srate <- wave@samp.rate
     amplitude <- wave@left
-    tbl <- tibble::tibble(amplitude = amplitude) %>%
-      dplyr::mutate(time = (dplyr::row_number() - 1) / srate) %>%
+    tbl <- tibble::tibble(amplitude = amplitude) |>
+      dplyr::mutate(time = (dplyr::row_number() - 1) / srate) |>
       dplyr::mutate(amplitude = 2 * (amplitude - min(amplitude)) / (max(amplitude) - min(amplitude)) - 1)
     return(tbl)
   }
@@ -31,7 +31,7 @@ server <- function(input, output, session) {
     if (!is.null(colors) && length(brush_data) > 0) {
       for (i in seq_along(brush_data)) {
         range <- brush_data[[i]]
-        selected_data <- tbl %>% dplyr::filter(time >= range[1] & time <= range[2])
+        selected_data <- tbl |> dplyr::filter(time >= range[1] & time <= range[2])
         p <- p + ggplot2::geom_line(data = selected_data, ggplot2::aes(x = time, y = amplitude), color = colors[i], linewidth = 0.5)
       }
     }
