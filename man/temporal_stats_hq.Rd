@@ -13,7 +13,7 @@ temporal_stats_hq(
   lower_detection_threshold = 0.1,
   min_train_dur = 0.002,
   max_train_gap = 0.08,
-  norm.env = TRUE
+  norm_env = TRUE
 )
 }
 \arguments{
@@ -39,7 +39,7 @@ of a valid amplitude train (default: 0.002).}
 \item{max_train_gap}{A numeric value representing the maximum gap (in seconds)
 allowed between two trains before considering them part of different motifs (default: 0.08).}
 
-\item{norm.env}{A logical indicating whether to normalize the envelope (default: TRUE).}
+\item{norm_env}{A logical indicating whether to normalize the envelope (default: TRUE).}
 }
 \value{
 A list with the following components:

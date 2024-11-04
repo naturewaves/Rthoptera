@@ -21,7 +21,7 @@
 #' of a valid amplitude train (default: 0.002).
 #' @param max_train_gap A numeric value representing the maximum gap (in seconds)
 #' allowed between two trains before considering them part of different motifs (default: 0.08).
-#' @param norm.env A logical indicating whether to normalize the envelope (default: TRUE).
+#' @param norm_env A logical indicating whether to normalize the envelope (default: TRUE).
 #'
 #' @return A list with the following components:
 #' \item{plot}{An interactive `plotly` plot showing the signal envelope,
@@ -52,7 +52,7 @@ temporal_stats_hq <- function(wave,
                               lower_detection_threshold = 0.1,
                               min_train_dur = 0.002,
                               max_train_gap = 0.08,
-                              norm.env = TRUE) {
+                              norm_env = TRUE) {
   # Store input parameters in a tibble
   params <- tibble(
     specimen_id = specimen_id,
@@ -61,7 +61,7 @@ temporal_stats_hq <- function(wave,
     max_train_gap = max_train_gap,
     upper_detection_threshold = upper_detection_threshold,
     lower_detection_threshold = lower_detection_threshold,
-    norm.env = norm.env
+    norm_env = norm_env
   )
 
 
@@ -72,11 +72,14 @@ temporal_stats_hq <- function(wave,
   msmooth_vec <- c(msmooth_window, msmooth_overlap)
 
   # Get envelope of the wave
-  envelope_vector <- seewave::env(wave, msmooth = msmooth_vec, plot = FALSE)
+  if (norm_env) {
+    envelope_vector <- seewave::env(wave, msmooth = msmooth_vec,
+                                    norm = TRUE, plot = FALSE)
+    } else {
 
-  if (norm.env) {
-    envelope_vector <- (envelope_vector - min(envelope_vector)) / (max(envelope_vector) - min(envelope_vector))
-  }
+    envelope_vector <- seewave::env(wave, msmooth = msmooth_vec, plot = FALSE)
+
+    }
 
   # Determine threshold based on maximum amplitude
   max_amplitude <- max(envelope_vector)
