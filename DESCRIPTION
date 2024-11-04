@@ -1,9 +1,9 @@
 Package: Rthoptera
 Type: Package
 Title: Standardized Insect Bioacoustics
-Version: 0.1.1
-Depends: R (>= 3.5.0)
-Author: Francisco Rivas [aut, cre], Cesare Brizio [ctb]
+Version: 0.1.2
+Depends: R (>= 3.5.0), shinyBS
+Author: Francisco Rivas [aut, cre], Cesare Brizio [ctb], Bryan Pijanowski [ctb]
 Maintainer: Francisco Rivas <fcorivasf@gmail.com>
 Description: The package provides functions (each one with a Shiny App version) to analyze insect acoustic signals, including preprocessing (e.g., high-pass filter, remove DC offset, down-sampling, etc.). Analytical functions allow the user to automatically extract relevant acoustic features in both spectral and temporal dimensions. 
 License: CC BY-NC 4.0
@@ -28,7 +28,6 @@ Imports:
   viridis,
   reshape2
 Suggests:
-  shinyBS,
   mockery,
   shinyjs,
   shinycssloaders,
