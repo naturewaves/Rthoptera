@@ -11,9 +11,7 @@
 #'
 #' @param wave A `Wave` object from the `tuneR` package representing the acoustic signal.
 #' @param specimen_id A character string representing the identifier for the specimen (or recording) being analyzed.
-#' @param msmooth_window Numeric value representing the smoothing window size (in samples) for the amplitude envelope.
-#' @param msmooth_overlap An integer specifying the overlap (in milliseconds) for
-#' smoothing the envelope (default: 50).
+#' @param ssmooth Numeric value representing the smoothing window size (in samples) for the amplitude envelope.
 #' @param peakfinder_ws Numeric value specifying the window size (in samples) for the peak detection algorithm.
 #' @param peakfinder_threshold Numeric value specifying the amplitude threshold for peak detection, as a proportion of the maximum amplitude.
 #' @param max_train_gap Numeric value representing the maximum allowed gap (in seconds) between peaks to consider them part of the same train.
@@ -45,8 +43,7 @@
 #' @importFrom htmlwidgets onRender
 temporal_stats_lq <- function(wave,
                               specimen_id = "",
-                              msmooth_window = 100,
-                              msmooth_overlap = 50,
+                              ssmooth = 100,
                               peakfinder_ws = 50,
                               peakfinder_threshold = 0.005,
                               max_train_gap = 0.5,
@@ -56,9 +53,7 @@ temporal_stats_lq <- function(wave,
   # Store input parameters in a tibble
   params <- tibble(
     specimen_id = specimen_id,
-    # ssmooth = ssmooth,
-    msmooth_window = msmooth_window,
-    msmooth_overlap = msmooth_overlap,
+    ssmooth = ssmooth,
     peakfinder_ws = peakfinder_ws,
     peakfinder_threshold = peakfinder_threshold,
     max_train_gap = max_train_gap,
@@ -70,13 +65,12 @@ temporal_stats_lq <- function(wave,
 
   waveDuration <- seewave::duration(wave)
 
-  msmooth_vec <- c(msmooth_window, msmooth_overlap)
 
   if (norm_env) {
-    envelope_vector <- seewave::env(wave, msmooth = msmooth_vec,
+    envelope_vector <- seewave::env(wave, ssmooth = ssmooth,
                                     norm = TRUE, plot = FALSE)
   } else {
-    envelope_vector <- seewave::env(wave, msmooth = msmooth_vec, plot = FALSE)
+    envelope_vector <- seewave::env(wave, ssmooth = ssmooth, plot = FALSE)
   }
 
   max_amplitude <- max(envelope_vector)

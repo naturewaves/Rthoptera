@@ -236,46 +236,23 @@ ui <- function(request) {
                                     shiny::div(style = "display: flex; align-items: center;",
                                                shiny::tagList(
                                                  shiny::tags$label("Smoothing"),
-                                                 shinyBS::bsButton("msmooth_window_info", label = "", lib = "font-awesome",
+                                                 shinyBS::bsButton("ssmooth_window_info", label = "", lib = "font-awesome",
                                                                    icon = shiny::icon("circle-info"), style = "default",
                                                                    size = "extra-small", class = "btn-info")
                                                )
                                     ),
-                                    shiny::numericInput("msmooth", label = NULL, value = 100,
+                                    shiny::numericInput("ssmooth", label = NULL, value = 100,
                                                         min = 10, max = 1000, step = 10)
                       )
                     ),
                     shinyBS::bsPopover(
-                      id = "msmooth_window_info",
+                      id = "ssmooth_window_info",
                       title = "Smoothing",
                       content = shiny::HTML(paste0("Window size (samples) used to smooth the envelope. A larger window will result in a smoother envelope.")),
                       placement = "right",
                       trigger = "click",
                       options = list(container = "body")
                     ),
-
-                    shiny::fluidRow(
-                      shiny::column(12,
-                                    shiny::div(style = "display: flex; align-items: center;",
-                                               shiny::tagList(
-                                                 shiny::tags$label("Overlap (%)"),
-                                                 shinyBS::bsButton("msmooth_overlap_info", label = "", lib = "font-awesome",
-                                                                   icon = shiny::icon("circle-info"), style = "default",
-                                                                   size = "extra-small", class = "btn-info")
-                                               )
-                                    ),
-                                    shiny::numericInput("msmooth_overlap", label = NULL, value = 50, min = 0, max = 100, step = 5)
-                      )
-                    ),
-                    shinyBS::bsPopover(
-                      id = "msmooth_overlap_info",
-                      title = "Window Overlap",
-                      content = shiny::HTML(paste0("Overlap percentage between successive windows during smoothing. Higher overlap results in more smoothing.")),
-                      placement = "right",
-                      trigger = "click",
-                      options = list(container = "body")
-                    ),
-
 
                     shiny::fluidRow(
                       shiny::column(12,

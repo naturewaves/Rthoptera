@@ -12,8 +12,7 @@ server <- function(input, output, session) {
     wave <- get(input$selectedWave, envir = .GlobalEnv)
     temporal_stats_lq(wave,
                       specimen_id = input$specimen_id,
-                      msmooth_window = as.numeric(shiny::isolate(input$msmooth_window)),
-                      msmooth_overlap = as.numeric(shiny::isolate(input$msmooth_overlap)),
+                      ssmooth = as.numeric(shiny::isolate(input$ssmooth)),
                       peakfinder_ws = input$peakfinder_ws,
                       peakfinder_threshold = input$peakfinder_threshold,
                       max_train_gap = input$max_train_gap,
