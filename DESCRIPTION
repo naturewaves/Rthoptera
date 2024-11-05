@@ -2,7 +2,7 @@ Package: Rthoptera
 Type: Package
 Title: Standardized Insect Bioacoustics
 Version: 1.0.0
-Depends: R (>= 3.5.0), shiny (>= 1.0.0), shinyBS, plotly, tuneR, seewave, ggplot2 (>= 3.0)
+Depends: R (>= 3.5.0), shiny (>= 1.0.0), shinyBS, shinyjs, plotly, tuneR, seewave, ggplot2 (>= 3.0)
 Author: Author1 [aut, cre], Author2 [ctb], Author3 [ctb]
 Maintainer: Author1 <fcorivasf@gmail.com>
 Description: The package provides functions (each one with a Shiny App version) to analyze insect acoustic signals, including preprocessing (e.g., high-pass filter, remove DC offset, down-sampling, etc.). Analytical functions allow the user to automatically extract relevant acoustic features in both spectral and temporal dimensions. 
@@ -24,7 +24,6 @@ Imports:
   reshape2
 Suggests:
   mockery,
-  shinyjs,
   shinycssloaders,
   writexl,
   RthopteraSounds,
