@@ -3,7 +3,8 @@ jscode <- "shinyjs.closeWindow = function() { window.close(); }"
 
 ui <- function(request) {
   shiny::tagList(
-    shiny::h1("Multi-Mean Spectra", style = "font-size: 28px; margin-left: 15px;"),
+    shiny::h1("Multi-Mean Spectra",
+              style = "font-size: 28px; margin-left: 15px;"),
     shiny::fluidPage(
       shinyjs::useShinyjs(),
       shinyjs::extendShinyjs(text = jscode, functions = c("closeWindow")),
@@ -74,28 +75,48 @@ ui <- function(request) {
       shiny::fluidRow(
         shiny::column(2,
                       shiny::div(style = "margin-right: 5px;",
-                                 shiny::selectInput("wave_select", "Select a Wave Object:", choices = NULL, width = '100%')
+                                 shiny::selectInput("wave_select",
+                                                    "Select a Wave Object:",
+                                                    choices = NULL,
+                                                    width = '100%')
                       )
         ),
         shiny::column(1,
                       shiny::div(style = "margin-right: 5px;",
-                                 shiny::selectInput("wl", "Window Length: ", selected = 4096, choices = c(512, 1024, 2048, 4096, 8192), width = '90%')
+                                 shiny::selectInput("wl", "Window Length: ",
+                                                    selected = 4096,
+                                                    choices = c(512,
+                                                                1024,
+                                                                2048,
+                                                                4096,
+                                                                8192),
+                                                    width = '90%')
                       )
         ),
         shiny::column(2,
                       shiny::verticalLayout(
                         shiny::div(style = "margin-right: 5px;",
-                                   shiny::textInput("plot_title", "Plot Title:", value = "", width = '100%')
+                                   shiny::textInput("plot_title", "Plot Title:",
+                                                    value = "", width = '100%')
                         ),
                         shiny::div(style = "margin-right: 5px;",
-                                   shiny::selectInput("selection_choice", "Selection Name:",
-                                                      choices = c("closing", "opening", "male", "female", "Custom..."),
-                                                      selected = "closing", width = '100%')
+                                   shiny::selectInput("selection_choice",
+                                                      "Selection Name:",
+                                                      choices = c("closing",
+                                                                  "opening",
+                                                                  "male",
+                                                                  "female",
+                                                                  "Custom..."),
+                                                      selected = "closing",
+                                                      width = '100%')
                         ),
                         shiny::conditionalPanel(
                           condition = "input.selection_choice == 'Custom...'",
                           shiny::div(style = "margin-right: 5px;",
-                                     shiny::textInput("custom_selection_name", "Custom Name:", value = "", width = '100%')
+                                     shiny::textInput("custom_selection_name",
+                                                      "Custom Name:",
+                                                      value = "",
+                                                      width = '100%')
                           )
                         )
                       )
@@ -103,30 +124,43 @@ ui <- function(request) {
         shiny::column(1,
                       shiny::verticalLayout(
                         shiny::div(style = "margin-right: 5px;",
-                                   shiny::actionButton("plot_button", "Plot", class = "btn-space")
+                                   shiny::actionButton("plot_button", "Plot",
+                                                       class = "btn-space")
                         ),
                         shiny::div(style = "margin-right: 5px;",
-                                   shiny::actionButton("add_selection", "Add Selection", class = "btn-space")
+                                   shiny::actionButton("add_selection",
+                                                       "Add Selection",
+                                                       class = "btn-space")
                         )
                       )
         ),
         shiny::column(1,
                       shiny::div(style = "margin-right: 5px;",
-                                 shiny::numericInput("alpha", "Opacity", value = 0.9, min = 0.1, max = 1, step = 0.1), width = '60%'
+                                 shiny::numericInput("alpha", "Opacity",
+                                                     value = 0.9,
+                                                     min = 0.1,
+                                                     max = 1,
+                                                     step = 0.1),
+                                 width = '60%'
                       )
         ),
         shiny::column(2,
                       shiny::div(style = "margin-right: 5px;",
-                                 shiny::textInput("file_name", "File prefix:", value = "", width = '70%')
+                                 shiny::textInput("file_name", "File prefix:",
+                                                  value = "", width = '70%')
                       )
         ),
         shiny::column(2,
                       shiny::verticalLayout(
                         shiny::div(style = "margin-bottom: 5px;",
-                                   shiny::downloadButton("download_oscillogram", "Download Oscillogram", class = "btn-down")
+                                   shiny::downloadButton("download_oscillogram",
+                                                         "Download Oscillogram",
+                                                         class = "btn-down")
                         ),
                         shiny::div(style = "margin-bottom: 5px;",
-                                   shiny::downloadButton("download_power_spectra", "Download Power Spectra", class = "btn-down")
+                                   shiny::downloadButton("download_power_spectra",
+                                                         "Download Power Spectra",
+                                                         class = "btn-down")
                         ),
                         shiny::div(style = "margin-right: 5px;",
                                    shiny::actionButton("close", "Close App")
@@ -137,11 +171,16 @@ ui <- function(request) {
 
       shiny::fluidRow(
         shiny::column(12,
-                      shiny::plotOutput("oscillogram", height = "150px", width = "100%",
-                                        brush = shiny::brushOpts(id = "wave_brush", direction = "x"))
+                      shiny::plotOutput("oscillogram",
+                                        height = "150px",
+                                        width = "100%",
+                                        brush = shiny::brushOpts(id = "wave_brush",
+                                                                 direction = "x"))
         ),
         shiny::column(12,
-                      shinycssloaders::withSpinner(plotly::plotlyOutput("mean_spectrum", height = "350px", width = "100%"))
+                      shinycssloaders::withSpinner(plotly::plotlyOutput("mean_spectrum",
+                                                                        height = "350px",
+                                                                        width = "100%"))
         )
       )
     )

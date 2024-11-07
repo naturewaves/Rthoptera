@@ -118,7 +118,8 @@ server <- function(input, output, session) {
 
   shiny::observe({
     wave_names <- ls(envir = .GlobalEnv)
-    wave_names <- wave_names[sapply(wave_names, function(x) inherits(get(x, envir = .GlobalEnv), "Wave"))]
+    wave_names <- wave_names[sapply(wave_names, function(x) inherits(get(x,
+                                                                         envir = .GlobalEnv), "Wave"))]
     shiny::updateSelectInput(session, "wave_select", choices = wave_names)
   })
 
@@ -173,7 +174,8 @@ server <- function(input, output, session) {
     wave <- selected_wave()
     range <- c(brush$xmin, brush$xmax)
 
-    spec <- spectrum_df(wave, from = range[1], to = range[2], wl = as.numeric(shiny::isolate(input$wl)))
+    spec <- spectrum_df(wave, from = range[1], to = range[2],
+                        wl = as.numeric(shiny::isolate(input$wl)))
     spec$amplitude <- spec$amplitude * max(wave_df(wave) %>%
                                              dplyr::filter(time >= range[1] & time <= range[2]) %>%
                                              dplyr::pull(amplitude))
@@ -186,17 +188,22 @@ server <- function(input, output, session) {
         mode = 'lines',
         line = list(shape = 'spline', color = 'transparent'),
         fill = 'tozeroy',
-        fillcolor = plotly::toRGB(colors[length(brush_data)], alpha = shiny::isolate(input$alpha)),
+        fillcolor = plotly::toRGB(colors[length(brush_data)],
+                                  alpha = shiny::isolate(input$alpha)),
         name = selection_name,
         hovertemplate = 'Amplitude: %{y:.2f}'
       ))
 
     p <- plotly_obj()
     p <- p %>%
-      plotly::add_trace(x = spec$frequency, y = spec$amplitude, type = 'scatter', mode = 'none',
-                        fill = 'tozeroy', fillcolor = plotly::toRGB(colors[length(brush_data)], alpha = shiny::isolate(input$alpha)),
+      plotly::add_trace(x = spec$frequency, y = spec$amplitude,
+                        type = 'scatter', mode = 'none',
+                        fill = 'tozeroy',
+                        fillcolor = plotly::toRGB(colors[length(brush_data)],
+                                                  alpha = shiny::isolate(input$alpha)),
                         name = selection_name,
-                        hovertemplate = 'Amplitude: %{y:.2f}', line = list(color = 'rgba(0,0,0,0)'))
+                        hovertemplate = 'Amplitude: %{y:.2f}',
+                        line = list(color = 'rgba(0,0,0,0)'))
     plotly_obj(p)
   })
 
