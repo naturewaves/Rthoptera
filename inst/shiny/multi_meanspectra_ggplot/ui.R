@@ -111,7 +111,19 @@ ui <- function(request) {
           shiny::numericInput("opacity", "Fill opacity:", value = 0.9, min = 0.1, max = 1, step = 0.1)
         )),
         shiny::column(1, shiny::selectInput("wl", "Window Length: ", selected = 4096, choices = c(512, 1024, 2048, 4096, 8192), width = '80%')),
-        shiny::column(1, shiny::actionButton("add_selection", "Add")),
+        shiny::column(1,
+                      shiny::verticalLayout(
+                        shiny::div(style = "margin-right: 5px;",
+                                   shiny::actionButton("plot_button", "Plot",
+                                                       class = "btn-space")
+                        ),
+                        shiny::div(style = "margin-right: 5px;",
+                                   shiny::actionButton("add_selection",
+                                                       "Add Selection",
+                                                       class = "btn-space")
+                        )
+                      )
+        ),
         shiny::column(2,
                       shiny::div(style = "margin-right: 5px;", shiny::textInput("file_name", "File prefix:", value = "", width = '70%'))
         ),

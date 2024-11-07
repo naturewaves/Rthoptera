@@ -50,7 +50,7 @@ server <- function(input, output, session) {
     p <- ggplot2::ggplot(full_spec, ggplot2::aes(x = frequency, y = amplitude)) +
       ggplot2::labs(x = "Frequency (kHz)", y = "Amplitude") +
       ggplot2::theme_minimal() +
-      ggplot2::scale_x_continuous(expand = c(0, 0))  # Remove padding
+      ggplot2::scale_x_continuous(expand = c(0, 0))
 
     if (show_total_mean) {
       p <- p + ggplot2::geom_line(color = "black", linewidth = 0.8, ggplot2::aes(x = frequency, y = amplitude))
@@ -60,8 +60,14 @@ server <- function(input, output, session) {
       for (i in seq_along(brush_data)) {
         range <- brush_data[[i]]
         spec <- extract_meanspec(wave, from = range[1], to = range[2], wl = wl)
-        p <- p + ggplot2::geom_line(data = spec, ggplot2::aes(x = frequency, y = amplitude), color = colors[i], size = 0.5) +
-          ggplot2::geom_area(data = spec, ggplot2::aes(x = frequency, y = amplitude), fill = scales::alpha(colors[i], opacity), color = NA)
+        p <- p + ggplot2::geom_line(data = spec,
+                                    ggplot2::aes(x = frequency,
+                                                 y = amplitude),
+                                    color = colors[i], linewidth = 0.5) +
+          ggplot2::geom_area(data = spec,
+                             ggplot2::aes(x = frequency,
+                                          y = amplitude),
+                             fill = scales::alpha(colors[i], opacity), color = NA)
       }
     }
 
@@ -90,6 +96,7 @@ server <- function(input, output, session) {
   })
 
   output$oscillogram <- shiny::renderPlot({
+    shiny::req(input$plot_button)
     shiny::req(selected_wave())
     wave <- selected_wave()
     brush_data <- brushed_ranges()
@@ -98,6 +105,7 @@ server <- function(input, output, session) {
   })
 
   output$mean_spectrum <- shiny::renderPlot({
+    shiny::req(input$plot_button)
     shiny::req(selected_wave())
     wave <- selected_wave()
     brush_data <- brushed_ranges()
