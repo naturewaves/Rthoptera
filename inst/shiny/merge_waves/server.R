@@ -2,34 +2,14 @@ server <- function(input, output, session) {
 
   merge_waves <- function(wave_list) {
     if (length(wave_list) == 0) {
-      return(NULL)
-    } # If no waves are selected, return NULL
-
-    # Start with the first wave in the list
-    merged_wave <- wave_list[[1]]
-
-    # Iterate through the rest of the waves and concatenate them over time
-    for (i in 2:length(wave_list)) {
-      current_wave <- wave_list[[i]]
-
-      # Concatenate the left channels of the waves (assuming mono or stereo)
-      merged_wave@left <- c(merged_wave@left, current_wave@left)
-
-      # If stereo, concatenate the right channels as well
-      if (merged_wave@stereo) {
-        merged_wave@right <- c(merged_wave@right, current_wave@right)
-      }
-
-      merged_wave <- tuneR::normalize(merged_wave,
-                                      unit = "24",
-                                      pcm = TRUE,
-                                      center = TRUE
-      )
+      return(NULL) # If no waves are selected, return NULL
     }
+
+    # Use tuneR::bind() to concatenate all Wave objects in the list
+    merged_wave <- do.call(tuneR::bind, wave_list)
 
     return(merged_wave)
   }
-
 
   # Dynamically update the available wave objects from the global environment
   shiny::observe({
