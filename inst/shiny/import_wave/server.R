@@ -9,7 +9,9 @@ server = function(input, output, session) {
 
   # Function to read and process audio file
   read_and_process_audio <- function(filepath, selected_channel = NULL) {
-    wave <- bioacoustics::read_audio(filepath)
+
+    # wave <- bioacoustics::read_audio(filepath)
+    wave <- tuneR::readWave(filepath)
     if (is.null(selected_channel) || !wave@stereo) {
       selected_channel <- 'left' # Default to the first channel for mono or unspecified channel
     }
