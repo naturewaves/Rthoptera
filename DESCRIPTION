@@ -21,10 +21,11 @@ Imports:
   rlang,
   fftw,
   viridis,
-  reshape2
+  reshape2,
+  DT,
+  shinycssloaders
 Suggests:
   mockery,
-  shinycssloaders,
   writexl,
   RthopteraSounds,
   bioacoustics,
@@ -33,7 +34,6 @@ Suggests:
   cowplot,
   htmltools,
   knitr,
-  DT,
   rmarkdown,
   markdown,
   testthat (>= 3.0.0)
