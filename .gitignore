@@ -5,7 +5,6 @@
 .github
 inst/doc
 /doc/
-/docs/
 /Meta/
 .Rcheck/
 tests/testthat/Rplots.pdf
