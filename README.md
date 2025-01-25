@@ -1,21 +1,20 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # Rthoptera
 
 <!-- badges: start -->
-
+<!-- 
 [![R-CMD-check](https://github.com/naturewaves/Rthoptera/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/naturewaves/Rthoptera/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/naturewaves/Rthoptera/branch/master/graph/badge.svg)](https://app.codecov.io/gh/naturewaves/Rthoptera?branch=master)
-
+[![Codecov test coverage](https://codecov.io/gh/naturewaves/Rthoptera/graph/badge.svg)](https://app.codecov.io/gh/naturewaves/Rthoptera)
+&#10;-->
 <!-- badges: end -->
 
 *Rthoptera* is an R package that provides interactive Shiny applications
 for standard analysis of insect sounds. The package is intended to be
 used on high signal-to-noise recordings, helping researchers make
 standardized measurements and plots to support the scientific
-description of the “acoustic types”. We define “acoustic type” as the
+description of the “acoustic types”.We define “acoustic type” as the
 first description of the calling song of a species, which should be
 accompanied by a high-quality recording and ideally the voucher specimen
 identifier in the collection it was deposited. It offers functions for
@@ -31,9 +30,10 @@ audio files before performing detailed analysis:
   objects into R. During this process, the waveform is centered to zero
   with the `rmoffset()` function to ensure accurate measurements.
 
-- **Downsample**: When required, you can reduce the sampling rate of
-  your audio files. This helps improve the computing speed for certain
-  analyses and plots without losing important sound features.
+- **Downsample**: When required and appropriate, you can reduce the
+  sampling rate of your audio files. This helps improve the computing
+  speed for certain analyses and plots without losing important sound
+  features.
 
 - **Band-pass Filter**: When necessary, apply a user-defined high-pass
   and/or low-pass filter to eliminate noise or non-target sounds from
@@ -48,7 +48,7 @@ We encourage new users to see the “Preprocessing” vignette for guidance.
 
 ## Analysis
 
-Once pre-processing is complete, *Rthoptera* offers analysis tools to
+Once pre-processing is complete, users can launch analysis tools to
 extract spectral and temporal statistics from your audio files:
 
 - **Spectral Statistics**: Automatically calculate spectral metrics
@@ -59,15 +59,23 @@ extract spectral and temporal statistics from your audio files:
   your audio recordings. This includes identifying and analyzing
   elements (“tooth impacts”), trains (syllables), and echemes (groups of
   syllables or trills) in the insect sounds. Two apps are available:
-  `temporal_stats_hq_app` is optimized to work with “tonal” (i.e.,
-  “high-Q”) signals, such as those produced by most crickets. It creates
-  an envelope of the waveform and measures the duration of sounds and
-  gaps based on a user-defined detection threshold. The
-  `temporal_stats_lq_app` works better for broadband calls with wide
-  amplitude variability, where the threshold approach would leave
-  fainter sounds undetected or poorly measured. This app detects each
-  peak in the envelope, often corresponding to a single tooth impact,
-  and groups them into trains and echemes with user-defined thresholds.
+  `temporal_stats_hq` is optimized to work with “tonal” (i.e., “high-Q”)
+  signals, such as those produced by most crickets. It creates an
+  envelope of the waveform and measures the duration of sounds and gaps
+  based on a user-defined detection threshold. The `temporal_stats_lq`
+  works better for broadband calls with wide amplitude variability,
+  where the threshold approach would leave fainter sounds undetected or
+  poorly measured. This app detects each peak in the envelope, often
+  corresponding to a single tooth impact, and groups them into trains
+  and echemes with user-defined thresholds.
+
+- **Call Statistics**: This experimental function
+  (`call_stats_lq`)summarizes the same metrics as in the Temporal
+  Statistics with the addition of spectral metrics for each detected
+  unit. The benefit of this approach is that the researcher can explore
+  differences in spectral features for different parts of a calling song
+  (e.g., different syllables or pulses). Once the function is
+  consolidated, we will make a Shiny version.
 
 ## Plotting
 
