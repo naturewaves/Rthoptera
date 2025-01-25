@@ -9,8 +9,6 @@
 #' \dontrun{
 #' list_waves()
 #' }
-#' List wave files in a directory
-#'
 list_waves <- function(folder = NULL){
 
   print_list <- function(list){

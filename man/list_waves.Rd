@@ -11,19 +11,14 @@ list_waves(folder = NULL)
 }
 \value{
 A list of wave files
-
-A list of wave files
 }
 \description{
 List wave files in a directory
 }
 \examples{
 \dontrun{
-list_waves(folder)
+list_waves()
 }
 List wave files in a directory
 
-\dontrun{
-list_waves(folder)
-}
 }

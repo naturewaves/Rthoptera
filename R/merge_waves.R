@@ -18,7 +18,6 @@
 #' wave1 <- sine(440, duration = 1, samp.rate = 44100)
 #' wave2 <- sine(880, duration = 1, samp.rate = 44100)
 #' merged_wave <- merge_waves(list(wave1, wave2))
-#' play(merged_wave)
 merge_waves <- function(wave_list) {
   if (length(wave_list) == 0) {
     return(NULL)
