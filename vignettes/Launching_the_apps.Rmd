@@ -27,4 +27,10 @@ and `Rthoptera` will launch the "import_wave" app. However, some apps have longe
 ```{r}
 launch_app("temporal_stats")
 ```
-`Rthoptera` will ask you to specify further.
+`Rthoptera` will ask you to specify further. If you pay attention to the list of available apps, you will notice that the 'temporal_stats' apps are the only ones ending with 'hq' and 'lq', so if you run:
+```{r}
+launch_app('hq')
+```
+*Rthoptera* will understand you are trying to do "launch_app("temporal_stats_hq")". 
+
+
