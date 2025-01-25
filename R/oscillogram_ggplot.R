@@ -5,8 +5,10 @@
 #' @param x_title Character. A title for the X-axis.
 #' @param save Logical. If TRUE, the plot is saved in the working directory.
 #' Defaults to FALSE.
-#' @param file_name Character. Name for the PNG file to be saved. A suffix ("_oscillogram")
+#' @param file_name Character. Name for the PNG file to be saved.
+#' A suffix ("_oscillogram")
 #' is added by default.
+#' @param show_x Logical. If TRUE (default), the X-axis is plotted.
 #'
 #' @return An oscillogram plot. This plot is meant to be used with other
 #' plots with matching the X-axis, therefore it lacks its labels.
@@ -17,10 +19,12 @@
 #' oscillgoram_ggplot(coryphoda)
 #' }
 oscillogram_ggplot <- function(wave,
-                               y_title = "Relative Amplitude",
-                               x_title = "",
-                               save = TRUE,
-                               file_name = "") {
+                                y_title = "Relative Amplitude",
+                                x_title = "",
+                                save = TRUE,
+                                file_name = "",
+                                show_x = TRUE) {
+
   oscillo_df <- oscillo_df(wave)
 
   oscillo_plot <- ggplot(oscillo_df, aes(x = time, y = amplitude)) +
@@ -33,10 +37,10 @@ oscillogram_ggplot <- function(wave,
       panel.grid = element_blank(),
       panel.background = element_rect(fill = "white", color = NA),
       axis.line.y = element_line(colour = "black"),
-      axis.line.x = element_blank(),
-      axis.ticks.x = element_blank(),
-      axis.title.x = element_blank(),
-      axis.text.x = element_blank(),
+      axis.line.x = if (show_x) element_line(colour = "black") else element_blank(),
+      axis.ticks.x = if (show_x) element_line(colour = "black") else element_blank(),
+      axis.title.x = if (show_x) element_text(size = 10) else element_blank(),
+      axis.text.x = if (show_x) element_text(size = 10) else element_blank(),
       axis.title = element_text(size = 10),
       axis.text = element_text(size = 10),
       legend.position = "none"
