@@ -9,7 +9,8 @@ oscillogram_ggplot(
   y_title = "Relative Amplitude",
   x_title = "",
   save = TRUE,
-  file_name = ""
+  file_name = "",
+  show_x = TRUE
 )
 }
 \arguments{
@@ -22,8 +23,11 @@ oscillogram_ggplot(
 \item{save}{Logical. If TRUE, the plot is saved in the working directory.
 Defaults to FALSE.}
 
-\item{file_name}{Character. Name for the PNG file to be saved. A suffix ("_oscillogram")
+\item{file_name}{Character. Name for the PNG file to be saved.
+A suffix ("_oscillogram")
 is added by default.}
+
+\item{show_x}{Logical. If TRUE (default), the X-axis is plotted.}
 }
 \value{
 An oscillogram plot. This plot is meant to be used with other
