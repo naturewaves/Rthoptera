@@ -7,8 +7,7 @@
 temporal_stats_lq(
   wave,
   specimen_id = "",
-  msmooth_window = 100,
-  msmooth_overlap = 50,
+  ssmooth = 100,
   peakfinder_ws = 50,
   peakfinder_threshold = 0.005,
   max_train_gap = 0.5,
@@ -22,10 +21,7 @@ temporal_stats_lq(
 
 \item{specimen_id}{A character string representing the identifier for the specimen (or recording) being analyzed.}
 
-\item{msmooth_window}{Numeric value representing the smoothing window size (in samples) for the amplitude envelope.}
-
-\item{msmooth_overlap}{An integer specifying the overlap (in milliseconds) for
-smoothing the envelope (default: 50).}
+\item{ssmooth}{Numeric value representing the smoothing window size (in samples) for the amplitude envelope.}
 
 \item{peakfinder_ws}{Numeric value specifying the window size (in samples) for the peak detection algorithm.}
 
