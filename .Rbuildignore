@@ -13,3 +13,5 @@
 ^\.Rhistory$
 ^\.git$
 ^Rcheck$
+^_pkgdown\.yml$
+^pkgdown$
