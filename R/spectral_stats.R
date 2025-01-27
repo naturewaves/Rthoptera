@@ -73,15 +73,15 @@ spectral_stats <- function(wave,
   if (db) {
     # Compute Spectral Indices with linear mean power spectrum
     spec1 <- meanspec(wave, wl = wlen, dB = NULL, plot = FALSE)
-    spEnt <- sh(spec1)
-    spFlat <- sfm(spec1)
+    sp.ent <- sh(spec1)
+    sp.flat <- sfm(spec1)
     rm(spec1)
     # Store the dB mean power spectrum
     spec <- meanspec(wave, wl = wlen, dB = "max0", plot = FALSE)
   } else {
     spec <- meanspec(wave, wl = wlen, dB = NULL, plot = FALSE)
-    spEnt <- sh(spec)
-    spFlat <- sfm(spec)
+    sp.ent <- sh(spec)
+    sp.flat <- sfm(spec)
   }
 
   spec_df <- as.data.frame(spec)
@@ -145,7 +145,7 @@ spectral_stats <- function(wave,
   # Spectral Excursion (contour length)
   spec_ex <- sum(sqrt(diff(freq_range$Frequency)^2 + diff(freq_range$Amplitude)^2))
 
-  # Area Under the Curve (AUC)
+  # Spectral energy (area under the curve)
   spec_en <- abs(sum(diff(freq_range$Frequency) * (head(freq_range$Amplitude, -1) + tail(freq_range$Amplitude, -1)) / 2))
 
 
@@ -159,10 +159,10 @@ spectral_stats <- function(wave,
     high.f = round(maxfreq, 1),
     bandw = round(maxfreq - minfreq, 1),
     peak.f = round(peak_frequency, 1),
-    spec.ex = round(spec_ex, 1),
-    spec.en = round(spec_en, 1),
-    spec.ent = round(spEnt, 2),
-    spec.flat = round(spFlat, 2),
+    sp.exc = round(spec_ex, 1),
+    sp.ene = round(spec_en, 1),
+    sp.ent = round(sp.ent, 2),
+    sp.flat = round(sp.flat, 2),
     q.factor = round(q_factor, 1),
     temp = temp,
     par.hpf = hpf,
