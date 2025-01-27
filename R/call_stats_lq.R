@@ -242,22 +242,29 @@ call_stats_lq <- function(wave,
   train_data <- train_data |>
     relocate(c(tem.exc, dyn.exc), .after = train.id)
 
-  #Add spectral statistics per train
+  # Add Spectral Statistics for each train
   train_data <- train_data %>%
     rowwise() %>%
     mutate(
       spectral_stats = list(
         tryCatch(
           {
+
+            spec1 <- meanspec(wave, wl = 128,
+                              from = train.start,
+                              to = train.end,
+                              dB = NULL, plot = FALSE)
+            sp.ent <- sh(spec1)
+            sp.flat <- sfm(spec1)
+            rm(spec1)
+
             # Calculate meanspec for the train
-            spec <- meanspec(
-              wave,
-              from = train.start,
-              to = train.end,
-              wl = 256,
-              dB = "max0",
-              plot = FALSE
-            )
+            spec <- meanspec(wave,
+                             from = train.start,
+                             to = train.end,
+                             wl = 128,
+                             dB = "max0",
+                             plot = FALSE)
 
             # Convert the spectrum to a data frame
             spec_df <- as.data.frame(spec)
@@ -282,17 +289,28 @@ call_stats_lq <- function(wave,
             # Calculate bandwidth
             bandw <- round(high.freq - low.freq, 1)
 
-            tibble(peak.freq, low.freq, high.freq, bandw)
+
+
+
+            freq_range <- spec_df[low_index:high_index, ]
+
+
+            # Spectral Excursion (contour length)
+            sp.exc <- sum(sqrt(diff(freq_range$Frequency)^2 + diff(freq_range$Amplitude)^2))
+
+            # Spectral energy (area under the curve)
+            sp.ene <- abs(sum(diff(freq_range$Frequency) * (head(freq_range$Amplitude, -1) + tail(freq_range$Amplitude, -1)) / 2))
+
+
+
+
+            tibble(peak.freq, low.freq, high.freq, bandw, sp.exc, sp.ene, sp.ent, sp.flat)
+
+
+
           },
           error = function(e) {
-            # warning(paste("Failed to calculate spectral stats for train",
-            #               train.id, ":", "too short segment"))
-            tibble(
-              peak.freq = NA_real_,
-              low.freq = NA_real_,
-              high.freq = NA_real_,
-              bandw = NA_real_
-            )
+
           }
         )
       )
@@ -328,7 +346,19 @@ call_stats_lq <- function(wave,
       high.freq.sd = round(sd(high.freq), 3),
       bandw.mean = round(mean(bandw),3),
       bandw.var = round(var(bandw), 3),
-      bandw.sd = round(sd(bandw), 3)
+      bandw.sd = round(sd(bandw), 3),
+      sp.exc.mean = round(mean(sp.exc, na.rm = TRUE), 3),
+      sp.exc.var = round(var(sp.exc, na.rm = TRUE), 3),
+      sp.exc.sd = round(sd(sp.exc, na.rm = TRUE), 3),
+      sp.ene.mean = round(mean(sp.ene, na.rm = TRUE), 3),
+      sp.ene.var = round(var(sp.ene, na.rm = TRUE), 3),
+      sp.ene.sd = round(sd(sp.ene, na.rm = TRUE), 3),
+      sp.ent.mean = round(mean(sp.ent, na.rm = TRUE), 3),
+      sp.ent.var = round(var(sp.ent, na.rm = TRUE), 3),
+      sp.ent.sd = round(sd(sp.ent, na.rm = TRUE), 3),
+      sp.flat.mean = round(mean(sp.flat, na.rm = TRUE), 3),
+      sp.flat.var = round(var(sp.flat, na.rm = TRUE), 3),
+      sp.flat.sd = round(sd(sp.flat, na.rm = TRUE), 3)
     ) |>
     mutate(
       train.rate = round((n.trains - 1) / motif.dur)
@@ -421,7 +451,15 @@ call_stats_lq <- function(wave,
     high.freq.mean = round(mean(train_data$high.freq, na.rm = TRUE), 3),
     high.freq.sd = round(sd(train_data$high.freq, na.rm = TRUE), 3),
     bandw.mean = round(mean(train_data$bandw, na.rm = TRUE), 3),
-    bandw.sd = round(sd(train_data$bandw, na.rm = TRUE), 3)
+    bandw.sd = round(sd(train_data$bandw, na.rm = TRUE), 3),
+    sp.exc.mean = round(mean(train_data$sp.exc, na.rm = TRUE), 3),
+    sp.exc.sd = round(sd(train_data$sp.exc, na.rm = TRUE), 3),
+    sp.ene.mean = round(mean(train_data$sp.ene, na.rm = TRUE), 3),
+    sp.ene.sd = round(sd(train_data$sp.ene, na.rm = TRUE), 3),
+    sp.ent.mean = round(mean(train_data$sp.ent, na.rm = TRUE), 3),
+    sp.ent.sd = round(sd(train_data$sp.ent, na.rm = TRUE), 3),
+    sp.flat.mean = round(mean(train_data$sp.flat, na.rm = TRUE), 3),
+    sp.flat.sd = round(sd(train_data$sp.flat, na.rm = TRUE), 3)
   )
 
   # Prepare annotations for the plot
@@ -438,7 +476,7 @@ call_stats_lq <- function(wave,
         "<br> Duty Cycle: ", round(mean(motif_data$duty.cycle), 1), "%",
         "<br> Trains/Motif:", round(mean(motif_data$n.trains), 1),
         "<br> Train Rate: ", round(mean(motif_data$train.rate)), "tps",
-        "<br> Train Dur.: ", round(mean(train_data$train.dur, na.rm = TRUE)), "ms",
+        "<br> Train Dur.: ", round(mean(train_data$train.dur, na.rm = TRUE),3), "ms",
         "<br> Peaks/Train: ", round(mean(train_data$n.peaks, na.rm = TRUE)),
         "<br> Peak Rate: ", round(mean(train_data$peak.rate, na.rm = TRUE)), "pps",
         "<br> PCI: ", mean(motif_data$pci, 3),
@@ -572,3 +610,4 @@ call_stats_lq <- function(wave,
     params = params
   ))
 }
+
