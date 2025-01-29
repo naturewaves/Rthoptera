@@ -19,6 +19,4 @@ List wave files in a directory
 \dontrun{
 list_waves()
 }
-List wave files in a directory
-
 }
