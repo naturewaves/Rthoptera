@@ -1,8 +1,12 @@
 ---
 title: "Rthoptera"
-author: "Anonymous"
+author: "NatureWaves"
 date: "2025-01-28"
 output: html_document
+vignette: >
+  %\VignetteIndexEntry{Preprocessing audio}
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
@@ -25,7 +29,7 @@ knitr::opts_chunk$set(
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Rthoptera
+# Introduction to Rthoptera
 
 <!-- badges: start -->
 <!-- 

@@ -1,14 +1,19 @@
 ---
 title: "Comparing Rthoptera with other workflows"
-author: "Anonymous"
+author: "NatureWaves"
 date: "2025-01-15"
 output: html_document 
 vignette: >
-  %\VignetteIndexEntry{Preprocessing audio}
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{Comparing Rthoptera}
+  %\VignetteEngine{plotly}
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Multi-software "manual" approaches
 Before the development of _Rthoptera_, being dissatisfied with the image output provided by the available bioacoustics software packages to create meaningful and clear illustrations suitable for scientific publication, the authors used screenshots from the relevant views obtained by closed-source software, mostly Adobe Audition (Adobe Inc., 2023). 
 
 Obviously, not being conceived for such usage, the screenshots need extensive manual refinements, that require the coordinated use of other closed-source software, that usually include MS-Paint and Adobe Photoshop.
@@ -39,17 +44,7 @@ This is an example of a Mean Power Spectrum extracted from a screenshot from Ado
 Below is the same plot type produced by _Rthoptera_ (using normalized amplitude instead of dB FS). Including the selection of the file, changing scale parameters and custom labels on the Y-axis, modifying the output dimensions, and typing down the species name and call type, it took 45 seconds to produce:
 <img src= "C:/R_packages/Rthoptera/images/ctenodecticus_spectral_plot.png" width="1500"/>
 
-_Rthoptera_ is capable to improve the efficiency and effectiveness of the image generation phase:
 
-•	by granting a more objective approach: the user chooses the parameters’ values, and the image plus data tables generation is entirely and consistently managed by _Rthoptera_, excluding the vagaries of a lengthy manual process and the impact of different operator’s habits or manual skills;
-
-•	by granting an advantage in terms of time required for image generation: even though R and RStudio are not especially suited for bioacoustic analyses, the worst-case scenario observed during the tests (up to 100 seconds for the generation of a composite image with _Rthoptera_) compares very favorably with the 20 or 30 minutes required to obtain a comparable image by the screenshot-based process illustrated above;
-
-•	by generating the publication-ready plots, including composite illustrations (i.e., “multiplot”) that would be even more time consuming to generate otherwise with a multi-software approach.
-
-•	by simultaneously producing multiple tabular datasets that would have required separate software (e.g., Excel) to manipulate;
-
-•	by providing new metrics (Pattern Complexity, Broadband Activity…) that may set a standard for future investigations.
 
 ### Raven Pro 1.6
 NOTE: For this comparison we used a machine with Windows 11 Home, 64 bit, 16 GB RAM.
@@ -62,12 +57,12 @@ While the output is nice, it is far from customizable, and the user can't contro
 In _Rthoptera_, the final output can be obtained in about 10 seconds without these extra manual processing. First, we will load the data from the _RthopteraSounds_ package:
 
 ```{r, eval=FALSE}
-library(RthopteraSounds)
 library(Rthoptera)
+library(RthopteraSounds)
 data("coryphoda") # Load the sample recording of Coryphoda albidicollis.
 ```
 Then, we launch the app *multi_plot* app with the following call:
-```{r setup, eval=FALSE}
+```{r, eval=FALSE}
 launch_app("multi_plot")
 ```
 <br><br>
@@ -79,6 +74,79 @@ Here we can modify some parameters before computing the plot:
 
 This is the exported image:
 <img src= "C:/R_packages/Rthoptera/images/coryphoda_rthoptera_10sec.png" width="1500"/>
+
+
+## Interactive plots
+One of the main features of our package is interactivity. Several functions and apps produce interactive plots that can be saved as HTML documents for end users to explore. Here are some examples on how to obtain interactive plots: 
+
+```{r, message=FALSE, warning=FALSE, out.width="100%"}
+library(RthopteraSounds)
+library(Rthoptera)
+data("tettigonia")
+
+# Interactive oscillogram (aka waveform)
+oscillogram_plotly(tettigonia)
+
+# Interactive spectrogram (aka sonogram)
+spectrogram_plotly(tettigonia)
+
+# Interactive mean power spectrum (aka PSD)
+spectrum_plotly(tettigonia)$plot
+```
+NOTE: The interactive spectrogram was added mainly as an aid during  preprocessing (band-pass filtering) and is not intended for illustrating a signal in a professional way (hence the blueprint style). 
+
+## Rthoptera's backbone: temporal metrics
+While all the importing and preprocessing apps were added here just to make your life easier, the core of _Rthoptera_'s contribution to insect biacoustics is the automatic detection and characterization of temporal units. By playing around with a few parameters, you can specify what to measure, and _Rthoptera_ will do the rest. Most of the available tools for automatic measurement of acoustic signals are based on a simple amplitude threshold which will separate a signal from background noise. That approach is enough to measure most high-SNR recordings of tonal calls, such as those produced by most ground-, tree-, and field-crickets. However, when you want to measure broadband stridulations such as those produced by most katydids and bush-crickets, there are other things to consider. These broadband calls are characterized by transient-like "clicks", often reflecting individual impacts of the stridulatory teeth on the scraper. In our neutral nomenclature, we call these sounds 'peaks'. Researchers are often interested in measuring the number of peaks in each 'pulse' (i.e., a continuous train of waves) or, as we call it, 'train'. The problem arises when some of these peaks are too faint to measure with the threshold approach, falling below the threshold if we want to filter out the reverberations of the signal. _Rthoptera_ solves this by detecting local peaks with user-defined parameters. The _call_stats_lq()_ function creates the following outputs:
+
+•	An interactive plot showing individual peaks, trains, and motifs, as well as reporting summary statistics of the main measurements.
+
+•	A tabular dataset including: peak, train, and motif measurements, a summary table and another table with all the parameters used in the analysis. All the temporal measurements are based on the peak detections. 
+
+You can use Plotly's tools to zoom-in and explore the peak detections, especially in the fainter train. Note that the 'Summary Statistics' panel can be toggled off by clicking on the text in the legend. For each train detection, spectral statistics are calculated. This can be accessed in the train_data table:
+
+```{r, message=FALSE, warning=FALSE, out.width="100%"}
+library(Rthoptera)
+library(RthopteraSounds)
+data(coryphoda)
+
+# Use the call_stats_lq() function with a low detection threshold
+results <- call_stats_lq(coryphoda, 
+                         specimen_id = "coralb_001",
+                         detection_threshold = 0.01)
+
+# Show the plot
+results$plot
+
+# Peaks
+results$peak_data
+
+# Trains
+results$train_data
+
+# Motifs
+results$motif_data
+
+# Parameters used
+results$params
+```
+The _Coryphoda_ analysis is a perfect illustration of the utility of the new Temporal and Dynamic Excursion metrics. If we used an amplitude threshold approach, we would likely have to ignore the first train, which is produced when the male opens its tegmina (forewings). However, the peak detection approach allows us to capture this faint sound that is packed with information. Let's focus on the "train_data" table. Note how the Temporal Excursion ("tem.exc" column) is much higher in the first train, which is also the longest ("train.dur" column), with the highest number of peaks ("n.peaks" column), the faintest ("mean.amp" column), and the flattest in terms of energy with the lowest Dynamic Excursion ("dyn.exc" column). The opposite is true for the last train (closing stroke) in almost all metrics; it is the shortest, with the lowest number of peaks, the loudest, with the greatest change in amplitude (Dynamic Excursion). 
+
+<br>
+
+## Conclusions
+
+_Rthoptera_ is capable of improving the efficiency and effectiveness of the analysis of insect signals:
+
+•	by granting a more objective approach: the user chooses the parameters’ values, and the image plus data tables generation is entirely and consistently managed by _Rthoptera_, excluding the vagaries of a lengthy manual process and the impact of different operator’s habits or manual skills;
+
+•	by granting an advantage in terms of time required for image generation: even though R and RStudio are not especially suited for bioacoustic analyses, the worst-case scenario observed during the tests (up to 100 seconds for the generation of a composite image with _Rthoptera_) compares very favorably with the 20 or 30 minutes required to obtain a comparable image by the screenshot-based process illustrated above;
+
+•	by generating the publication-ready plots, including composite illustrations (i.e., “multiplot”) that would be more tedious and time-consuming to generate with a multi-software approach.
+
+•	by simultaneously producing multiple tabular datasets with diverse levels of aggregation;
+
+•	by providing new metrics (Pattern Complexity, Broadband Activity, Temporal Excursion, Dynamic Excursion, etc.) that may set a standard for future investigations.
+
 
 <br><br><br>
 

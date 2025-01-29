@@ -1,6 +1,6 @@
 ---
 title: "Launching the Shiny Apps"
-author: "Anonymous"
+author: "NatureWaves"
 date: "2024-11-04"
 output: html_document
 vignette: >
