@@ -39,6 +39,19 @@ launch_app <- function(app_name = NULL) {
     app_name <- matches
   }
 
+  # Check if there are any Wave objects in the environment
+  wave_objects_exist <- any(sapply(ls(envir = .GlobalEnv), function(x) inherits(get(x), "Wave")))
+
+  # Allow the "import_wave" app to be launched regardless of Wave objects
+  # if (app_name != "import_wave" && !wave_objects_exist) {
+  #   stop("No Wave objects found in the environment. Please import Wave files using the 'import_wave' app first.")
+  # }
+
+  if (!any(grepl("imp", app_name, ignore.case = TRUE)) && !wave_objects_exist) {
+    stop("No Wave objects found in the environment. Please import Wave files using the 'import_wave' or 'import' app first.")
+  }
+
+
   # Construct the app directory path
   app_dir <- file.path(app_dir_root, app_name)
 
