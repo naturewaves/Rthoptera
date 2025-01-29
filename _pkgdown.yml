@@ -1,6 +1,7 @@
 url: https://naturewaves.github.io/Rthoptera/
-title: "Rthoptera "
+title: 'Rthoptera '
 template:
   bootstrap: 5
-  light-switch: true
+  light-switch: yes
   bootswatch: journal
+
