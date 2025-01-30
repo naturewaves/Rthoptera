@@ -19,22 +19,22 @@ Before the development of _Rthoptera_, being dissatisfied with the image output 
 Obviously, not being conceived for such usage, the screenshots need extensive manual refinements, that require the coordinated use of other closed-source software, that usually include MS-Paint and Adobe Photoshop.
 After the selection of the relevant portion of the audio file, the bare minimum of activities needed includes:
 
-•	Taking a screenshot (i.e., copying current screen content in the RAM image clipboard);
+-	Taking a screenshot (i.e., copying current screen content in the RAM image clipboard);
 
-•	Pasting the screenshot in the image editing environment;
+-	Pasting the screenshot in the image editing environment;
 
-•	Improving image clarity by adjusting image levels (e.g.,  brightness, contrast, sharpness, etc.). Other post-production interventions needed may include image mode conversion (color to black & white or vice-versa) and feature (e.g., grid lines) removal;
+-	Improving image clarity by adjusting image levels (e.g.,  brightness, contrast, sharpness, etc.). Other post-production interventions needed may include image mode conversion (color to black & white or vice-versa) and feature (e.g., grid lines) removal;
 
-•	Adding readable vertical and horizontal axes, including tick marks, values and labels: even though the original screenshot may include such information, the on-screen font size is usually too small to be readable. Furthermore, if a non-initial section of the audio file is illustrated, the on-screen horizontal time scale does not start with zero, which complicates its reading. For those reasons, suitably sized and zeroed horizontal and vertical scales need to be juxtaposed to the image, in a time-consuming process. Usually, under Windows operating system, this activity is performed with MS-Paint.
+- Adding readable vertical and horizontal axes, including tick marks, values and labels: even though the original screenshot may include such information, the on-screen font size is usually too small to be readable. Furthermore, if a non-initial section of the audio file is illustrated, the on-screen horizontal time scale does not start with zero, which complicates its reading. For those reasons, suitably sized and zeroed horizontal and vertical scales need to be juxtaposed to the image, in a time-consuming process. Usually, under Windows operating system, this activity is performed with MS-Paint.
 On average, obtaining each image may require from 10 to 20 minutes of work (e.g., as in Brizio et al., 2021). The raster images emerging from the process described are sufficiently clear, but there are drawbacks, including:
 
-•	Image content is limited to the views available in the audio analysis software: usually, this boils down to time/pressure envelopes, spectrograms and mean spectra;
+-	Image content is limited to the views available in the audio analysis software: usually, this boils down to time/pressure envelopes, spectrograms and mean spectra;
 
-•	Composite images (e.g. time/pressure envelopes at different time scales, or combination of mean spectra and spectrogram) cannot be obtained in a single passage, and require a mosaic of separately generated images;
+-	Composite images (e.g. time/pressure envelopes at different time scales, or combination of mean spectra and spectrogram) cannot be obtained in a single step, and require a mosaic of separately generated images;
 
-•	Images do not include any data besides those appearing in the image itself. If further data are needed for the purpose of the publication, they must be obtained in other ways, typically by manual transcription of values read on screen, often obtained by suitably positioning the mouse pointer, e.g. in the case of the reading of pressure levels from mean spectra (not forgetting that the pixel-wise process of pointer positioning is inconsistent and error-prone);
+-	Images do not include any data besides those appearing in the image itself. If further data are needed for the purpose of the publication, they must be obtained in other ways, typically by manual transcription of values read on screen, often obtained by suitably positioning the mouse pointer, e.g. in the case of the reading of pressure levels from mean spectra (not forgetting that the pixel-wise process of pointer positioning is inconsistent and error-prone);
 
-•	Image style (e.g., color coding of pressure levels) may vary from one image to another, depending on the software used for screenshot generation.
+-	Image style (e.g., color coding of pressure levels) may vary from one image to another, depending on the software used for screenshot generation.
 
 The whole process described above is highly dependent from the skill, the experience and the individual sensitivity of each operator, and consistency of the results by different operators is not fully granted.
 
@@ -138,15 +138,15 @@ The _Coryphoda_ analysis is a perfect illustration of the utility of the new Tem
 
 _Rthoptera_ is capable of improving the efficiency and effectiveness of the analysis of insect signals:
 
-•	by granting a more objective approach: the user chooses the parameters’ values, and the image plus data tables generation is entirely and consistently managed by _Rthoptera_, excluding the vagaries of a lengthy manual process and the impact of different operator’s habits or manual skills;
+-	by granting a more objective approach: the user chooses the parameter values, and the image plus data tables generation is entirely and consistently managed by _Rthoptera_, excluding the vagaries of a lengthy manual process and the impact of different operators habits or manual skills;
 
-•	by granting an advantage in terms of time required for image generation: even though R and RStudio are not especially suited for bioacoustic analyses, the worst-case scenario observed during the tests (up to 100 seconds for the generation of a composite image with _Rthoptera_) compares very favorably with the 20 or 30 minutes required to obtain a comparable image by the screenshot-based process illustrated above;
+-	by granting an advantage in terms of time required for image generation: even though R and RStudio are not especially suited for bioacoustic analyses, the worst-case scenario observed during the tests (up to 100 seconds for the generation of a composite image with _Rthoptera_) compares very favorably with the 20 or 30 minutes required to obtain a comparable image by the screenshot-based process illustrated above;
 
-•	by generating the publication-ready plots, including composite illustrations (i.e., “multiplot”) that would be more tedious and time-consuming to generate with a multi-software approach.
+-	by generating the publication-ready plots, including composite illustrations (i.e., "multiplot") that would be more tedious and time-consuming to generate with a multi-software approach.
 
-•	by simultaneously producing multiple tabular datasets with diverse levels of aggregation;
+-	by simultaneously producing multiple tabular datasets with diverse levels of aggregation;
 
-•	by providing new metrics (Pattern Complexity, Broadband Activity, Temporal Excursion, Dynamic Excursion, etc.) that may set a standard for future investigations.
+-	by providing new metrics (Pattern Complexity, Broadband Activity, Temporal Excursion, Dynamic Excursion, etc.) that may set a standard for future investigations.
 
 
 <br><br><br>
@@ -158,5 +158,4 @@ Brizio, C.; Buzzetti, F.M.; Pavan, G. Beyond the audible: Wide band (0–125 kHz
 
 Cornell Lab of Ornithology. (2021). Raven Pro: Interactive sound analysis software (Version 1.6) [Computer software]. https://ravensoundsoftware.com/
 
-testing... see what happens, Larry?
 
