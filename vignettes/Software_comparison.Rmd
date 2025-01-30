@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Multi-software "manual" approaches
-Before the development of _Rthoptera_, being dissatisfied with the image output provided by the available bioacoustics software packages to create meaningful and clear illustrations suitable for scientific publication, the authors used screenshots from the relevant views obtained by closed-source software, mostly Adobe Audition (Adobe Inc., 2023). 
+Before the development of _Rthoptera_, being dissatisfied with the image output provided by the available bioacoustics software packages, the authors used screenshots from the relevant views obtained by closed-source software, mostly Adobe Audition (Adobe Inc., 2023). 
 
 Obviously, not being conceived for such usage, the screenshots need extensive manual refinements, that require the coordinated use of other closed-source software, that usually include MS-Paint and Adobe Photoshop.
 After the selection of the relevant portion of the audio file, the bare minimum of activities needed includes:
