@@ -143,5 +143,3 @@ To install the Rthoptera package, follow these steps:
     ```r
     library(Rthoptera)
     ```
-
-blabla
