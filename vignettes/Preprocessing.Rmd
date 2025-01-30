@@ -24,41 +24,39 @@ these cases, we might want to preprocess our recordings. ***Rthoptera*** offers 
 DISCLAIMER: R is not optimized for rendering large amounts of data in plots. If you have long sound files (> 1 min) recorded at high sampling rates (> 48 kHz), you might want to subset them with a dedicated audio software before importing them into R, unless you have a lot of patience or a very capable computer. A popular free audio editor is Audacity. 
 
 
-In this guide, we will work with the example Wave objects included in the 
-package. To load all of them, run this:
-```{r, echo=TRUE, eval = FALSE}
-remotes::install_github("naturewaves/RthopteraSounds")
-library(RthopteraSounds)
-load_rthoptera_data()
-```
-
-If you want to work with a single file of the included data, you can run, for 
-example:
+In this guide, we will work with the example Wave objects included in the package. If you want to work with a single file of the included data, you can run, for example:
 ```{r, echo=TRUE, eval=FALSE}
+# Uncheck the line below if you haven't installed RthopteraSounds
+#remotes::install_github("naturewaves/RthopteraSounds")
+library(RthopteraSounds)
 data("tettigonia")
 ```
 which will make the song of *Tettigonia cantans* available in the R environment. 
 
-To use your own recordings you should run `launch_app("import_wave")`, which 
-will allow you to select, name and import sound files as R objects of class 
-"Wave". This app uses the `readWave()` function from the `tuneR` package.
+To load all of them at once, run this:
+```{r, echo=TRUE, eval = FALSE}
+load_rthoptera_data()
+```
 
-Now you can use the different functions to preprocess the Wave before analysis, including trimming, filtering, and downsampling. All the preprocessing apps in ***Rthoptera*** produce blueprint-like plots to remind users that these are not intended for publication, but instead to aid in decision-making on the edits. 
+To use your own recordings you should run 
+```{r, echo=TRUE, eval = FALSE}
+launch_app("import_wave")
+```
+which will allow you to select, name and import sound files as R objects of class "Wave". This app uses the `readWave()` function from the `tuneR` package.
 
-As a rule of thumb, if you want to analyze several snippets of a recording 
-separately, you should first evaluate if you need to do any filtering or 
-downsampling before extracting the cuts to avoid repeating the process for each. If you want to analyze a single snippet from the wave file, you might want to trim it before filtering, which will optimize processing time for the other editing steps. 
+Now you can use the different apps to preprocess the Wave before analysis, including trimming, filtering, and downsampling. All the preprocessing apps in ***Rthoptera*** produce blueprint-like plots to remind users that these are not intended for publication, but instead to aid in decision-making on the edits. 
+
+As a rule of thumb, if you want to analyze several snippets of a recording separately, you should first evaluate if you need to do any filtering or downsampling before extracting the cuts to avoid repeating the process for each. If you want to analyze a single snippet from the wave file, you might want to trim it before filtering, which will optimize processing time for the other editing steps. 
 
 ### Trim
-This app is based on `tuneR`'s `extractWave()` function. To trim a Wave, run the app, plot the oscillogram, select the portion you want to save, type a name for it, and save it. You can overwrite the original Wave by assigning the same name for the selection (this will not have any effect outside the R environment), or assign a new name to create a new Wave object.If you want to save several snippets of the same length, just drag the first selection to the desired position and assign a new name before saving. 
+This app works with `tuneR`'s `extractWave()` function, which has an interactive option but it is not accurate in the selection of snippets. To trim a Wave, run the app, plot the oscillogram, select the portion you want to save, type a name for it, and save it. You can overwrite the original Wave by assigning the same name for the selection (this will not have any effect outside the R environment), or assign a new name to create a new Wave object.If you want to save several snippets of the same length, just drag the first selection to the desired position and assign a new name before saving. 
 
 ```{r, echo=TRUE, eval = FALSE}
 launch_app("trim")
 ```
+![How to use the "Trim" app.](../man/figures/trim.gif)
 
-For the downsampling and band-passing examples, we will use the included 
-"platycleis" Wave, a recording of *Platycleis grisea* made by Cesare Brizio 
-in Italy. 
+For the downsampling and band-passing examples, we will use the included "platycleis" Wave, a recording of *Platycleis grisea* made by Cesare Brizio in Italy. 
 
 ### Downsample
 This app is based on `seewave`'s `resamp()` function.  
