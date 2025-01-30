@@ -9,8 +9,6 @@ inst/doc
 .Rcheck/
 tests/testthat/Rplots.pdf
 Rthoptera.Rproj
-docs
-.Rdata
 .httr-oauth
 .DS_Store
 .quarto
