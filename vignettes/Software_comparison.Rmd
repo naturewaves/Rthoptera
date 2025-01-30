@@ -40,18 +40,18 @@ The whole process described above is highly dependent from the skill, the experi
 
 This is an example of a Mean Power Spectrum extracted from a screenshot from Adobe Audition and post-processed in Microsoft Paint and Adobe Photoshop to change the color scale and add new axes labels, requiring about 10 minutes to produce:
 
-![Ctenodecticus bolivari audition spectrogram](../images/ctenodecticus_bolivari_audition_microsoft.png)
+![Ctenodecticus bolivari audition spectrogram](../man/figures/ctenodecticus_bolivari_audition_microsoft.png)
 
 
 Below is the same plot type produced by _Rthoptera_ (using normalized amplitude instead of dB FS). Including the selection of the file, changing scale parameters and custom labels on the Y-axis, modifying the output dimensions, and typing down the species name and call type, it took 45 seconds to produce:
-![Spectral plot of Ctenodecticus](../images/ctenodecticus_spectral_plot.png)
+![Spectral plot of Ctenodecticus](../man/figures/ctenodecticus_spectral_plot.png)
 
 
 ### Raven Pro 1.6
 NOTE: For this comparison we used a machine with Windows 11 Home, 64 bit, 16 GB RAM.
 
 **Raven Pro 1.6** (Cornell Lab of Ornithology, 2021) is a dedicated bioacoustics software build by and for scientists. Even the free version **Raven Lite** offers a suite of useful tools for acoustic analysis, and is extensively used by researchers in acoustic communication of birds, anurans, bats, and other mammals. One disadvantage of this software is its proprietary nature, limiting the user's ability to customize the plots and forcing them to rely on extra software to obtain the desired results. The plot shown below took about 70 seconds to make in **Raven Pro 1.6**, including un-checking the position marker (which is wrongly shown in many scientific publications), adjusting the zoom level on the oscillogram, the window size and contrast for the spectrogram, and finally changing to grey scale in Microsoft Office, which does not allow to control the output dimensions either:
-![Coryphoda raven 70-second spectrogram](../images/coryphoda_raven_70sec.png)
+![Coryphoda raven 70-second spectrogram](../man/figures/coryphoda_raven_70sec.png)
 
 While the output is nice, it is far from customizable, and the user can't control the output parameters either (e.g., image dimensions). To our knowledge, all the plot in **Raven** are separate views, not allowing to add a Mean Power Spectrum aligned on the side of the spectrogram. If we wanted to achieve the same output as in the "multiplot" from _Rthoptera_, we would have to manually paste the spectral plot on the side, requiring a manual adjustment of the dimensions which would likely distort the axes labels. If we consider iterating this process over many recordings, it translates into a very tedious endeavor.
 
@@ -69,12 +69,12 @@ launch_app("multi_plot")
 <br><br>
 
 Here we can modify some parameters before computing the plot:
-![Coryphoda rthoptera multiplot app screenshot](../images/coryphoda_rthoptera_multiplot_app.png)
+![Coryphoda rthoptera multiplot app screenshot](../man/figures/coryphoda_rthoptera_multiplot_app.png)
 
 <br><br>
 
 This is the exported image:
-![Coryphoda rthoptera 10-second spectrogram](../images/coryphoda_rthoptera_10sec.png)
+![Coryphoda rthoptera 10-second spectrogram](../man/figures/coryphoda_rthoptera_10sec.png)
 
 
 ## Interactive plots
