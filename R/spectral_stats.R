@@ -1,15 +1,15 @@
 #' Calculate Spectral Statistics
 #'
-#' This function calculates various spectral statistics for a given audio
-#' signal, including peak frequency, bandwidth, spectral entropy, and spectral
-#' flatness. It generates an interactive plot with frequency and amplitude
-#' traces and includes options to visualize key statistics with lines on
-#' the plot.
+#' This function calculates various spectral statistics for a complete Wave
+#' object, including peak frequency, bandwidth, spectral entropy, spectral
+#' flatness, spectral excursion, and spectral energy. It generates an
+#' interactive plot with frequency and amplitude traces and includes options
+#' to visualize key statistics with lines on the plot.
 #'
 #' @param wave A `Wave` object representing the sound data.
 #' @param specimen_id Character string for the specimen identifier.
 #' @param total_range Logical, whether to calculate the full frequency range.
-#' @param robust Logical, whether to use a robust frequency resolution.
+#' @param robust Logical, whether to use a robust frequency resolution (244 Hz).
 #' @param db Logical. If TRUE, a decibel scale is used. If FALSE (default),
 #' a linear scale is used. Both are relative to the peak amplitude in the Wave.
 #' @param cutoff Numeric, threshold for bandwidth calculation. If db = FALSE,
@@ -61,9 +61,9 @@ spectral_stats <- function(wave,
 
 
   freq_per_bin <- if (robust) {
-    244.1406
+    244.1406 # equivalent to a window length of 1024 & samp. rate of 250 kHz
   } else {
-    30.51758
+    30.51758 # equivalent to window length = 8192 & samp. rate of 250 kHz
   }
 
   sampling_rate <- wave@samp.rate
