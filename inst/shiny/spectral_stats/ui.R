@@ -330,7 +330,7 @@ ui <- function(request) {
                     shinyBS::bsPopover(
                       id = "robust_info",
                       title = "Robust",
-                      content = shiny::HTML("This option performs a robust analysis, where the frequency resolution is fixed at ~244.1 Hz, intended to reflect broad spectral structure, thus ignoring subtle differences between individuals."),
+                      content = shiny::HTML("This option performs a robust analysis, where the frequency resolution is fixed at ~244.1 Hz, intended to reflect broad spectral structure, thus ignoring subtle differences within and between individuals."),
                       placement = "right",
                       trigger = "click",
                       options = list(container = "body")
