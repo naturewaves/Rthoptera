@@ -13,10 +13,14 @@
 #' algorithm.
 #' @param peakfinder_threshold Numeric. Amplitude threshold for peak detection,
 #' as a proportion of the maximum amplitude.
-#' @param max_train_gap Numeric. Maximum allowed gap (in seconds) between trains
-#' to consider them part of the same group.
 #' @param max_peak_gap Numeric. Maximum allowed gap (in seconds) between peaks
 #' to consider them part of the same train.
+#' @param max_train_gap Numeric. Maximum allowed gap (in seconds) between trains
+#' to consider them part of the same motif.
+#' @param motif_groups Logical. If TRUE, add an aggregation of motifs. Default
+#' value is FALSE.
+#' @param max_motif_gap Numeric. Maximum allowed gap (in seconds) between motifs
+#' to consider them part of the same group.
 #' @param detection_threshold Numeric. Minimum amplitude for a peak to be
 #' considered valid.
 #' @param norm_env Logical. Whether to normalize the amplitude envelope between
@@ -25,11 +29,18 @@
 #' calculating low and high frequencies. Defaults to 20 dB.
 #'
 #' @return A list containing the following components:
-#'   \item{plot}{An interactive `plotly` object showing the waveform envelope, detected peaks, trains, and motifs.}
-#'   \item{summary_data}{A tibble with summary statistics for the analyzed waveform.}
-#'   \item{motif_data}{A tibble summarizing motifs, including motif duration, train counts, and spectral properties.}
-#'   \item{train_data}{A tibble detailing detected trains, including start and end times, durations, peak frequencies, and bandwidths.}
-#'   \item{peak_data}{A tibble containing detected peaks, including their times, periods, and amplitudes.}
+#'   \item{plot}{An interactive `plotly` object showing the waveform envelope,
+#'   detected peaks, trains, and motifs.}
+#'   \item{summary_data}{A tibble with summary statistics for the analyzed
+#'   waveform.}
+#'   \item{motif_group_data} {A tibble summarizing motif groups. Only produced
+#'   when motif_groups = TRUE.}
+#'   \item{motif_data}{A tibble summarizing motifs, including motif duration,
+#'   train counts, and spectral properties.}
+#'   \item{train_data}{A tibble detailing detected trains, including start and
+#'   end times, durations, peak frequencies, and bandwidths.}
+#'   \item{peak_data}{A tibble containing detected peaks, including their times,
+#'   periods, and amplitudes.}
 #'   \item{params}{A tibble summarizing input parameters for the function.}
 #'
 #' @examples
@@ -67,11 +78,14 @@ call_stats_lq <- function(wave,
                           ssmooth = 100,
                           peakfinder_ws = 50,
                           peakfinder_threshold = 0.005,
-                          max_train_gap = 0.5,
                           max_peak_gap = 0.01,
+                          max_train_gap = 0.5,
+                          motif_groups = TRUE,
+                          max_motif_gap = 0.8,
                           detection_threshold = 0.1,
                           norm_env = TRUE,
                           db_threshold = 20) {
+
   # Store input parameters in a tibble
   params <- tibble(
     specimen_id = specimen_id,
@@ -427,6 +441,47 @@ call_stats_lq <- function(wave,
     ungroup() |>
     select(specimen.id, motif.id, pci, everything(), -proportions, proportions)
 
+  # Motif groupings
+  motif_data <- motif_data |>
+    mutate(
+      motif.group = 1 + cumsum(ifelse(
+        c(0, diff(motif.start)) > max_motif_gap,
+        1, 0
+      ))
+    )
+
+  motif_data <- motif_data |>
+    mutate(
+      motif.period = ifelse(is.na(lead(motif.group)) | lead(motif.group) != motif.group, NA, lead(motif.start) - motif.start),
+      motif.gap = round(lead(motif.start) - motif.end, 3)
+    ) |>
+    relocate(motif.period, .after = motif.dur) |>
+    relocate(motif.gap, .after = motif.period) |>
+    relocate(motif.group, .after = motif.id)
+
+  if (motif_groups) {
+    motif_data <- motif_data %>%
+      group_by(motif.group) %>%
+      mutate(motif.id = row_number()) %>%
+      ungroup()
+
+    # Create motif.group data for plotting
+    motif_group_data <- motif_data |>
+      group_by(motif.group) |>
+      reframe(
+        group.start = min(motif.start),
+        group.end = max(motif.end)
+      )
+
+    motif_group_data <- motif_group_data |>
+      mutate(
+        group.dur = group.end - group.start,
+        group.period = lead(group.start) - group.start,
+        group.gap = round(lead(group.start) - group.end, 3)
+      )
+  }
+
+
   summary_data <- tibble(
     pci.mean = round(mean(motif_data$pci, na.rm = TRUE), 3),
     pci.sd = round(sd(motif_data$pci, na.rm = TRUE), 3),
@@ -452,6 +507,8 @@ call_stats_lq <- function(wave,
     high.freq.sd = round(sd(train_data$high.freq, na.rm = TRUE), 3),
     bandw.mean = round(mean(train_data$bandw, na.rm = TRUE), 3),
     bandw.sd = round(sd(train_data$bandw, na.rm = TRUE), 3),
+    # motif.group.dur.mean = round(mean(motif_group_data$group.dur, na.rm = TRUE), 3),
+    # motif.group.dur.sd = round(sd(motif_group_data$group.dur, na.rm = TRUE), 3),
     sp.exc.mean = round(mean(train_data$sp.exc, na.rm = TRUE), 3),
     sp.exc.sd = round(sd(train_data$sp.exc, na.rm = TRUE), 3),
     sp.ene.mean = round(mean(train_data$sp.ene, na.rm = TRUE), 3),
@@ -539,6 +596,24 @@ call_stats_lq <- function(wave,
       )
   }
 
+  if (motif_groups) {
+    # Add motif groups
+    for (i in seq_len(nrow(motif_group_data))) {
+      group_start <- motif_group_data$group.start[i]
+      group_end <- motif_group_data$group.end[i]
+      show_legend <- if (i == 1) TRUE else FALSE
+      p <- p %>%
+        add_lines(
+          x = c(group_start, group_end), y = c(1.02, 1.02),
+          name = "Motif Groups", line = list(color = "#FF0000", width = 6),
+          showlegend = show_legend, legendgroup = "motif.groups",
+          hoverinfo = "x", text = paste("Time:", round(c(group_start, group_end), 2))
+        )
+    }
+
+  }
+
+
   # Add peak markers
   p <- p |>
     add_markers(
@@ -601,13 +676,25 @@ call_stats_lq <- function(wave,
 
   p
 
-  return(list(
+  # Initialize return list
+  return_list <- list(
     plot = p,
-    summary_data = summary_data,
+    summary_data = summary_data
+  )
+
+  if (motif_groups) {
+    return_list$motif_group_data <- motif_group_data
+  }
+
+  return_list <- c(return_list, list(
     motif_data = motif_data,
     train_data = train_data,
     peak_data = peak_data,
     params = params
   ))
+
+  # Return the final list
+  return(return_list)
+
 }
 
