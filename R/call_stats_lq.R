@@ -17,7 +17,7 @@
 #' to consider them part of the same train.
 #' @param max_train_gap Numeric. Maximum allowed gap (in seconds) between trains
 #' to consider them part of the same motif.
-#' @param motif_groups Logical. If TRUE, add an aggregation of motifs. Default
+#' @param motif_seq Logical. If TRUE, add an first-order aggregation of motifs. Default
 #' value is FALSE.
 #' @param max_motif_gap Numeric. Maximum allowed gap (in seconds) between motifs
 #' to consider them part of the same group.
@@ -34,7 +34,7 @@
 #'   \item{summary_data}{A tibble with summary statistics for the analyzed
 #'   waveform.}
 #'   \item{motif_group_data} {A tibble summarizing motif groups. Only produced
-#'   when motif_groups = TRUE.}
+#'   when motif_seq = TRUE.}
 #'   \item{motif_data}{A tibble summarizing motifs, including motif duration,
 #'   train counts, and spectral properties.}
 #'   \item{train_data}{A tibble detailing detected trains, including start and
@@ -80,7 +80,7 @@ call_stats_lq <- function(wave,
                           peakfinder_threshold = 0.005,
                           max_peak_gap = 0.01,
                           max_train_gap = 0.5,
-                          motif_groups = TRUE,
+                          motif_seq = TRUE,
                           max_motif_gap = 0.8,
                           detection_threshold = 0.1,
                           norm_env = TRUE,
@@ -459,7 +459,7 @@ call_stats_lq <- function(wave,
     relocate(motif.gap, .after = motif.period) |>
     relocate(motif.group, .after = motif.id)
 
-  if (motif_groups) {
+  if (motif_seq) {
     motif_data <- motif_data %>%
       group_by(motif.group) %>%
       mutate(motif.id = row_number()) %>%
@@ -596,7 +596,7 @@ call_stats_lq <- function(wave,
       )
   }
 
-  if (motif_groups) {
+  if (motif_seq) {
     # Add motif groups
     for (i in seq_len(nrow(motif_group_data))) {
       group_start <- motif_group_data$group.start[i]
@@ -682,7 +682,7 @@ call_stats_lq <- function(wave,
     summary_data = summary_data
   )
 
-  if (motif_groups) {
+  if (motif_seq) {
     return_list$motif_group_data <- motif_group_data
   }
 
