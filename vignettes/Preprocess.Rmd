@@ -4,7 +4,7 @@ author: "NatureWaves"
 date: "2024-10-02"
 output: html_document 
 vignette: >
-  %\VignetteIndexEntry{Preprocessing audio}
+  %\VignetteIndexEntry{Preprocessing}
   %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
 ---
@@ -56,6 +56,7 @@ launch_app("trim")
 ```
 
 ![Fig.1. How to use the "Trim" app.](../man/figures/trim.gif)
+
 <br>
 
 For the downsampling and band-passing examples, we will use the included "platycleis" Wave, a recording of *Platycleis grisea* made by Cesare Brizio in Italy. 
@@ -69,14 +70,16 @@ launch_app("downsample")
 ```
 
 ![Fig.2. How to use the "Downsample" app.](../man/figures/downsample.gif)
+
 <br>
 
 ### Band-pass Filter
 
-This app is based on `seewave`'s `fir()` (Finite Impulse Response Filter) function. If you believe that your recording has low-frequency noise or non-target (e.g., other species) sounds, you should consider applying a band-pass filter (BPF) with the `bandpass_filter` app. This app allows you to verify the presence of non-target sound and its range, helping to choose an appropriate BPF. A Mean Power Spectrum view should be used to determine whether a non-target sound or noise is above the -20dB threshold typically employed to assess the bandwidth of the signal of interest (SOI). If non-target sound is detected, the user should choose a proper combination of high-pass filter and low-pass filter values which will significantly attenuate the sounds below outside this range, allowing for accurate measure and plot the SOI. Although it takes longer to render, the spectrogram view may be necessary for field recordings where multiple species are detected, as it allows for visual discrimination of the SOI from non-target signals by inspecting their temporal patterns, which are not visible in the mean power spectrum. 
+This app is based on `seewave`'s `fir()` (Finite Impulse Response Filter) function. If you believe that your recording has low-frequency noise or non-target (e.g., other species) sounds, you should consider applying a band-pass filter (BPF) with the `bandpass_filter` app. This app allows you to verify the presence of non-target sound and its range, helping to choose an appropriate BPF. A Mean Power Spectrum view should be used to determine whether a non-target sound or noise is above the -20dB threshold typically employed to assess the bandwidth of the signal of interest (SOI). If non-target sound is detected, the user should choose a proper combination of high-pass filter and low-pass filter values which will significantly attenuate the sounds below the threshold, allowing for accurate measure and plot the SOI. Although it takes longer to render, the spectrogram view may be necessary for field recordings where multiple species are detected, as it allows for visual discrimination of the SOI from non-target signals by inspecting their temporal patterns, which are not visible in the mean power spectrum. 
 
 ```{r, echo=TRUE, eval = FALSE}
 launch_app("bandpass_filter")
 ```
 
 ![Fig.3. How to use the "bandpass_filter" app.](../man/figures/bandpass.gif)
+<br><br>

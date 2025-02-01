@@ -2,10 +2,10 @@
 title: "Rthoptera"
 author: "NatureWaves"
 date: "2025-01-28"
-output: html_document
+output: rmarkdown::html_document
 vignette: >
-  %\VignetteIndexEntry{Preprocessing audio}
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{Rthoptera}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -26,8 +26,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # Introduction to Rthoptera
 
@@ -150,4 +148,8 @@ To install the Rthoptera package, follow these steps:
     ```r
     library(Rthoptera)
     ```
+5. List the available apps:
 
+    ```r
+    launch_apps()
+    ```
