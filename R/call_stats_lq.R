@@ -17,8 +17,8 @@
 #' to consider them part of the same train.
 #' @param max_train_gap Numeric. Maximum allowed gap (in seconds) between trains
 #' to consider them part of the same motif.
-#' @param motif_seq Logical. If TRUE, add an first-order aggregation of motifs. Default
-#' value is FALSE.
+#' @param motif_seq Logical. If TRUE, add an first-order aggregation of motifs.
+#' Default = FALSE.
 #' @param max_motif_gap Numeric. Maximum allowed gap (in seconds) between motifs
 #' to consider them part of the same group.
 #' @param detection_threshold Numeric. Minimum amplitude for a peak to be
@@ -27,13 +27,12 @@
 #' 0 and 1. Defaults to `TRUE`.
 #' @param db_threshold Numeric. Decibel threshold below the peak amplitude for
 #' calculating low and high frequencies. Defaults to 20 dB.
-#'
 #' @return A list containing the following components:
 #'   \item{plot}{An interactive `plotly` object showing the waveform envelope,
 #'   detected peaks, trains, and motifs.}
 #'   \item{summary_data}{A tibble with summary statistics for the analyzed
 #'   waveform.}
-#'   \item{motif_group_data} {A tibble summarizing motif groups. Only produced
+#'   \item{motif_seq_data}{A tibble summarizing motif sequences. Only produced
 #'   when motif_seq = TRUE.}
 #'   \item{motif_data}{A tibble summarizing motifs, including motif duration,
 #'   train counts, and spectral properties.}
@@ -42,14 +41,9 @@
 #'   \item{peak_data}{A tibble containing detected peaks, including their times,
 #'   periods, and amplitudes.}
 #'   \item{params}{A tibble summarizing input parameters for the function.}
-#'
 #' @examples
 #' \dontrun{
-#' # Load required libraries and data
-#' library(RthopteraSounds)
-#' library(tuneR)
 #' data(coryphoda)
-#'
 #' # Perform analysis on the coryphoda sample
 #' results <- call_stats_lq(
 #'   wave = coryphoda,
@@ -63,11 +57,6 @@
 #'   norm_env = TRUE,
 #'   db_threshold = 20
 #' )
-#'
-#' # Explore the results
-#' results$summary_data
-#' results$motif_data
-#' results$train_data
 #' results$plot
 #' }
 #' @export
@@ -207,6 +196,7 @@ call_stats_lq <- function(wave,
   train_data <- peak_data |>
     group_by(specimen.id, motif.id, train.id) |>
     summarize(
+      spcimen.id = unique(specimen.id),
       train.start = min(peak.time),
       train.end = max(peak.time),
       train.dur = round((train.end - train.start), 3),
@@ -257,8 +247,8 @@ call_stats_lq <- function(wave,
     relocate(c(tem.exc, dyn.exc), .after = train.id)
 
   # Add Spectral Statistics for each train
-  train_data <- train_data %>%
-    rowwise() %>%
+  train_data <- train_data |>
+    rowwise() |>
     mutate(
       spectral_stats = list(
         tryCatch(
@@ -302,9 +292,6 @@ call_stats_lq <- function(wave,
 
             # Calculate bandwidth
             bandw <- round(high.freq - low.freq, 1)
-
-
-
 
             freq_range <- spec_df[low_index:high_index, ]
 
@@ -382,7 +369,6 @@ call_stats_lq <- function(wave,
     ungroup()
 
 
-
   motif_data <- motif_data |>
     mutate(
       proportions = map(motif.id, function(eid) {
@@ -441,10 +427,11 @@ call_stats_lq <- function(wave,
     ungroup() |>
     select(specimen.id, motif.id, pci, everything(), -proportions, proportions)
 
-  # Motif groupings
+  # Aggregate motifs
+  if (motif_seq) {
   motif_data <- motif_data |>
     mutate(
-      motif.group = 1 + cumsum(ifelse(
+      motif.seq = 1 + cumsum(ifelse(
         c(0, diff(motif.start)) > max_motif_gap,
         1, 0
       ))
@@ -452,28 +439,28 @@ call_stats_lq <- function(wave,
 
   motif_data <- motif_data |>
     mutate(
-      motif.period = ifelse(is.na(lead(motif.group)) | lead(motif.group) != motif.group, NA, lead(motif.start) - motif.start),
+      motif.period = ifelse(is.na(lead(motif.seq)) | lead(motif.seq) != motif.seq, NA, lead(motif.start) - motif.start),
       motif.gap = round(lead(motif.start) - motif.end, 3)
     ) |>
     relocate(motif.period, .after = motif.dur) |>
     relocate(motif.gap, .after = motif.period) |>
-    relocate(motif.group, .after = motif.id)
+    relocate(motif.seq, .after = motif.id)
 
-  if (motif_seq) {
+
     motif_data <- motif_data %>%
-      group_by(motif.group) %>%
+      group_by(motif.seq) %>%
       mutate(motif.id = row_number()) %>%
       ungroup()
 
-    # Create motif.group data for plotting
-    motif_group_data <- motif_data |>
-      group_by(motif.group) |>
+    # Create motif.seq data for plotting
+    motif_seq_data <- motif_data |>
+      group_by(motif.seq) |>
       reframe(
         group.start = min(motif.start),
         group.end = max(motif.end)
       )
 
-    motif_group_data <- motif_group_data |>
+    motif_seq_data <- motif_seq_data |>
       mutate(
         group.dur = group.end - group.start,
         group.period = lead(group.start) - group.start,
@@ -483,20 +470,26 @@ call_stats_lq <- function(wave,
 
 
   summary_data <- tibble(
+    specimen.id = base::unique(train_data$specimen.id),
+    n.motifs = nrow(motif_data),
     pci.mean = round(mean(motif_data$pci, na.rm = TRUE), 3),
     pci.sd = round(sd(motif_data$pci, na.rm = TRUE), 3),
-    temp.exc.mean = round(mean(train_data$tem.exc, na.rm = TRUE), 3),
-    temp.exc.sd = round(sd(train_data$tem.exc, na.rm = TRUE), 3),
-    dyn.exc.mean = round(mean(train_data$dyn.exc, na.rm = TRUE), 3),
-    dyn.exc.sd = round(sd(train_data$dyn.exc, na.rm = TRUE), 3),
+    duty.cycle.mean = round(mean(motif_data$duty.cycle, na.rm = TRUE), 3),
+    duty.cycle.sd = round(sd(motif_data$duty.cycle, na.rm = TRUE), 3),
     motif.dur.mean = round(mean(motif_data$motif.dur, na.rm = TRUE), 3),
     motif.dur.sd = round(sd(motif_data$motif.dur, na.rm = TRUE), 3),
     n.trains.mean = round(mean(motif_data$n.trains, na.rm = TRUE), 3),
     n.trains.sd = round(sd(motif_data$n.trains, na.rm = TRUE), 3),
     train.rate.mean = round(mean(motif_data$train.rate, na.rm = TRUE), 3),
     train.rate.sd = round(sd(motif_data$train.rate, na.rm = TRUE), 3),
-    duty.cycle.mean = round(mean(motif_data$duty.cycle, na.rm = TRUE), 3),
-    duty.cycle.sd = round(sd(motif_data$duty.cycle, na.rm = TRUE), 3),
+    train.dur.mean = round(mean(train_data$train.dur, na.rm = TRUE), 3),
+    train.dur.sd = round(sd(train_data$train.dur, na.rm = TRUE), 3),
+    gap.dur.mean = round(mean(train_data$train.gap[train_data$train.gap <= max_train_gap], na.rm = TRUE), 3),
+    gap.dur.sd = round(sd(train_data$train.gap[train_data$train.gap <= max_train_gap], na.rm = TRUE), 3),
+    temp.exc.mean = round(mean(train_data$tem.exc, na.rm = TRUE), 3),
+    temp.exc.sd = round(sd(train_data$tem.exc, na.rm = TRUE), 3),
+    dyn.exc.mean = round(mean(train_data$dyn.exc, na.rm = TRUE), 3),
+    dyn.exc.sd = round(sd(train_data$dyn.exc, na.rm = TRUE), 3),
     entropy.mean = round(mean(motif_data$props.ent, na.rm = TRUE), 3),
     entropy.sd = round(sd(motif_data$props.ent, na.rm = TRUE), 3),
     peak.freq.mean = round(mean(train_data$peak.freq, na.rm = TRUE), 3),
@@ -507,8 +500,6 @@ call_stats_lq <- function(wave,
     high.freq.sd = round(sd(train_data$high.freq, na.rm = TRUE), 3),
     bandw.mean = round(mean(train_data$bandw, na.rm = TRUE), 3),
     bandw.sd = round(sd(train_data$bandw, na.rm = TRUE), 3),
-    # motif.group.dur.mean = round(mean(motif_group_data$group.dur, na.rm = TRUE), 3),
-    # motif.group.dur.sd = round(sd(motif_group_data$group.dur, na.rm = TRUE), 3),
     sp.exc.mean = round(mean(train_data$sp.exc, na.rm = TRUE), 3),
     sp.exc.sd = round(sd(train_data$sp.exc, na.rm = TRUE), 3),
     sp.ene.mean = round(mean(train_data$sp.ene, na.rm = TRUE), 3),
@@ -518,6 +509,16 @@ call_stats_lq <- function(wave,
     sp.flat.mean = round(mean(train_data$sp.flat, na.rm = TRUE), 3),
     sp.flat.sd = round(sd(train_data$sp.flat, na.rm = TRUE), 3)
   )
+
+  if (motif_seq) {
+
+    summary_data <- summary_data |>
+      mutate(
+    motif.seq.dur.mean = round(mean(motif_seq_data$group.dur, na.rm = TRUE), 3),
+    motif.seq.dur.sd = round(sd(motif_seq_data$group.dur, na.rm = TRUE), 3)
+        )
+
+  }
 
   # Prepare annotations for the plot
   annotations <- list(
@@ -529,15 +530,16 @@ call_stats_lq <- function(wave,
       text = paste(
         "<b> Summary Statistics</b>",
         "<br> N. motifs:", length(motifs),
-        "<br> Motif Dur.: ", round(mean(motif_data$motif.dur), 3), "s",
-        "<br> Duty Cycle: ", round(mean(motif_data$duty.cycle), 1), "%",
-        "<br> Trains/Motif:", round(mean(motif_data$n.trains), 1),
-        "<br> Train Rate: ", round(mean(motif_data$train.rate)), "tps",
-        "<br> Train Dur.: ", round(mean(train_data$train.dur, na.rm = TRUE),3), "ms",
-        "<br> Peaks/Train: ", round(mean(train_data$n.peaks, na.rm = TRUE)),
-        "<br> Peak Rate: ", round(mean(train_data$peak.rate, na.rm = TRUE)), "pps",
         "<br> PCI: ", mean(motif_data$pci, 3),
-        "<br> Peak Freq: ", summary_data$peak.freq.mean, "kHz"
+        "<br> Duty Cycle: ", round(mean(motif_data$duty.cycle), 1), "%",
+        "<br> Peak Freq: ", summary_data$peak.freq.mean, "kHz",
+        "<br> Motif Dur.: ", round(mean(motif_data$motif.dur), 3), "s",
+        "<br> Trains/Motif: ", round(mean(motif_data$n.trains), 1),
+        "<br> Train Rate: ", round(mean(motif_data$train.rate)), "Hz",
+        "<br> Train Dur.: ", round(mean(train_data$train.dur, na.rm = TRUE),3), "ms",
+        "<br> Train Gap Dur.: ", round(summary_data$gap.dur.mean), "ms",
+        "<br> Peaks/Train: ", round(mean(train_data$n.peaks, na.rm = TRUE)),
+        "<br> Peak Rate: ", round(mean(train_data$peak.rate, na.rm = TRUE)), "Hz"
       ),
       showarrow = FALSE,
       font = list(size = 12),
@@ -597,16 +599,16 @@ call_stats_lq <- function(wave,
   }
 
   if (motif_seq) {
-    # Add motif groups
-    for (i in seq_len(nrow(motif_group_data))) {
-      group_start <- motif_group_data$group.start[i]
-      group_end <- motif_group_data$group.end[i]
+    # Add motif sequences
+    for (i in seq_len(nrow(motif_seq_data))) {
+      group_start <- motif_seq_data$group.start[i]
+      group_end <- motif_seq_data$group.end[i]
       show_legend <- if (i == 1) TRUE else FALSE
       p <- p %>%
         add_lines(
           x = c(group_start, group_end), y = c(1.02, 1.02),
-          name = "Motif Groups", line = list(color = "#FF0000", width = 6),
-          showlegend = show_legend, legendgroup = "motif.groups",
+          name = "Motif Sequences", line = list(color = "#FF0000", width = 6),
+          showlegend = show_legend, legendgroup = "motif.seqs",
           hoverinfo = "x", text = paste("Time:", round(c(group_start, group_end), 2))
         )
     }
@@ -683,7 +685,7 @@ call_stats_lq <- function(wave,
   )
 
   if (motif_seq) {
-    return_list$motif_group_data <- motif_group_data
+    return_list$motif_seq_data <- motif_seq_data
   }
 
   return_list <- c(return_list, list(
@@ -697,4 +699,3 @@ call_stats_lq <- function(wave,
   return(return_list)
 
 }
-
