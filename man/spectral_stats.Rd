@@ -24,7 +24,7 @@ spectral_stats(
 
 \item{total_range}{Logical, whether to calculate the full frequency range.}
 
-\item{robust}{Logical, whether to use a robust frequency resolution.}
+\item{robust}{Logical, whether to use a robust frequency resolution (244 Hz).}
 
 \item{db}{Logical. If TRUE, a decibel scale is used. If FALSE (default),
 a linear scale is used. Both are relative to the peak amplitude in the Wave.}
@@ -48,11 +48,11 @@ A list containing:
 - `plot`: An interactive `plotly` plot with frequency and amplitude traces.
 }
 \description{
-This function calculates various spectral statistics for a given audio
-signal, including peak frequency, bandwidth, spectral entropy, and spectral
-flatness. It generates an interactive plot with frequency and amplitude
-traces and includes options to visualize key statistics with lines on
-the plot.
+This function calculates various spectral statistics for a complete Wave
+object, including peak frequency, bandwidth, spectral entropy, spectral
+flatness, spectral excursion, and spectral energy. It generates an
+interactive plot with frequency and amplitude traces and includes options
+to visualize key statistics with lines on the plot.
 }
 \examples{
 \dontrun{

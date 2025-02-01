@@ -10,8 +10,10 @@ call_stats_lq(
   ssmooth = 100,
   peakfinder_ws = 50,
   peakfinder_threshold = 0.005,
-  max_train_gap = 0.5,
   max_peak_gap = 0.01,
+  max_train_gap = 0.5,
+  motif_seq = TRUE,
+  max_motif_gap = 0.8,
   detection_threshold = 0.1,
   norm_env = TRUE,
   db_threshold = 20
@@ -32,11 +34,17 @@ algorithm.}
 \item{peakfinder_threshold}{Numeric. Amplitude threshold for peak detection,
 as a proportion of the maximum amplitude.}
 
-\item{max_train_gap}{Numeric. Maximum allowed gap (in seconds) between trains
-to consider them part of the same group.}
-
 \item{max_peak_gap}{Numeric. Maximum allowed gap (in seconds) between peaks
 to consider them part of the same train.}
+
+\item{max_train_gap}{Numeric. Maximum allowed gap (in seconds) between trains
+to consider them part of the same motif.}
+
+\item{motif_seq}{Logical. If TRUE, add an first-order aggregation of motifs.
+Default = FALSE.}
+
+\item{max_motif_gap}{Numeric. Maximum allowed gap (in seconds) between motifs
+to consider them part of the same group.}
 
 \item{detection_threshold}{Numeric. Minimum amplitude for a peak to be
 considered valid.}
@@ -49,11 +57,18 @@ calculating low and high frequencies. Defaults to 20 dB.}
 }
 \value{
 A list containing the following components:
-  \item{plot}{An interactive `plotly` object showing the waveform envelope, detected peaks, trains, and motifs.}
-  \item{summary_data}{A tibble with summary statistics for the analyzed waveform.}
-  \item{motif_data}{A tibble summarizing motifs, including motif duration, train counts, and spectral properties.}
-  \item{train_data}{A tibble detailing detected trains, including start and end times, durations, peak frequencies, and bandwidths.}
-  \item{peak_data}{A tibble containing detected peaks, including their times, periods, and amplitudes.}
+  \item{plot}{An interactive `plotly` object showing the waveform envelope,
+  detected peaks, trains, and motifs.}
+  \item{summary_data}{A tibble with summary statistics for the analyzed
+  waveform.}
+  \item{motif_seq_data}{A tibble summarizing motif sequences. Only produced
+  when motif_seq = TRUE.}
+  \item{motif_data}{A tibble summarizing motifs, including motif duration,
+  train counts, and spectral properties.}
+  \item{train_data}{A tibble detailing detected trains, including start and
+  end times, durations, peak frequencies, and bandwidths.}
+  \item{peak_data}{A tibble containing detected peaks, including their times,
+  periods, and amplitudes.}
   \item{params}{A tibble summarizing input parameters for the function.}
 }
 \description{
@@ -63,11 +78,7 @@ such as peak frequency, low frequency, high frequency, and bandwidth.
 }
 \examples{
 \dontrun{
-# Load required libraries and data
-library(RthopteraSounds)
-library(tuneR)
 data(coryphoda)
-
 # Perform analysis on the coryphoda sample
 results <- call_stats_lq(
   wave = coryphoda,
@@ -81,11 +92,6 @@ results <- call_stats_lq(
   norm_env = TRUE,
   db_threshold = 20
 )
-
-# Explore the results
-results$summary_data
-results$motif_data
-results$train_data
 results$plot
 }
 }
