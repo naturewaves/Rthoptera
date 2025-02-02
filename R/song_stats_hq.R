@@ -1,4 +1,4 @@
-#' Temporal and Spectral Statistics for HQ Calls
+#' Temporal and Spectral Statistics for HQ (Narrow-band) Songs
 #'
 #' This function analyzes the acoustic characteristics of a wave object by
 #' detecting sounds above a threshold in the envelope created with a mean
@@ -50,7 +50,7 @@
 #' @importFrom plotly plot_ly add_lines layout
 #' @importFrom purrr map
 #' @importFrom htmlwidgets onRender
-call_stats_hq <- function(wave,
+song_stats_hq <- function(wave,
                           specimen_id = "",
                           msmooth_window = 100,
                           msmooth_overlap = 50,

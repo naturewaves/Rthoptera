@@ -1,4 +1,4 @@
-#' Temporal and spectral statistics of detected broadband calls.
+#' Temporal and Spectral Statistics of LQ (Broad-band) Songs.
 #'
 #' This function calculates temporal and spectral statistics, identifying motifs
 #' and trains in the waveform, detecting peaks, and extracting spectral features
@@ -62,7 +62,7 @@
 #' @export
 #' @importFrom tidyr unnest_wider
 #' @importFrom dplyr reframe rowwise mutate select ungroup tibble
-call_stats_lq <- function(wave,
+song_stats_lq <- function(wave,
                           specimen_id = "",
                           ssmooth = 100,
                           peakfinder_ws = 50,
@@ -258,8 +258,8 @@ call_stats_lq <- function(wave,
                               from = train.start,
                               to = train.end,
                               dB = NULL, plot = FALSE)
-            sp.ent <- sh(spec1)
-            sp.flat <- sfm(spec1)
+            sp.ent <- round(sh(spec1), 3)
+            sp.flat <- round(sfm(spec1), 3)
             rm(spec1)
 
             # Calculate meanspec for the train
@@ -297,10 +297,10 @@ call_stats_lq <- function(wave,
 
 
             # Spectral Excursion (contour length)
-            sp.exc <- sum(sqrt(diff(freq_range$Frequency)^2 + diff(freq_range$Amplitude)^2))
+            sp.exc <- round(sum(sqrt(diff(freq_range$Frequency)^2 + diff(freq_range$Amplitude)^2)), 3)
 
             # Spectral energy (area under the curve)
-            sp.ene <- abs(sum(diff(freq_range$Frequency) * (head(freq_range$Amplitude, -1) + tail(freq_range$Amplitude, -1)) / 2))
+            sp.ene <- round(abs(sum(diff(freq_range$Frequency) * (head(freq_range$Amplitude, -1) + tail(freq_range$Amplitude, -1)) / 2)), 3)
 
 
 
