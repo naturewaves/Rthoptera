@@ -65,7 +65,7 @@ server <- function(input, output, session) {
         ))
       } else {
         p <- p + ggplot2::theme_void() +
-          ggplot2::annotate("segment", x = scalebar_x_start, xend = scalebar_x_end, y = -1.1, yend = -1.1, color = "black", size = 1) +
+          ggplot2::annotate("segment", x = scalebar_x_start, xend = scalebar_x_end, y = -1.1, yend = -1.1, color = "black", linewidth = 1) +
           ggplot2::annotate("text", x = (scalebar_x_start + scalebar_x_end) / 2, y = -1.3, label = scalebarText, vjust = 0.5, hjust = 0.5)
       }
     }

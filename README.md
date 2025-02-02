@@ -1,7 +1,17 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+<style> .title-logo { display: inline-block; vertical-align: middle; width: 150px;
+height: auto; margin-right: 10px; } </style>
 
-# Rthoptera
+<div>
+
+<img src="C:/R_packages/Rthoptera/assets/img/Rthoptera_logo_darkgrey.png" class="title-logo" alt="Rthoptera Logo">
+<h1 style="display: inline-block; vertical-align: middle;">
+Rthoptera
+</h1>
+
+</div>
+
+#### *Standardised insect bioacoustics*
 
 <!-- badges: start -->
 <!-- 
@@ -10,26 +20,28 @@
 &#10;-->
 <!-- badges: end -->
 
-*Rthoptera* is an R package that provides interactive Shiny applications
-for standard analysis of insect sounds. The package is intended to be
-used on high signal-to-noise recordings, helping researchers make
-standardized measurements and plots to support the scientific
-description of the “acoustic types”. We define “acoustic type” as the
-first description of the calling song of a species, which should be
-accompanied by a high-quality recording and ideally the voucher specimen
-identifier in the collection it was deposited. For the convenience of
-users, we have included functions for pre-processing audio files, which
-are already available in other packages (e.g., *tuneR*, *seewave*), but
-here they are interactive. Most of the plotting functions are based on
-the *seewave* package, with the added benefit of presets and automatic
+*Rthoptera* provides interactive Shiny applications for standard
+analysis of insect sounds. The package is intended to be used on high
+signal-to-noise recordings, helping researchers make standardized
+measurements and plots to support the scientific description of the
+“acoustic types”. We define “acoustic type” as the first description of
+the calling song of a species, which should be accompanied by a
+high-quality recording and ideally the voucher specimen identifier in
+the collection it was deposited. For the convenience of users, we have
+included functions for pre-processing audio files, which are already
+available in other packages (e.g., *tuneR*, *seewave*), but here they
+are interactive (Shiny apps). Most of the plotting functions are based
+on the *seewave* package, with the convenience of presets and automatic
 parameter selection (e.g., window length for the spectrograms) to ensure
-clarity in any recording. Most of these plots also have interactive
-versions which can be saved as HTML documents.
+clarity in any Wave regardless of the recording settings. Most of these
+plots also have interactive versions which can be saved as HTML
+documents.
 
-## Pre-processing
+## Preprocessing
 
-We encourage new users to see the “Preprocessing” vignette for guidance
-on how and when to use these tools.
+Please visit the
+[Preprocess](https://naturewaves.github.io/Rthoptera/articles/Preprocess.html "Preprocessing Audio Files with Rthoptera")
+page for guidance on how and when to use these tools.
 
 - **Import**: Browse your local data to import audio files (WAV) as Wave
   objects into R. During this process, the waveform is centered to zero
@@ -50,11 +62,11 @@ on how and when to use these tools.
   analysis.
 
 - **Merge**: Useful when one needs to concatenate several wave files
-  together for cetain analyses.
+  together for certain analyses.
 
 ## Analysis
 
-Once pre-processing is complete, users can launch analysis tools to
+Once preprocessing is complete, users can launch analysis tools to
 extract spectral and temporal statistics from your audio files:
 
 - **Spectral Statistics**: Automatically calculate spectral metrics
@@ -64,20 +76,24 @@ extract spectral and temporal statistics from your audio files:
   your audio recordings. This includes identifying and analyzing
   elements (“tooth impacts”), trains (syllables), and echemes (groups of
   syllables or trills) in the insect sounds. Two apps are available:
-  `call_stats_hq` is optimized to work with “tonal” (i.e., “high-Q”)
+
+- `call_stats_hq` is optimized to work with “tonal” (i.e., “high-Q”)
   signals, such as those produced by most crickets. It creates an
-  envelope of the waveform and measures the duration of sounds and gaps
-  based on a user-defined detection threshold.
+  envelope of the waveform and measures the duration of **trains**
+  (i.e., “pulses”) and gaps based on a user-defined detection threshold,
+  then aggregating them into **motifs** (i.e., “echemes”) and,
+  optionally, into **motif sequences**.
 
-The `call_stats_lq` works better for broadband calls usually produced by
-katydids, bush-crickets, water-bugs, etc, including those with wide
-amplitude variability, where the threshold approach would leave fainter
-sounds undetected or poorly measured. This app detects each peak in the
-envelope, often corresponding to a single tooth impact, and groups them
-into trains (e.g., “pulses”, “syllables”) and motifs (e.g., “echemes”)
-with user-defined thresholds.
+- `call_stats_lq` works better for broadband calls usually produced by
+  katydids, bush-crickets, water-bugs, etc, including those with wide
+  amplitude variability, where the threshold approach would leave
+  fainter sounds undetected or poorly measured. The main difference with
+  the “hq” app is the granularity: this app detects each **peak** in the
+  envelope, often corresponding to a single tooth impact, and groups
+  them into **trains** (e.g., “pulses”, “syllables”), **motifs** (e.g.,
+  “echemes”), and **motif sequences** using user-defined thresholds.
 
-## Plotting
+## Visualisation
 
 - **Multi-Power Spectrum**: An interactive tool that overlays multiple
   power spectrum plots selected from the oscillogram, allowing for easy
@@ -100,9 +116,9 @@ with user-defined thresholds.
   oscillograms that allow you to zoom in and explore specific sections
   of the waveform.
 
-- **Multi-oscillogram**: Create a stacked oscillogram plot for comparing
-  the sounds of multiple species. This is particularly useful for
-  analyzing the differences in acoustic patterns between species.
+- **Multi-oscillogram**: Create a stacked oscillogram plot for
+  0comparing the sounds of multiple species. This is particularly useful
+  for analyzing the differences in acoustic patterns between species.
 
 - **Zoomed oscillogram**: Create a static oscillogram with stacked
   zoomed portions selected interactively.
@@ -113,24 +129,24 @@ To install the Rthoptera package, follow these steps:
 
 1.  Install the `remotes` package if you haven’t already:
 
-    ``` r
-    install.packages("remotes")
-    ```
+``` r
+install.packages("remotes")
+```
 
 2.  Load the `remotes` package:
 
-    ``` r
-    library(remotes)
-    ```
+``` r
+library(remotes)
+```
 
 3.  Install **Rthoptera** from GitHub:
 
-    ``` r
-    remotes::install_github("naturewaves/Rthoptera")
-    ```
+``` r
+remotes::install_github("naturewaves/Rthoptera")
+```
 
 4.  Load the **Rthoptera** package:
 
-    ``` r
-    library(Rthoptera)
-    ```
+``` r
+library(Rthoptera)
+```
