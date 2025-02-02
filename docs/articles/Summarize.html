@@ -105,7 +105,7 @@ package, calculating its mean:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">train_data</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">train.id</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># group the trains by their identity within a motif</span></span>
-<span>  <span class="fu">reframe</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">peak.freq</span><span class="op">)</span><span class="op">)</span> <span class="co"># get the mean per "train.id"</span></span></code></pre></div>
+<span>  <span class="fu">reframe</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">peak.freq</span><span class="op">)</span><span class="op">)</span> <span class="co"># get the mean per "train.id" </span></span></code></pre></div>
 <div class="float">
 <img src="../reference/figures/summarize_data.gif" alt="Fig.3. How to use the “bandpass_filter” app."><div class="figcaption">Fig.3. How to use the “bandpass_filter”
 app.</div>

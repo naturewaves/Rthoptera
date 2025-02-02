@@ -33,7 +33,7 @@ Next, we will group the train data by "train.id", and summarize it with the `ref
 ```{r, eval=FALSE, message=FALSE, warning=FALSE}
 results$train_data |> 
   group_by(train.id) |> # group the trains by their identity within a motif
-  reframe(mean(peak.freq)) # get the mean per "train.id"
+  reframe(mean(peak.freq)) # get the mean per "train.id" 
 ```
 
 
