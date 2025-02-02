@@ -14,17 +14,22 @@
 for standard analysis of insect sounds. The package is intended to be
 used on high signal-to-noise recordings, helping researchers make
 standardized measurements and plots to support the scientific
-description of the “acoustic types”.We define “acoustic type” as the
+description of the “acoustic types”. We define “acoustic type” as the
 first description of the calling song of a species, which should be
 accompanied by a high-quality recording and ideally the voucher specimen
-identifier in the collection it was deposited. It offers functions for
-pre-processing, spectral and temporal analysis, as well as several
-interactive and static visualizations.
+identifier in the collection it was deposited. For the convenience of
+users, we have included functions for pre-processing audio files, which
+are already available in other packages (e.g., *tuneR*, *seewave*), but
+here they are interactive. Most of the plotting functions are based on
+the *seewave* package, with the added benefit of presets and automatic
+parameter selection (e.g., window length for the spectrograms) to ensure
+clarity in any recording. Most of these plots also have interactive
+versions which can be saved as HTML documents.
 
 ## Pre-processing
 
-The package offers several pre-processing tools that allow you to handle
-audio files before performing detailed analysis:
+We encourage new users to see the “Preprocessing” vignette for guidance
+on how and when to use these tools.
 
 - **Import**: Browse your local data to import audio files (WAV) as Wave
   objects into R. During this process, the waveform is centered to zero
@@ -44,7 +49,8 @@ audio files before performing detailed analysis:
   be saved as new Wave objects in your R environment for further
   analysis.
 
-We encourage new users to see the “Preprocessing” vignette for guidance.
+- **Merge**: Useful when one needs to concatenate several wave files
+  together for cetain analyses.
 
 ## Analysis
 
@@ -52,38 +58,32 @@ Once pre-processing is complete, users can launch analysis tools to
 extract spectral and temporal statistics from your audio files:
 
 - **Spectral Statistics**: Automatically calculate spectral metrics
-  based on the mean power spectrum of a Wave object. These statistics
-  provide insights into the frequency domain of the audio signal.
+  based on the mean power spectrum of a Wave object.
 
 - **Temporal Statistics**: Automatically extract temporal metrics from
   your audio recordings. This includes identifying and analyzing
   elements (“tooth impacts”), trains (syllables), and echemes (groups of
   syllables or trills) in the insect sounds. Two apps are available:
-  `temporal_stats_hq` is optimized to work with “tonal” (i.e., “high-Q”)
+  `call_stats_hq` is optimized to work with “tonal” (i.e., “high-Q”)
   signals, such as those produced by most crickets. It creates an
   envelope of the waveform and measures the duration of sounds and gaps
-  based on a user-defined detection threshold. The `temporal_stats_lq`
-  works better for broadband calls with wide amplitude variability,
-  where the threshold approach would leave fainter sounds undetected or
-  poorly measured. This app detects each peak in the envelope, often
-  corresponding to a single tooth impact, and groups them into trains
-  and echemes with user-defined thresholds.
+  based on a user-defined detection threshold.
 
-- **Call Statistics**: This experimental function
-  (`call_stats_lq`)summarizes the same metrics as in the Temporal
-  Statistics with the addition of spectral metrics for each detected
-  unit. The benefit of this approach is that the researcher can explore
-  differences in spectral features for different parts of a calling song
-  (e.g., different syllables or pulses). Once the function is
-  consolidated, we will make a Shiny version.
+The `call_stats_lq` works better for broadband calls usually produced by
+katydids, bush-crickets, water-bugs, etc, including those with wide
+amplitude variability, where the threshold approach would leave fainter
+sounds undetected or poorly measured. This app detects each peak in the
+envelope, often corresponding to a single tooth impact, and groups them
+into trains (e.g., “pulses”, “syllables”) and motifs (e.g., “echemes”)
+with user-defined thresholds.
 
 ## Plotting
 
 - **Multi-Power Spectrum**: An interactive tool that overlays multiple
   power spectrum plots selected from the oscillogram, allowing for easy
   comparison and visualization of spectral features across different
-  time intervals. Each selection is assigned to its own color-blind-safe
-  color both in the oscillogram and the mean spectrum plots.
+  time intervals. Each selection is assigned to its own color
+  (colorblind-safe) both in the oscillogram and the mean spectrum plots.
 
 - **Spectrogram**: Generate standard spectrograms, optionally alongside
   a lateral mean power spectrum. This combination allows you to
@@ -103,6 +103,9 @@ extract spectral and temporal statistics from your audio files:
 - **Multi-oscillogram**: Create a stacked oscillogram plot for comparing
   the sounds of multiple species. This is particularly useful for
   analyzing the differences in acoustic patterns between species.
+
+- **Zoomed oscillogram**: Create a static oscillogram with stacked
+  zoomed portions selected interactively.
 
 ## Installation
 
