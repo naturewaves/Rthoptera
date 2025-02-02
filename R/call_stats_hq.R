@@ -26,7 +26,7 @@
 #' @param motif_seq Logical. If TRUE, add an first-order aggregation of motifs. Default
 #' value is FALSE.
 #' @param max_motif_gap Numeric. Maximum allowed gap (in seconds) between motifs
-#' to consider them part of the same group.
+#' to consider them part of the same sequence.
 #'  @param norm_env A logical indicating whether to normalize the envelope
 #'  Default = TRUE.
 #'
@@ -400,15 +400,15 @@ call_stats_hq <- function(wave,
     motif_seq_data <- motif_data |>
       group_by(motif.seq) |>
       reframe(
-        group.start = min(motif.start),
-        group.end = max(motif.end)
+        seq.start = min(motif.start),
+        seq.end = max(motif.end)
       )
 
     motif_seq_data <- motif_seq_data |>
       mutate(
-        group.dur = group.end - group.start,
-        group.period = lead(group.start) - group.start,
-        group.gap = round(lead(group.start) - group.end, 3)
+        seq.dur = seq.end - seq.start,
+        seq.period = lead(seq.start) - seq.start,
+        seq.gap = round(lead(seq.start) - seq.end, 3)
       )
   }
 
@@ -458,8 +458,8 @@ call_stats_hq <- function(wave,
 
     summary_data <- summary_data |>
       mutate(
-        motif.seq.dur.mean = round(mean(motif_seq_data$group.dur, na.rm = TRUE), 3),
-        motif.seq.dur.sd = round(sd(motif_seq_data$group.dur, na.rm = TRUE), 3)
+        motif.seq.dur.mean = round(mean(motif_seq_data$seq.dur, na.rm = TRUE), 3),
+        motif.seq.dur.sd = round(sd(motif_seq_data$seq.dur, na.rm = TRUE), 3)
       )
 
   }
@@ -550,15 +550,15 @@ call_stats_hq <- function(wave,
   if (motif_seq) {
     # Add motif groups
     for (i in seq_len(nrow(motif_seq_data))) {
-      group_start <- motif_seq_data$group.start[i]
-      group_end <- motif_seq_data$group.end[i]
+      seq_start <- motif_seq_data$seq.start[i]
+      seq_end <- motif_seq_data$seq.end[i]
       show_legend <- if (i == 1) TRUE else FALSE
       p <- p %>%
         add_lines(
-          x = c(group_start, group_end), y = c(1.02, 1.02),
+          x = c(seq_start, seq_end), y = c(1.02, 1.02),
           name = "Motif Sequences", line = list(color = "#FF0000", width = 6),
           showlegend = show_legend, legendgroup = "motif.seqs",
-          hoverinfo = "x", text = paste("Time:", round(c(group_start, group_end), 2))
+          hoverinfo = "x", text = paste("Time:", round(c(seq_start, seq_end), 2))
         )
     }
 

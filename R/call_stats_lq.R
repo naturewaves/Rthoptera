@@ -196,7 +196,7 @@ call_stats_lq <- function(wave,
   train_data <- peak_data |>
     group_by(specimen.id, motif.id, train.id) |>
     summarize(
-      spcimen.id = unique(specimen.id),
+      specimen.id = unique(specimen.id),
       train.start = min(peak.time),
       train.end = max(peak.time),
       train.dur = round((train.end - train.start), 3),
