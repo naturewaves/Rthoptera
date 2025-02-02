@@ -52,7 +52,7 @@ This is an example of a Mean Power Spectrum extracted from a screenshot from Ado
 
 ![<span style="font-size: 12px;">Fig.1. Mean Power Spectrum of the song of <i>Ctenodecticus bolivari</i> obtained via screenshot from Adobe Audition.](../man/figures/ctenodecticus_bolivari_audition_microsoft.png)
 
-<br> Below is the same plot type produced by *Rthoptera* (using normalized amplitude instead of dB FS), which took 45 seconds to produce, including the selection of the file, changing scale parameters and custom labels on the Y-axis, modifying the output dimensions, and typing down the species name and call type.
+<br> Below is the same plot type produced by *Rthoptera* (using normalized amplitude instead of dB FS), which took 45 seconds to produce, including the selection of the file, changing scale parameters and custom labels on the Y-axis, modifying the output dimensions, and typing down the species name and song type.
 
 ![<span style="font-size: 12px;">Fig.2. Mean Power Spectrum of the song of <i>Ctenodecticus bolivari</i> obtained with <i>Rthoptera</i>.](../man/figures/ctenodecticus_spectral_plot.png)
 
@@ -149,47 +149,39 @@ spectrum_plotly(tettigonia)$plot
 While all the importing and preprocessing apps were added here just to make your life easier, the core of *Rthoptera*'s contribution to insect biacoustics is the automatic detection and characterization of temporal units.
 By playing around with a few parameters, you can specify what to measure, and *Rthoptera* will do the rest.
 Most of the available tools for automatic measurement of acoustic signals are based on a simple amplitude threshold which will separate a signal from background noise.
-That approach is enough to measure most high-SNR recordings of tonal calls, such as those produced by most ground-, tree-, and field-crickets.
+That approach is enough to measure most high-SNR recordings of tonal songs, such as those produced by most ground-, tree-, and field-crickets.
 However, when you want to measure broadband stridulations such as those produced by most katydids and bush-crickets, there are other things to consider.
-These broadband calls are characterized by transient-like "clicks", often reflecting individual impacts of the stridulatory teeth on the scraper.
+These broad-band songs are characterized by transient-like "clicks", often reflecting individual impacts of the stridulatory teeth on the scraper.
 In our neutral nomenclature, we call these sounds 'peaks'.
 Researchers are often interested in measuring the number of peaks in each 'pulse' (i.e., a continuous train of waves) or, as we call it, 'train'.
 The problem arises when some of these peaks are too faint to measure with the threshold approach, falling below the threshold if we want to filter out the reverberations of the signal.
 *Rthoptera* solves this by detecting local peaks with user-defined parameters.
-The *call_stats_lq()* function creates the following outputs:
+The *song_stats_lq* app (and function) creates the following outputs:
 
-• An interactive plot showing individual peaks, trains, and motifs, as well as reporting summary statistics of the main measurements.
+• An interactive plot showing individual peaks, trains, motifs, and motif sequences (when motif_seq = TRUE) as well as reporting summary statistics of the main measurements.
 
-• A tabular dataset including: peak, train, and motif measurements, a summary table and another table with all the parameters used in the analysis.
+• A tabular dataset including: peak, train, motif, and motif sequence measurements, a summary table and another table with all the parameters used in the analysis.
 All the temporal measurements are based on the peak detections.
 
-You can use Plotly's tools to zoom-in and explore the peak detections, especially in the fainter train.
-Note that the 'Summary Statistics' panel can be toggled off by clicking on the text in the legend.
-For each train detection, spectral statistics are calculated.
-This can be accessed in the train_data table:
+You can use Plotly's tools to zoom-in and explore the peak detections, especially in the fainter train. Note that the 'Summary Statistics' panel can be toggled off by clicking on the text in the legend, and the same is true for all the rest of the elements in the plot. 
+For each train detection, spectral statistics are calculated, which can be accessed in the train_data table. In this example, we will use the console to work with the function directly:
 
 ```{r , eval=FALSE}
 # Using a low detection threshold
-results <- call_stats_lq(coryphoda, 
-                         specimen_id = "coralb_001",
+results <- song_stats_lq(coryphoda, 
                          detection_threshold = 0.01,
                          motif_seq = FALSE)
 # Show the plot
 results$plot
 ```
 
+Note that any element of the plot can be toggled off from the legend pane. The plot can be downloaded as an HTML from the 'Export' menu in the Rstudio's viewer pane.
+<br>
 
-![<span style="font-size: 12px;">Fig.9. How to use the <i>call_stats_lq()</i> function and explore its interactive output. Any element of the plot can be toggled off from the legend pane.](../man/figures/call_stats_lq.gif) 
+![<span style="font-size: 12px;">Fig.9. How to use the <i>song_stats_lq()</i> function and explore its interactive output.](../man/figures/song_stats_lq_function.gif) 
 
 <br>
 
-You can download interactive plots using the "Export" menu in the Rstudio viewer pane:
-
-
-![<span style="font-size: 12px;">Fig.10. How to download HTML plots with Rstudio.](../man/figures/download_html.gif)
-
-
-<br> 
 
 Now let's inspect the results in the output tables:
 
@@ -216,7 +208,7 @@ View(results$params)
 
 <br> 
 
-The *Coryphoda* analysis is a perfect illustration for the Temporal and Dynamic Excursion metrics in the `call_stats_lq()` function.
+The *Coryphoda* analysis is a perfect illustration for the Temporal and Dynamic Excursion metrics in the `song_stats_lq()` function.
 If we used an amplitude threshold approach, we would likely have to ignore the first train, which is produced when the male opens its tegmina (forewings).
 However, the peak detection approach allows us to capture this faint sound which is packed with information.
 Let's focus on the "train_data" table:
@@ -225,7 +217,7 @@ Let's focus on the "train_data" table:
 library(Rthoptera)
 library(RthopteraSounds)
 data("coryphoda")
-results <- call_stats_lq(coryphoda, 
+results <- song_stats_lq(coryphoda, 
                          detection_threshold = 0.01, 
                          motif_seq = FALSE)
 knitr::kable(results$train_data, caption = "Fig. 12. Train Data table from the 'results' object.") 
@@ -243,23 +235,38 @@ table caption {
 }
 ```
 
+Of course, if you prefer, you can use the app:
+
+```{r, eval=FALSE}
+launch_app("song_stats_lq")
+```
+
+<br>
+
+![<span style="font-size: 12px;">Fig.13. How to use the <i>song_stats_lq</i> app.](../man/figures/song_stats.gif)
+
+<br> 
 
 Note how the Temporal Excursion ("tem.exc" column) is much higher in the first train, which is also the longest ("train.dur" column), with the highest number of peaks ("n.peaks" column), the faintest ("mean.amp" column), and the flattest in terms of energy, with the lowest Dynamic Excursion ("dyn.exc" column).
 The opposite is true in almost all metrics for the last train (closing stroke); it is the shortest, with the lowest number of peaks, the loudest, with the greatest change in amplitude (Dynamic Excursion).
 
-If you want to analyze tonal, "high-Q" songs, such as those produced by most crickets, you should instead use the `call_stats_hq()` function.
+If you want to analyze tonal, "high-Q" songs, such as those produced by most crickets, you should instead use the `song_stats_hq()` function.
 In this example, we will use the *gryllus* Wave from *RthopteraSounds.* We will also add another level of aggregation by leaving *motif_seq = TRUE* (Default) in the arguments:
 
 ```{r , eval=FALSE}
-# Use the call_stats_lq() function with a low detection threshold
-call_stats_hq(gryllus, 
+# Use the song_stats_lq() function with a low detection threshold
+song_stats_hq(gryllus, 
               specimen_id = "gryllus_001") #optional
 
 # Show the plot
 results$plot
 ```
 
-![<span style="font-size: 12px;">Fig.13. How to use the <i>call_stats_hq()</i> function for tonal calls.](../man/figures/call_stats_hq.gif)
+Note that when you don't assign the function call to a new object (e.g., <i>some_object <- song_stats_hq(gryllus)</i>), the output is only printed on the console, which is not optimal when there are many columns which remain hidden.
+
+<br>
+
+![<span style="font-size: 12px;">Fig.13. How to use the <i>song_stats_hq()</i> function for tonal songs.](../man/figures/song_stats_hq_function.gif)
 
 <br>
 

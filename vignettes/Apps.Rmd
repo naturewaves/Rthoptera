@@ -27,9 +27,9 @@ launch_app("import")
 ```
 and `Rthoptera` will launch the *import_wave* app. However, some apps have longer and similar names, for which you will need to type more characters. For example, if you run:
 ```{r}
-launch_app("temporal_stats")
+launch_app("song_stats")
 ```
-`Rthoptera` will ask you to specify further. If you pay attention to the list of available apps, you will notice that the 'temporal_stats' apps are the only ones ending with 'hq' and 'lq', so if you run:
+`Rthoptera` will ask you to specify further. If you pay attention to the list of available apps, you will notice that the 'song_stats' apps are the only ones ending with 'hq' and 'lq', so if you run:
 ```{r}
 launch_app('hq')
 ```

@@ -81,14 +81,14 @@
 <div class="section level2">
 <h2 id="getting-summary-data-for-specific-trains-across-motifs">Getting summary data for specific trains across motifs<a class="anchor" aria-label="anchor" href="#getting-summary-data-for-specific-trains-across-motifs"></a>
 </h2>
-<p>When you use the <code>call_stats</code> functions to extract
+<p>When you use the <code>song_stats</code> functions to extract
 temporal and spectral statistics, the summary output does not include
 summaries by individual “train ids” because the number of train per
 motif is variable between species. However, you can easily summarize
 these with little code:</p>
 <p>For this example, we will work with the <code>gryllus</code> object
 from the <code>RthopteraSounds</code> package. After loading the data,
-we will run the <code>call_stats_hq</code> function which is optimized
+we will run the <code>song_stats_hq</code> function which is optimized
 for tonal calls, storing the output of the function in the local
 environment:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -98,7 +98,7 @@ environment:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">gryllus</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Store the results in the R environment</span></span>
-<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/call_stats_hq.html">call_stats_hq</a></span><span class="op">(</span><span class="va">gryllus</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/song_stats_hq.html">song_stats_hq</a></span><span class="op">(</span><span class="va">gryllus</span><span class="op">)</span></span></code></pre></div>
 <p>Next, we will group the train data by “train.id”, and summarize it
 with the <code>reframe()</code> function from the <strong>dplyr</strong>
 package, calculating its mean:</p>

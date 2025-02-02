@@ -147,7 +147,7 @@ screenshot from Adobe Audition.</span></div>
 (using normalized amplitude instead of dB FS), which took 45 seconds to
 produce, including the selection of the file, changing scale parameters
 and custom labels on the Y-axis, modifying the output dimensions, and
-typing down the species name and call type.</p>
+typing down the species name and song type.</p>
 <div class="float">
 <img src="../reference/figures/ctenodecticus_spectral_plot.png" alt="Fig.2. Mean Power Spectrum of the song of Ctenodecticus bolivari obtained with Rthoptera."><div class="figcaption"><span style="font-size: 12px;">Fig.2. Mean Power
 Spectrum of the song of <i>Ctenodecticus bolivari</i> obtained with
@@ -276,10 +276,10 @@ what to measure, and <em>Rthoptera</em> will do the rest. Most of the
 available tools for automatic measurement of acoustic signals are based
 on a simple amplitude threshold which will separate a signal from
 background noise. That approach is enough to measure most high-SNR
-recordings of tonal calls, such as those produced by most ground-,
+recordings of tonal songs, such as those produced by most ground-,
 tree-, and field-crickets. However, when you want to measure broadband
 stridulations such as those produced by most katydids and bush-crickets,
-there are other things to consider. These broadband calls are
+there are other things to consider. These broad-band songs are
 characterized by transient-like “clicks”, often reflecting individual
 impacts of the stridulatory teeth on the scraper. In our neutral
 nomenclature, we call these sounds ‘peaks’. Researchers are often
@@ -289,37 +289,36 @@ arises when some of these peaks are too faint to measure with the
 threshold approach, falling below the threshold if we want to filter out
 the reverberations of the signal. <em>Rthoptera</em> solves this by
 detecting local peaks with user-defined parameters. The
-<em>call_stats_lq()</em> function creates the following outputs:</p>
-<p>• An interactive plot showing individual peaks, trains, and motifs,
-as well as reporting summary statistics of the main measurements.</p>
-<p>• A tabular dataset including: peak, train, and motif measurements, a
-summary table and another table with all the parameters used in the
-analysis. All the temporal measurements are based on the peak
-detections.</p>
+<em>song_stats_lq</em> app (and function) creates the following
+outputs:</p>
+<p>• An interactive plot showing individual peaks, trains, motifs, and
+motif sequences (when motif_seq = TRUE) as well as reporting summary
+statistics of the main measurements.</p>
+<p>• A tabular dataset including: peak, train, motif, and motif sequence
+measurements, a summary table and another table with all the parameters
+used in the analysis. All the temporal measurements are based on the
+peak detections.</p>
 <p>You can use Plotly’s tools to zoom-in and explore the peak
 detections, especially in the fainter train. Note that the ‘Summary
 Statistics’ panel can be toggled off by clicking on the text in the
-legend. For each train detection, spectral statistics are calculated.
-This can be accessed in the train_data table:</p>
+legend, and the same is true for all the rest of the elements in the
+plot. For each train detection, spectral statistics are calculated,
+which can be accessed in the train_data table. In this example, we will
+use the console to work with the function directly:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Using a low detection threshold</span></span>
-<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/call_stats_lq.html">call_stats_lq</a></span><span class="op">(</span><span class="va">coryphoda</span>, </span>
-<span>                         specimen_id <span class="op">=</span> <span class="st">"coralb_001"</span>,</span>
+<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/song_stats_lq.html">song_stats_lq</a></span><span class="op">(</span><span class="va">coryphoda</span>, </span>
 <span>                         detection_threshold <span class="op">=</span> <span class="fl">0.01</span>,</span>
 <span>                         motif_seq <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co"># Show the plot</span></span>
 <span><span class="va">results</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
+<p>Note that any element of the plot can be toggled off from the legend
+pane. The plot can be downloaded as an HTML from the ‘Export’ menu in
+the Rstudio’s viewer pane. <br></p>
 <div class="float">
-<img src="../reference/figures/call_stats_lq.gif" alt="Fig.9. How to use the call_stats_lq() function and explore its interactive output. Any element of the plot can be toggled off from the legend pane."><div class="figcaption"><span style="font-size: 12px;">Fig.9. How to use
-the <i>call_stats_lq()</i> function and explore its interactive output.
-Any element of the plot can be toggled off from the legend pane.</span></div>
-</div>
-<p><br></p>
-<p>You can download interactive plots using the “Export” menu in the
-Rstudio viewer pane:</p>
-<div class="float">
-<img src="../reference/figures/download_html.gif" alt="Fig.10. How to download HTML plots with Rstudio."><div class="figcaption"><span style="font-size: 12px;">Fig.10. How to
-download HTML plots with Rstudio.</span></div>
+<img src="../reference/figures/song_stats_lq_function.gif" alt="Fig.9. How to use the song_stats_lq() function and explore its interactive output."><div class="figcaption"><span style="font-size: 12px;">Fig.9. How to use
+the <i>song_stats_lq()</i> function and explore its interactive
+output.</span></div>
 </div>
 <p><br></p>
 <p>Now let’s inspect the results in the output tables:</p>
@@ -346,7 +345,7 @@ inspect tables from a listed output in Rstudio.</span></div>
 <p><br></p>
 <p>The <em>Coryphoda</em> analysis is a perfect illustration for the
 Temporal and Dynamic Excursion metrics in the
-<code><a href="../reference/call_stats_lq.html">call_stats_lq()</a></code> function. If we used an amplitude threshold
+<code><a href="../reference/song_stats_lq.html">song_stats_lq()</a></code> function. If we used an amplitude threshold
 approach, we would likely have to ignore the first train, which is
 produced when the male opens its tegmina (forewings). However, the peak
 detection approach allows us to capture this faint sound which is packed
@@ -354,26 +353,26 @@ with information. Let’s focus on the “train_data” table:</p>
 <table class="table">
 <caption>Fig. 12. Train Data table from the ‘results’ object.</caption>
 <colgroup>
-<col width="5%">
+<col width="6%">
 <col width="4%">
 <col width="4%">
-<col width="3%">
-<col width="3%">
-<col width="5%">
 <col width="4%">
 <col width="4%">
 <col width="6%">
+<col width="5%">
+<col width="5%">
+<col width="6%">
+<col width="5%">
 <col width="4%">
+<col width="4%">
+<col width="5%">
+<col width="5%">
+<col width="4%">
+<col width="5%">
+<col width="3%">
 <col width="3%">
 <col width="4%">
-<col width="4%">
-<col width="4%">
-<col width="4%">
-<col width="4%">
-<col width="2%">
-<col width="4%">
-<col width="4%">
-<col width="4%">
+<col width="3%">
 <col width="4%">
 </colgroup>
 <thead><tr class="header">
@@ -418,10 +417,10 @@ with information. Let’s focus on the “train_data” table:</p>
 <td align="right">12.8</td>
 <td align="right">26.2</td>
 <td align="right">13.4</td>
-<td align="right">51.08304</td>
-<td align="right">108.6218</td>
-<td align="right">0.8130509</td>
-<td align="right">0.3860315</td>
+<td align="right">51.083</td>
+<td align="right">108.622</td>
+<td align="right">0.813</td>
+<td align="right">0.386</td>
 </tr>
 <tr class="even">
 <td align="left"></td>
@@ -441,10 +440,10 @@ with information. Let’s focus on the “train_data” table:</p>
 <td align="right">13.5</td>
 <td align="right">34.5</td>
 <td align="right">21.0</td>
-<td align="right">69.97252</td>
-<td align="right">193.6458</td>
-<td align="right">0.8026287</td>
-<td align="right">0.2602236</td>
+<td align="right">69.973</td>
+<td align="right">193.646</td>
+<td align="right">0.803</td>
+<td align="right">0.260</td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
@@ -464,10 +463,10 @@ with information. Let’s focus on the “train_data” table:</p>
 <td align="right">14.2</td>
 <td align="right">33.0</td>
 <td align="right">18.8</td>
-<td align="right">62.96677</td>
-<td align="right">187.7962</td>
-<td align="right">0.7722762</td>
-<td align="right">0.2139693</td>
+<td align="right">62.967</td>
+<td align="right">187.796</td>
+<td align="right">0.772</td>
+<td align="right">0.214</td>
 </tr>
 </tbody>
 </table>
@@ -482,6 +481,15 @@ table caption {
   color: black; 
 }
 </style>
+<p>Of course, if you prefer, you can use the app:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/launch_app.html">launch_app</a></span><span class="op">(</span><span class="st">"song_stats_lq"</span><span class="op">)</span></span></code></pre></div>
+<p><br></p>
+<div class="float">
+<img src="../reference/figures/song_stats.gif" alt="Fig.13. How to use the song_stats_lq app."><div class="figcaption"><span style="font-size: 12px;">Fig.13. How to
+use the <i>song_stats_lq</i> app.</span></div>
+</div>
+<p><br></p>
 <p>Note how the Temporal Excursion (“tem.exc” column) is much higher in
 the first train, which is also the longest (“train.dur” column), with
 the highest number of peaks (“n.peaks” column), the faintest (“mean.amp”
@@ -492,20 +500,25 @@ number of peaks, the loudest, with the greatest change in amplitude
 (Dynamic Excursion).</p>
 <p>If you want to analyze tonal, “high-Q” songs, such as those produced
 by most crickets, you should instead use the
-<code><a href="../reference/call_stats_hq.html">call_stats_hq()</a></code> function. In this example, we will use the
+<code><a href="../reference/song_stats_hq.html">song_stats_hq()</a></code> function. In this example, we will use the
 <em>gryllus</em> Wave from <em>RthopteraSounds.</em> We will also add
 another level of aggregation by leaving <em>motif_seq = TRUE</em>
 (Default) in the arguments:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Use the call_stats_lq() function with a low detection threshold</span></span>
-<span><span class="fu"><a href="../reference/call_stats_hq.html">call_stats_hq</a></span><span class="op">(</span><span class="va">gryllus</span>, </span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Use the song_stats_lq() function with a low detection threshold</span></span>
+<span><span class="fu"><a href="../reference/song_stats_hq.html">song_stats_hq</a></span><span class="op">(</span><span class="va">gryllus</span>, </span>
 <span>              specimen_id <span class="op">=</span> <span class="st">"gryllus_001"</span><span class="op">)</span> <span class="co">#optional</span></span>
 <span></span>
 <span><span class="co"># Show the plot</span></span>
 <span><span class="va">results</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
+<p>Note that when you don’t assign the function call to a new object
+(e.g., <i>some_object &lt;- song_stats_hq(gryllus)</i>), the output is
+only printed on the console, which is not optimal when there are many
+columns which remain hidden.</p>
+<p><br></p>
 <div class="float">
-<img src="../reference/figures/call_stats_hq.gif" alt="Fig.13. How to use the call_stats_hq() function for tonal calls."><div class="figcaption"><span style="font-size: 12px;">Fig.13. How to
-use the <i>call_stats_hq()</i> function for tonal calls.</span></div>
+<img src="../reference/figures/song_stats_hq_function.gif" alt="Fig.13. How to use the song_stats_hq() function for tonal songs."><div class="figcaption"><span style="font-size: 12px;">Fig.13. How to
+use the <i>song_stats_hq()</i> function for tonal songs.</span></div>
 </div>
 <p><br></p>
 </div>
