@@ -16,6 +16,8 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+![](../man/figures/Rthoptera_logo_darkgrey.png){width=20%}
+
 ## Multi-software "manual" approaches
 
 Before the development of *Rthoptera*, being dissatisfied with the image output provided by the available bioacoustics software packages, the authors used screenshots from the relevant views obtained by closed-source software, mostly Adobe Audition (Adobe Inc., 2023).

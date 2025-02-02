@@ -14,9 +14,11 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+![](../man/figures/Rthoptera_logo_darkgrey.png){width=20%}
+
 ## Getting summary data for specific trains across motifs
 
-When you use the `song_stats` functions to extract temporal and spectral statistics, the summary output does not include summaries by individual "train ids" because the number of train per motif is variable between species. However, you can easily summarize these with little code:
+When you use the `song_stats` functions to extract temporal and spectral statistics, the summary output does not include summaries by individual "train ids" because the number of train per motif is variable between species. However, you can easily summarize these using a few lines of code.
 
 For this example, we will work with the `gryllus` object from the `RthopteraSounds` package. After loading the data, we will run the `song_stats_hq` function which is optimized for tonal calls, storing the output of the function in the local environment:
 ```{r, evaluate = FALSE, message=FALSE, warning=FALSE}
@@ -29,7 +31,7 @@ data(gryllus)
 results <- song_stats_hq(gryllus)
 ```
 
-Next, we will group the train data by "train.id", and summarize it with the `reframe()` function from the **dplyr** package, calculating its mean:
+Next, we will group the train data by "train.id", and summarize it with the `reframe()` function from the **dplyr** package, calculating its mean. You can use the pipe operator (left-pointing triangle) with Ctrl+Shift_M on Windows and Cmd+Shift+M on Mac:
 ```{r, eval=FALSE, message=FALSE, warning=FALSE}
 results$train_data |> 
   group_by(train.id) |> # group the trains by their identity within a motif
@@ -37,4 +39,4 @@ results$train_data |>
 ```
 
 
-![Fig.3. How to use the "bandpass_filter" app.](../man/figures/summarize_data.gif)
+![Fig.1. How to summarize data from a listed data frame in R.](../man/figures/summarize.gif)
