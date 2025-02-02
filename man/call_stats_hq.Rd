@@ -47,7 +47,7 @@ motifs. Default = 0.08.}
 value is FALSE.}
 
 \item{max_motif_gap}{Numeric. Maximum allowed gap (in seconds) between motifs
-to consider them part of the same group.
+to consider them part of the same sequence.
  @param norm_env A logical indicating whether to normalize the envelope
  Default = TRUE.}
 }
