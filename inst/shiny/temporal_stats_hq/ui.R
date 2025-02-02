@@ -331,20 +331,22 @@ ui <- function(request) {
 
       shiny::column(10,
                     shiny::fluidRow(
-                      shiny::column(2, shiny::actionButton("run", "Run Analysis")),
+                      shiny::column(2, shiny::actionButton("run", "Run Analysis"),
+                                    shiny::checkboxInput("motif_seq", "Motif Sequences", value = TRUE)
+                      ),
                       shiny::column(2, shiny::downloadButton("saveData", "Export Excel Workbook")),
                       shiny::column(2, shiny::verticalLayout(
-                        shiny::downloadButton("savePlot", "Export HTML Plot"),
-                        # shiny::checkboxInput("show_annotations", "Show Annotations", value = TRUE)  # Add this checkbox
+                        shiny::downloadButton("savePlot", "Export HTML Plot")
+                        # shiny::checkboxInput("motif_seq", "Motif Sequences", value = TRUE)
                       )),
                       shiny::column(1, shiny::actionButton("close", "Close App"))
                     ),
 
                     shiny::fluidRow(
                       shiny::column(12,
-                                    shiny::h3("NOTICE: This function resamples Wave objects to 192 kHz for consistent
-            minimum resolution of time measurements. Sampling rates equal or higher are not resampled. See documentation for details.",
-                                              style = "font-size: 12px; color: lightgrey;"),
+                                    #                         shiny::h3("NOTICE: This function resamples Wave objects to 192 kHz for consistent
+                                    # minimum resolution of time measurements. Sampling rates equal or higher are not resampled. See documentation for details.",
+                                    #                                   style = "font-size: 12px; color: lightgrey;"),
                                     shinycssloaders::withSpinner(plotly::plotlyOutput("audioPlot")),
                                     DT::DTOutput("summary_data"),
                                     DT::DTOutput("motif_data"),

@@ -1,4 +1,4 @@
-#' Temporal and spectral statistics for HQ calls
+#' Temporal and Spectral Statistics for HQ Calls
 #'
 #' This function analyzes the acoustic characteristics of a wave object by
 #' detecting sounds above a threshold in the envelope created with a mean
@@ -148,8 +148,8 @@ call_stats_hq <- function(wave,
                               from = train.start,
                               to = train.end,
                               dB = NULL, plot = FALSE)
-            sp.ent <- seewave::sh(spec1)
-            sp.flat <- seewave::sfm(spec1)
+            sp.ent <- round(seewave::sh(spec1), 3)
+            sp.flat <- round(seewave::sfm(spec1), 3)
             rm(spec1)
 
             # Calculate meanspec for the train
@@ -166,7 +166,7 @@ call_stats_hq <- function(wave,
 
             # Identify the peak frequency and peak amplitude
             peak_index <- which.max(spec_df$Amplitude)
-            peak.freq <- round(spec_df$Frequency[peak_index], 1)
+            peak.freq <- round(spec_df$Frequency[peak_index], 2)
             peak_amp <- spec_df$Amplitude[peak_index]
 
             # Determine the threshold (dB below the peak amplitude)
@@ -174,27 +174,34 @@ call_stats_hq <- function(wave,
 
             # Find low frequency (first frequency below threshold moving to lower frequencies)
             low_index <- max(which(spec_df$Amplitude[1:peak_index] < threshold))
-            low.freq <- round(spec_df$Frequency[low_index], 1)
+            low.freq <- round(spec_df$Frequency[low_index], 2)
 
             # Find high frequency (first frequency below threshold moving to higher frequencies)
             high_index <- peak_index + min(which(spec_df$Amplitude[peak_index:nrow(spec_df)] < threshold)) - 1
-            high.freq <- round(spec_df$Frequency[high_index], 1)
+            high.freq <- round(spec_df$Frequency[high_index], 2)
 
             # Calculate bandwidth
-            bandw <- round(high.freq - low.freq, 1)
+            bandw <- round(high.freq - low.freq, 2)
 
             freq_range <- spec_df[low_index:high_index, ]
 
             # Spectral Excursion (contour length)
-            sp.exc <- sum(sqrt(diff(freq_range$Frequency)^2 + diff(freq_range$Amplitude)^2))
+            sp.exc <- round(sum(sqrt(diff(freq_range$Frequency)^2 + diff(freq_range$Amplitude)^2)),3)
 
             # Spectral energy (area under the curve)
-            sp.ene <- abs(sum(diff(freq_range$Frequency) * (head(freq_range$Amplitude, -1) + tail(freq_range$Amplitude, -1)) / 2))
+            sp.ene <- round(abs(sum(diff(freq_range$Frequency) * (head(freq_range$Amplitude, -1) + tail(freq_range$Amplitude, -1)) / 2)),3)
 
 
 
 
-            tibble(peak.freq, low.freq, high.freq, bandw, sp.exc, sp.ene, sp.ent, sp.flat)
+            tibble(peak.freq,
+                   low.freq,
+                   high.freq,
+                   bandw,
+                   sp.exc,
+                   sp.ene,
+                   sp.ent,
+                   sp.flat)
 
 
 
@@ -383,7 +390,7 @@ call_stats_hq <- function(wave,
 
     motif_data <- motif_data |>
       mutate(
-        motif.period = ifelse(is.na(lead(motif.seq)) | lead(motif.seq) != motif.seq, NA, lead(motif.start) - motif.start),
+        motif.period = round(ifelse(is.na(lead(motif.seq)) | lead(motif.seq) != motif.seq, NA, lead(motif.start) - motif.start),3),
         motif.gap = round(lead(motif.start) - motif.end, 3)
       ) |>
       relocate(motif.period, .after = motif.dur) |>

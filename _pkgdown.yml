@@ -2,4 +2,4 @@ url: https://naturewaves.github.io/Rthoptera/
 template:
   bootstrap: 5
   light-switch: true
-  bootswatch: solar
+  bootswatch: sketchy

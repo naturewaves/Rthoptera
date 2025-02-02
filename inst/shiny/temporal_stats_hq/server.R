@@ -9,15 +9,17 @@ server <- function(input, output, session) {
   result <- shiny::eventReactive(input$run, {
     shiny::req(input$selectedWave)
     wave <- get(input$selectedWave, envir = .GlobalEnv)
-    temporal_stats_hq(wave,
-                      specimen_id = shiny::isolate(input$specimen_id),
-                      msmooth_window = as.numeric(shiny::isolate(input$msmooth_window)),
-                      msmooth_overlap = as.numeric(shiny::isolate(input$msmooth_overlap)),
-                      upper_detection_threshold = as.numeric(shiny::isolate(input$upper_detection_threshold)),
-                      lower_detection_threshold = as.numeric(shiny::isolate(input$lower_detection_threshold)),
-                      min_train_dur = as.numeric(0.002),
-                      max_train_gap = as.numeric(shiny::isolate(input$max_train_gap)),
-                      norm_env = TRUE)
+    call_stats_hq(wave,
+                  specimen_id = shiny::isolate(input$specimen_id),
+                  msmooth_window = as.numeric(shiny::isolate(input$msmooth_window)),
+                  msmooth_overlap = as.numeric(shiny::isolate(input$msmooth_overlap)),
+                  upper_detection_threshold = as.numeric(shiny::isolate(input$upper_detection_threshold)),
+                  lower_detection_threshold = as.numeric(shiny::isolate(input$lower_detection_threshold)),
+                  min_train_dur = as.numeric(0.002),
+                  max_train_gap = as.numeric(shiny::isolate(input$max_train_gap)),
+                  norm_env = TRUE,
+                  motif_seq = input$motif_seq
+    )
   })
 
   shiny::observeEvent(input$preset, {
@@ -126,24 +128,32 @@ server <- function(input, output, session) {
     content = function(file) {
       shiny::req(result())
       data_list <- list(
-        "Summary" = result()$summary_data,
-        "Motif Data" = result()$motif_data,
-        "Train Data" = result()$train_data,
-        "Parameters" = result()$params
-      )
-      writexl::write_xlsx(data_list, path = file)
+        "Summary" = result()$summary_data)
+
+      if (input$motif_seq) {
+
+        data_list <- data_list |>
+          mutate("Motif Sequence Data" = result()$motif_seq_data)
+      }
+
+      ,
+      "Motif Data" = result()$motif_data,
+      "Train Data" = result()$train_data,
+      "Parameters" = result()$params
+  )
+  writexl::write_xlsx(data_list, path = file)
     }
   )
 
-  # Stop app when the tab is closed with the "X" button
-  session$onSessionEnded(function() {
-    shiny::stopApp()
-  })
+# Stop app when the tab is closed with the "X" button
+session$onSessionEnded(function() {
+  shiny::stopApp()
+})
 
-  # Stop app when the "Close app" button is used
-  shiny::observeEvent(input$close, {
-    shinyjs::runjs("window.close();")
-    shiny::stopApp()
-  })
+# Stop app when the "Close app" button is used
+shiny::observeEvent(input$close, {
+  shinyjs::runjs("window.close();")
+  shiny::stopApp()
+})
 
 }
