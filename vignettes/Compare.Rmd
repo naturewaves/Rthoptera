@@ -5,7 +5,7 @@ date: "2025-01-15"
 output: rmarkdown::html_document 
 vignette: >
   %\VignetteIndexEntry{Comparing Rthoptera with other workflows}
-  %\VignetteEngine{plotly}
+  %\VignetteEngine{knitr}
   %\VignetteEncoding{UTF-8}
 editor_options: 
   markdown: 
@@ -50,14 +50,13 @@ The whole process described above is highly dependent from the skill, the experi
 
 This is an example of a Mean Power Spectrum extracted from a screenshot from Adobe Audition and post-processed in Microsoft Paint and Adobe Photoshop to change the color scale and add new axes labels, requiring about 10 minutes to produce:
 
-![Fig.1. Mean Power Spectrum of the song of Ctenodecticus bolivari obtained via screenshot from Adobe Audition.](../man/figures/ctenodecticus_bolivari_audition_microsoft.png) 
+![<span style="font-size: 12px;">Fig.1. Mean Power Spectrum of the song of <i>Ctenodecticus bolivari</i> obtained via screenshot from Adobe Audition.](../man/figures/ctenodecticus_bolivari_audition_microsoft.png)
 
-Below is the same plot type produced by *Rthoptera* (using normalized amplitude instead of dB FS), which took 45 seconds to produce, including the selection of the file, changing scale parameters and custom labels on the Y-axis, modifying the output dimensions, and typing down the species name and call type.
+<br> Below is the same plot type produced by *Rthoptera* (using normalized amplitude instead of dB FS), which took 45 seconds to produce, including the selection of the file, changing scale parameters and custom labels on the Y-axis, modifying the output dimensions, and typing down the species name and call type.
 
-![Fig.2. Mean Power Spectrum of the song of Ctenodecticus bolivari obtained with Rthoptera.](../man/figures/ctenodecticus_spectral_plot.png) 
+![<span style="font-size: 12px;">Fig.2. Mean Power Spectrum of the song of <i>Ctenodecticus bolivari</i> obtained with <i>Rthoptera</i>.](../man/figures/ctenodecticus_spectral_plot.png)
 
-
-### Raven Pro 1.6 
+### Raven Pro 1.6
 
 NOTE: For this comparison we used a machine with Windows 11 Home, 64 bit, 16 GB RAM.
 
@@ -66,62 +65,86 @@ Even the free version **Raven Lite** offers a suite of useful tools for acoustic
 One disadvantage of this software is its proprietary nature, limiting the user's ability to customize the plots and forcing them to rely on extra software to obtain the desired results.
 The plot shown below took about 70 seconds to make in **Raven Pro 1.6**, including un-checking the position marker (which is wrongly shown in many scientific publications), adjusting the zoom level on the oscillogram, the window size and contrast for the spectrogram, and finally changing to grey scale in Microsoft Office, which does not allow to control the output dimensions either:
 
-![Fig.3. Oscillogram and spectrogram views of a song of Coryphoda albidicollis obtained from Raven Pro.](../man/figures/coryphoda_raven_70sec.png) 
+![<span style="font-size: 12px;">Fig.3. Oscillogram and spectrogram views of the calling song of <i>Coryphoda albidicollis</i> obtained from Raven Pro.](../man/figures/coryphoda_raven_70sec.png)
 
-<br> While the output is nice, it is far from customizable, and the user can't control the output parameters either (e.g., image dimensions).
-To our knowledge, all the plot in **Raven** are separate views, not allowing to add a Mean Power Spectrum aligned on the side of the spectrogram.
-If we wanted to achieve the same output as in the "multiplot" from *Rthoptera*, we would have to manually paste the spectral plot on the side, requiring a manual adjustment of the dimensions which would likely distort the axes labels.
+<br> 
+While the output is nice, it is far from customizable, and the user can't control the output parameters either (e.g., image dimensions).
+To our knowledge, all the plots in **Raven** are separate views, not allowing to add a Mean Power Spectrum aligned on the side of the spectrogram.
+If we wanted to achieve the same output as in the "multi-plot" from *Rthoptera*, we would have to manually paste the spectral plot on the side, requiring a manual adjustment of the dimensions which would likely distort the axes labels.
 If we consider iterating this process over many recordings, it translates into a very tedious endeavor.
 
 In *Rthoptera*, the final output can be obtained in about 10 seconds without these extra manual processing.
-First, we will load the data from the *RthopteraSounds* package:
+First, we will load some Waves from the *RthopteraSounds* package:
 
 ```{r, eval=FALSE}
 library(Rthoptera)
+
+# Load the sample recordings
 library(RthopteraSounds)
-data("coryphoda") # Load the sample recording of Coryphoda albidicollis.
+data("coryphoda") 
+data("tettigonia")
+data("gryllus")
 ```
 
-Then, we launch the app *multi_plot* app with the following call:
+Then, we launch the app `multi_plot` app with the following call:
 
 ```{r, eval=FALSE}
 launch_app("multi_plot")
 ```
 
-<br><br>
+<br> Here we can modify some parameters before computing the plot:
 
-Here we can modify some parameters before computing the plot: ![Fig.4. How to use the "multi_plot" app.](../man/figures/multiplot.gif)
+![<span style="font-size: 12px;">Fig.4. How to use the <i>multi_plot</i> app.](../man/figures/multiplot.gif)
 
 <br>
-
 This is the exported image:
 
-![Fig.5. Exported PNG file from the "multi_plot" app in Rthoptera.](../man/figures/coryphoda_rthoptera_10sec.png) <br>
+![<span style="font-size: 12px;">Fig.5. Exported PNG file from the <i>multi_plot</i> app in <i>Rthoptera</i>.](../man/figures/coryphoda_rthoptera_10sec.png)
 
-## Interactive plots
+<br> 
+Note that in **R**, the **warbleR** package also allows to extract spectral statistics automatically, but it requires importing selection tables from **Raven**, which makes the process longer.
+
+## <b>Rthoptera</b>'s Interactive Plots
 
 One of the main features of our package is interactivity.
 Several functions and apps produce interactive plots that can be saved as HTML documents for end users to explore.
-Here are some examples on how to obtain interactive plots:
+Here are some examples on how to obtain interactive plots using the `tettigonia` Wave object from *RthopteraSounds*:
 
-```{r, message=FALSE, warning=FALSE, out.width="100%"}
-library(RthopteraSounds)
-library(Rthoptera)
+First, let's make an interactive oscillogram with the *oscillogram_plotly* function:
+```{r, eval=FALSE}
 data("tettigonia")
-
 # Interactive oscillogram (aka waveform)
 oscillogram_plotly(tettigonia)
+```
 
+![<span style="font-size: 12px;">Fig.6. Interactive oscillogram created using Plotly.](../man/figures/oscillogram_plotly.gif)
+
+<br>
+
+An ancillary interactive spectrogram can be obtained with the *spectrogram_plotly()* function. Note that the interactive spectrogram was added mainly as an aid during preprocessing (band-pass filtering) and is not intended for illustrating a signal in a professional way (hence the blueprint style):
+
+```{r, eval=FALSE}
 # Interactive spectrogram (aka sonogram)
 spectrogram_plotly(tettigonia)
+```
 
+![<span style="font-size: 12px;">Fig.7. Interactive spectrogram with Plotly.](../man/figures/spectrogram_plotly.gif)
+
+<br>
+An interactive Power Spectrum can be obtained with the *spectrum_plotly()* function. This plot shows a black linear scale spectrum on top of a grey dB scale spectrum:
+
+```{r, eval=FALSE}
 # Interactive mean power spectrum (aka PSD)
 spectrum_plotly(tettigonia)$plot
 ```
 
-NOTE: The interactive spectrogram was added mainly as an aid during preprocessing (band-pass filtering) and is not intended for illustrating a signal in a professional way (hence the blueprint style).
+<br>
 
-## Rthoptera's backbone: temporal metrics
+![<span style="font-size: 12px;">Fig.8. Interactive power spectrum with Plotly.](../man/figures/spectrum_plotly.gif) 
+
+<br>
+
+## <b>Rthoptera</b>'s Temporal Metrics
 
 While all the importing and preprocessing apps were added here just to make your life easier, the core of *Rthoptera*'s contribution to insect biacoustics is the automatic detection and characterization of temporal units.
 By playing around with a few parameters, you can specify what to measure, and *Rthoptera* will do the rest.
@@ -145,44 +168,102 @@ Note that the 'Summary Statistics' panel can be toggled off by clicking on the t
 For each train detection, spectral statistics are calculated.
 This can be accessed in the train_data table:
 
-```{r , out.width="100%"}
-library(Rthoptera)
-library(RthopteraSounds)
-data(coryphoda)
-
-# Use the call_stats_lq() function with a low detection threshold
+```{r , eval=FALSE}
+# Using a low detection threshold
 results <- call_stats_lq(coryphoda, 
                          specimen_id = "coralb_001",
                          detection_threshold = 0.01,
                          motif_seq = FALSE)
+# Show the plot
+results$plot
+```
+
+
+![<span style="font-size: 12px;">Fig.9. How to use the <i>call_stats_lq()</i> function and explore its interactive output. Any element of the plot can be toggled off from the legend pane.](../man/figures/call_stats_lq.gif) 
+
+<br>
+
+You can download interactive plots using the "Export" menu in the Rstudio viewer pane:
+
+
+![<span style="font-size: 12px;">Fig.10. How to download HTML plots with Rstudio.](../man/figures/download_html.gif)
+
+
+<br> 
+
+Now let's inspect the results in the output tables:
+
+```{r, eval=FALSE}
+# Summary
+View(results$summary_data)
+
+# Peaks
+View(results$peak_data)
+
+# Trains
+View(results$train_data)
+
+# Motifs
+View(results$motif_data)
+
+# Parameters used
+View(results$params)
+```
+
+<br>
+
+![<span style="font-size: 12px;">Fig.11. How to inspect tables from a listed output in Rstudio.](../man/figures/view_tables.gif)
+
+<br> 
+
+The *Coryphoda* analysis is a perfect illustration for the Temporal and Dynamic Excursion metrics in the `call_stats_lq()` function.
+If we used an amplitude threshold approach, we would likely have to ignore the first train, which is produced when the male opens its tegmina (forewings).
+However, the peak detection approach allows us to capture this faint sound which is packed with information.
+Let's focus on the "train_data" table:
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(Rthoptera)
+library(RthopteraSounds)
+data("coryphoda")
+results <- call_stats_lq(coryphoda, 
+                         detection_threshold = 0.01, 
+                         motif_seq = FALSE)
+knitr::kable(results$train_data, caption = "Fig. 12. Train Data table from the 'results' object.") 
+```
+
+```{css, echo=FALSE}
+
+table {
+  caption-side: bottom;
+}
+
+table caption {
+  font-size: 12px; 
+  color: black; 
+}
+```
+
+
+Note how the Temporal Excursion ("tem.exc" column) is much higher in the first train, which is also the longest ("train.dur" column), with the highest number of peaks ("n.peaks" column), the faintest ("mean.amp" column), and the flattest in terms of energy, with the lowest Dynamic Excursion ("dyn.exc" column).
+The opposite is true in almost all metrics for the last train (closing stroke); it is the shortest, with the lowest number of peaks, the loudest, with the greatest change in amplitude (Dynamic Excursion).
+
+If you want to analyze tonal, "high-Q" songs, such as those produced by most crickets, you should instead use the `call_stats_hq()` function.
+In this example, we will use the *gryllus* Wave from *RthopteraSounds.* We will also add another level of aggregation by leaving *motif_seq = TRUE* (Default) in the arguments:
+
+```{r , eval=FALSE}
+# Use the call_stats_lq() function with a low detection threshold
+call_stats_hq(gryllus, 
+              specimen_id = "gryllus_001") #optional
 
 # Show the plot
 results$plot
-
-# Peaks
-results$peak_data
-
-# Trains
-results$train_data
-
-# Motifs
-results$motif_data
-
-# Parameters used
-results$params
 ```
 
-The *Coryphoda* analysis is a perfect illustration for the Temporal and Dynamic Excursion metrics in the *call_stats_lq()* function.
-If we used an amplitude threshold approach, we would likely have to ignore the first train, which is produced when the male opens its tegmina (forewings).
-However, the peak detection approach allows us to capture this faint sound which is packed with information.
-Let's focus on the "train_data" table.
-Note how the Temporal Excursion ("tem.exc" column) is much higher in the first train, which is also the longest ("train.dur" column), with the highest number of peaks ("n.peaks" column), the faintest ("mean.amp" column), and the flattest in terms of energy, with the lowest Dynamic Excursion ("dyn.exc" column).
-The opposite is true in almost all metrics for the last train (closing stroke); it is the shortest, with the lowest number of peaks, the loudest, with the greatest change in amplitude (Dynamic Excursion).
+![<span style="font-size: 12px;">Fig.13. How to use the <i>call_stats_hq()</i> function for tonal calls.](../man/figures/call_stats_hq.gif)
 
 <br>
 
 ## Conclusions
-
 *Rthoptera* is capable of improving the efficiency and effectiveness of the analysis of insect signals:
 
 -   by granting a more objective approach: the user chooses the parameter values, and the image plus data tables generation is entirely and consistently managed by *Rthoptera*, excluding the vagaries of a lengthy manual process and the impact of different operators habits or manual skills;
@@ -197,7 +278,7 @@ The opposite is true in almost all metrics for the last train (closing stroke); 
 
 <br><br><br>
 
-#### References
+### References
 
 Adobe Inc. (2023).
 Adobe Audition (Version 23.0) [Computer software].
@@ -212,3 +293,5 @@ Cornell Lab of Ornithology.
 (2021).
 Raven Pro: Interactive sound analysis software (Version 1.6) [Computer software].
 <https://ravensoundsoftware.com/>
+
+<br><br>
