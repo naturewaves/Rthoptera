@@ -78,28 +78,26 @@
 
     
     
+<p><img src="../reference/figures/Rthoptera_logo_darkgrey.png" style="width:20.0%"></p>
+<p><em>Rthoptera</em> provides interactive Shiny applications for
+standard analysis of insect sounds. The package is intended to be used
+on high signal-to-noise recordings, helping researchers make
+standardized measurements and plots to support the scientific
+description of the “acoustic types”. We define “acoustic type” as the
+first description of the calling song of a species, which should be
+accompanied by a high-quality recording and ideally the voucher specimen
+identifier in the collection it was deposited. For the convenience of
+users, we have included functions for pre-processing audio files, which
+are already available in other packages (e.g., <em>tuneR</em>,
+<em>seewave</em>), but here they are interactive (Shiny apps). Most of
+the plotting functions are based on the <em>seewave</em> package, with
+the convenience of presets and automatic parameter selection (e.g.,
+window length for the spectrograms) to ensure clarity in any Wave
+regardless of the recording settings. Most of these plots also have
+interactive versions which can be saved as HTML documents.</p>
 <div class="section level2">
-<h2 id="introduction-to-rthoptera">Introduction to Rthoptera<a class="anchor" aria-label="anchor" href="#introduction-to-rthoptera"></a>
+<h2 id="preprocessing">Preprocessing<a class="anchor" aria-label="anchor" href="#preprocessing"></a>
 </h2>
-<p><em>Rthoptera</em> is an R package that provides interactive Shiny
-applications for standard analysis of insect sounds. The package is
-intended to be used on high signal-to-noise recordings, helping
-researchers make standardized measurements and plots to support the
-scientific description of the “acoustic types”. We define “acoustic
-type” as the first description of the calling song of a species, which
-should be accompanied by a high-quality recording and ideally the
-voucher specimen identifier in the collection it was deposited. For the
-convenience of users, we have included functions for pre-processing
-audio files, which are already available in other packages (e.g.,
-<em>tuneR</em>, <em>seewave</em>), but here they are interactive (Shiny
-apps). Most of the plotting functions are based on the <em>seewave</em>
-package, with the convenience of presets and automatic parameter
-selection (e.g., window length for the spectrograms) to ensure clarity
-in any Wave regardless of the recording settings. Most of these plots
-also have interactive versions which can be saved as HTML documents.</p>
-<div class="section level3">
-<h3 id="preprocessing">Preprocessing<a class="anchor" aria-label="anchor" href="#preprocessing"></a>
-</h3>
 <p>Please visit the <a href="https://naturewaves.github.io/Rthoptera/articles/Preprocess.html" title="Preprocessing Audio Files with Rthoptera">Preprocess</a> page for
 guidance on how and when to use these tools.</p>
 <ul>
@@ -122,9 +120,9 @@ further analysis.</p></li>
 several wave files together for certain analyses.</p></li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="analysis">Analysis<a class="anchor" aria-label="anchor" href="#analysis"></a>
-</h3>
+<div class="section level2">
+<h2 id="analysis">Analysis<a class="anchor" aria-label="anchor" href="#analysis"></a>
+</h2>
 <p>Once preprocessing is complete, users can launch analysis tools to
 extract spectral and temporal statistics from your audio files:</p>
 <ul>
@@ -154,9 +152,9 @@ tooth impact, and groups them into <strong>trains</strong> (e.g.,
 <strong>motif sequences</strong> using user-defined thresholds.</p></li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
-</h3>
+<div class="section level2">
+<h2 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
+</h2>
 <ul>
 <li><p><strong>Multi-Power Spectrum</strong>: An interactive tool that
 overlays multiple power spectrum plots selected from the oscillogram,
@@ -185,7 +183,6 @@ species.</p></li>
 <li><p><strong>Zoomed oscillogram</strong>: Create a static oscillogram
 with stacked zoomed portions selected interactively.</p></li>
 </ul>
-</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

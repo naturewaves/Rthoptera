@@ -63,47 +63,55 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="rthoptera">Rthoptera<a class="anchor" aria-label="anchor" href="#rthoptera"></a>
+  <main id="main" class="col-md-9"><div>
+<img src="C:/R_packages/Rthoptera/assets/img/Rthoptera_logo_darkgrey.png" class="title-logo" alt="Rthoptera Logo"><div class="page-header"><h1 style="display: inline-block; vertical-align: middle;">
+Rthoptera
 </h1></div>
+</div>
+<div class="section level4">
+<h4 id="standardised-insect-bioacoustics">
+<em>Standardised insect bioacoustics</em><a class="anchor" aria-label="anchor" href="#standardised-insect-bioacoustics"></a>
+</h4>
 <!-- badges: start -->
 <!--
 [![R-CMD-check](https://github.com/naturewaves/Rthoptera/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/naturewaves/Rthoptera/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/naturewaves/Rthoptera/graph/badge.svg)](https://app.codecov.io/gh/naturewaves/Rthoptera)
 &#10;-->
 <!-- badges: end -->
-<p><em>Rthoptera</em> is an R package that provides interactive Shiny applications for standard analysis of insect sounds. The package is intended to be used on high signal-to-noise recordings, helping researchers make standardized measurements and plots to support the scientific description of the “acoustic types”. We define “acoustic type” as the first description of the calling song of a species, which should be accompanied by a high-quality recording and ideally the voucher specimen identifier in the collection it was deposited. For the convenience of users, we have included functions for pre-processing audio files, which are already available in other packages (e.g., <em>tuneR</em>, <em>seewave</em>), but here they are interactive. Most of the plotting functions are based on the <em>seewave</em> package, with the added benefit of presets and automatic parameter selection (e.g., window length for the spectrograms) to ensure clarity in any recording. Most of these plots also have interactive versions which can be saved as HTML documents.</p>
+<p><em>Rthoptera</em> provides interactive Shiny applications for standard analysis of insect sounds. The package is intended to be used on high signal-to-noise recordings, helping researchers make standardized measurements and plots to support the scientific description of the “acoustic types”. We define “acoustic type” as the first description of the calling song of a species, which should be accompanied by a high-quality recording and ideally the voucher specimen identifier in the collection it was deposited. For the convenience of users, we have included functions for pre-processing audio files, which are already available in other packages (e.g., <em>tuneR</em>, <em>seewave</em>), but here they are interactive (Shiny apps). Most of the plotting functions are based on the <em>seewave</em> package, with the convenience of presets and automatic parameter selection (e.g., window length for the spectrograms) to ensure clarity in any Wave regardless of the recording settings. Most of these plots also have interactive versions which can be saved as HTML documents.</p>
+</div>
 <div class="section level2">
-<h2 id="pre-processing">Pre-processing<a class="anchor" aria-label="anchor" href="#pre-processing"></a>
+<h2 id="preprocessing">Preprocessing<a class="anchor" aria-label="anchor" href="#preprocessing"></a>
 </h2>
-<p>We encourage new users to see the “Preprocessing” vignette for guidance on how and when to use these tools.</p>
+<p>Please visit the <a href="https://naturewaves.github.io/Rthoptera/articles/Preprocess.html" title="Preprocessing Audio Files with Rthoptera">Preprocess</a> page for guidance on how and when to use these tools.</p>
 <ul>
 <li><p><strong>Import</strong>: Browse your local data to import audio files (WAV) as Wave objects into R. During this process, the waveform is centered to zero with the <code><a href="https://rdrr.io/pkg/seewave/man/rmoffset.html" class="external-link">rmoffset()</a></code> function to ensure accurate measurements.</p></li>
 <li><p><strong>Downsample</strong>: When required and appropriate, you can reduce the sampling rate of your audio files. This helps improve the computing speed for certain analyses and plots without losing important sound features.</p></li>
 <li><p><strong>Band-pass Filter</strong>: When necessary, apply a user-defined high-pass and/or low-pass filter to eliminate noise or non-target sounds from your audio recordings.</p></li>
 <li><p><strong>Trim</strong>: Using an interactive oscillogram, you can visually select and trim specific sections of a Wave object. The trimmed sections can be saved as new Wave objects in your R environment for further analysis.</p></li>
-<li><p><strong>Merge</strong>: Useful when one needs to concatenate several wave files together for cetain analyses.</p></li>
+<li><p><strong>Merge</strong>: Useful when one needs to concatenate several wave files together for certain analyses.</p></li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="analysis">Analysis<a class="anchor" aria-label="anchor" href="#analysis"></a>
 </h2>
-<p>Once pre-processing is complete, users can launch analysis tools to extract spectral and temporal statistics from your audio files:</p>
+<p>Once preprocessing is complete, users can launch analysis tools to extract spectral and temporal statistics from your audio files:</p>
 <ul>
 <li><p><strong>Spectral Statistics</strong>: Automatically calculate spectral metrics based on the mean power spectrum of a Wave object.</p></li>
-<li><p><strong>Temporal Statistics</strong>: Automatically extract temporal metrics from your audio recordings. This includes identifying and analyzing elements (“tooth impacts”), trains (syllables), and echemes (groups of syllables or trills) in the insect sounds. Two apps are available: <code>call_stats_hq</code> is optimized to work with “tonal” (i.e., “high-Q”) signals, such as those produced by most crickets. It creates an envelope of the waveform and measures the duration of sounds and gaps based on a user-defined detection threshold.</p></li>
+<li><p><strong>Temporal Statistics</strong>: Automatically extract temporal metrics from your audio recordings. This includes identifying and analyzing elements (“tooth impacts”), trains (syllables), and echemes (groups of syllables or trills) in the insect sounds. Two apps are available:</p></li>
+<li><p><code>call_stats_hq</code> is optimized to work with “tonal” (i.e., “high-Q”) signals, such as those produced by most crickets. It creates an envelope of the waveform and measures the duration of <strong>trains</strong> (i.e., “pulses”) and gaps based on a user-defined detection threshold, then aggregating them into <strong>motifs</strong> (i.e., “echemes”) and, optionally, into <strong>motif sequences</strong>.</p></li>
+<li><p><code>call_stats_lq</code> works better for broadband calls usually produced by katydids, bush-crickets, water-bugs, etc, including those with wide amplitude variability, where the threshold approach would leave fainter sounds undetected or poorly measured. The main difference with the “hq” app is the granularity: this app detects each <strong>peak</strong> in the envelope, often corresponding to a single tooth impact, and groups them into <strong>trains</strong> (e.g., “pulses”, “syllables”), <strong>motifs</strong> (e.g., “echemes”), and <strong>motif sequences</strong> using user-defined thresholds.</p></li>
 </ul>
-<p>The <code>call_stats_lq</code> works better for broadband calls usually produced by katydids, bush-crickets, water-bugs, etc, including those with wide amplitude variability, where the threshold approach would leave fainter sounds undetected or poorly measured. This app detects each peak in the envelope, often corresponding to a single tooth impact, and groups them into trains (e.g., “pulses”, “syllables”) and motifs (e.g., “echemes”) with user-defined thresholds.</p>
 </div>
 <div class="section level2">
-<h2 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
+<h2 id="visualisation">Visualisation<a class="anchor" aria-label="anchor" href="#visualisation"></a>
 </h2>
 <ul>
 <li><p><strong>Multi-Power Spectrum</strong>: An interactive tool that overlays multiple power spectrum plots selected from the oscillogram, allowing for easy comparison and visualization of spectral features across different time intervals. Each selection is assigned to its own color (colorblind-safe) both in the oscillogram and the mean spectrum plots.</p></li>
 <li><p><strong>Spectrogram</strong>: Generate standard spectrograms, optionally alongside a lateral mean power spectrum. This combination allows you to visualize both time-frequency representations and the overall spectral distribution. The spectrogram window size is automatically adjusted based on the sampling rate and duration of the recording to obtain a standard frequency/time resolution trade-off.</p></li>
 <li><p><strong>Multi Plot</strong>: A combined visualization of the spectrogram, mean spectrum, and oscillogram, providing a comprehensive view of both the time-domain and frequency-domain characteristics of the insect sounds.</p></li>
 <li><p><strong>Oscillogram</strong>: Create standard oscillograms as well as interactive oscillograms that allow you to zoom in and explore specific sections of the waveform.</p></li>
-<li><p><strong>Multi-oscillogram</strong>: Create a stacked oscillogram plot for comparing the sounds of multiple species. This is particularly useful for analyzing the differences in acoustic patterns between species.</p></li>
+<li><p><strong>Multi-oscillogram</strong>: Create a stacked oscillogram plot for 0comparing the sounds of multiple species. This is particularly useful for analyzing the differences in acoustic patterns between species.</p></li>
 <li><p><strong>Zoomed oscillogram</strong>: Create a static oscillogram with stacked zoomed portions selected interactively.</p></li>
 </ul>
 </div>
@@ -112,29 +120,27 @@
 </h2>
 <p>To install the Rthoptera package, follow these steps:</p>
 <ol style="list-style-type: decimal">
-<li>
-<p>Install the <code>remotes</code> package if you haven’t already:</p>
+<li>Install the <code>remotes</code> package if you haven’t already:</li>
+</ol>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span></code></pre></div>
-</li>
-<li>
-<p>Load the <code>remotes</code> package:</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Load the <code>remotes</code> package:</li>
+</ol>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://remotes.r-lib.org" class="external-link">remotes</a></span><span class="op">)</span></span></code></pre></div>
-</li>
-<li>
-<p>Install <strong>Rthoptera</strong> from GitHub:</p>
+<ol start="3" style="list-style-type: decimal">
+<li>Install <strong>Rthoptera</strong> from GitHub:</li>
+</ol>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"naturewaves/Rthoptera"</span><span class="op">)</span></span></code></pre></div>
-</li>
-<li>
-<p>Load the <strong>Rthoptera</strong> package:</p>
+<ol start="4" style="list-style-type: decimal">
+<li>Load the <strong>Rthoptera</strong> package:</li>
+</ol>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/naturewaves/Rthoptera" class="external-link">Rthoptera</a></span><span class="op">)</span></span></code></pre></div>
-</li>
-</ol>
 </div>
-</div>
+
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
