@@ -1,11 +1,9 @@
 ---
 title: "Comparing Rthoptera with other workflows"
-author: "NatureWaves"
-date: "2025-01-15"
-output: rmarkdown::html_document 
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Comparing Rthoptera with other workflows}
-  %\VignetteEngine{knitr}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 editor_options: 
   markdown: 
@@ -16,9 +14,9 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-![Rthoptera Logo](../man/figures/rthoptera_logo_darkgrey.png){width=20%}
 
-## Multi-software "manual" approaches
+
+## Multi-software "manual" approaches  <img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
 
 Before the development of *Rthoptera*, being dissatisfied with the image output provided by the available bioacoustics software packages, the authors used screenshots from the relevant views obtained by closed-source software, mostly Adobe Audition (Adobe Inc., 2023).
 

@@ -1,18 +1,4 @@
 
-<style> .title-logo { display: inline-block; vertical-align: middle; width: 150px;
-height: auto; margin-right: 10px; } </style>
-
-<div>
-
-<img src="C:/R_packages/Rthoptera/assets/img/Rthoptera_logo_darkgrey.png" class="title-logo" alt="Rthoptera Logo">
-<h1 style="display: inline-block; vertical-align: middle;">
-Rthoptera
-</h1>
-
-</div>
-
-#### *Standardised insect bioacoustics*
-
 <!-- badges: start -->
 <!-- 
 [![R-CMD-check](https://github.com/naturewaves/Rthoptera/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/naturewaves/Rthoptera/actions/workflows/R-CMD-check.yaml)
@@ -20,22 +6,23 @@ Rthoptera
 &#10;-->
 <!-- badges: end -->
 
+# Rthoptera <img src="man/figures/rthoptera_logo_darkgrey.png" align="right" height="150" alt="" /></a>
+
 *Rthoptera* provides interactive Shiny applications for standard
 analysis of insect sounds. The package is intended to be used on high
 signal-to-noise recordings, helping researchers make standardized
 measurements and plots to support the scientific description of the
-“acoustic types”. We define “acoustic type” as the first description of
-the calling song of a species, which should be accompanied by a
-high-quality recording and ideally the voucher specimen identifier in
-the collection it was deposited. For the convenience of users, we have
-included functions for pre-processing audio files, which are already
-available in other packages (e.g., *tuneR*, *seewave*), but here they
-are interactive (Shiny apps). Most of the plotting functions are based
-on the *seewave* package, with the convenience of presets and automatic
-parameter selection (e.g., window length for the spectrograms) to ensure
-clarity in any Wave regardless of the recording settings. Most of these
-plots also have interactive versions which can be saved as HTML
-documents.
+“acoustic types”, which are the first description of the calling song of
+a species, which should be accompanied by a high-quality recording and
+ideally the voucher specimen identifier in the collection it was
+deposited. For the convenience of users, we have included functions for
+pre-processing audio files, which are already available in other
+packages (e.g., *tuneR*, *seewave*), but here they are interactive
+(Shiny apps). Most of the plotting functions are based on the *seewave*
+package, with the convenience of presets and automatic parameter
+selection (e.g., window length for the spectrograms) to ensure clarity
+in any Wave regardless of the recording settings. Most of these plots
+also have interactive versions which can be saved as HTML documents.
 
 ## Preprocessing
 

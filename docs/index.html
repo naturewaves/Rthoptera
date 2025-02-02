@@ -6,6 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Standardized Insect Bioacoustics • Rthoptera</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -13,6 +19,7 @@
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Standardized Insect Bioacoustics">
 <meta name="description" content="The package provides functions (each one with a Shiny App version) to analyze insect acoustic signals, including preprocessing (e.g., high-pass filter, remove DC offset, down-sampling, etc.). Analytical functions allow the user to automatically extract relevant acoustic features in both spectral and temporal dimensions.">
 <meta property="og:description" content="The package provides functions (each one with a Shiny App version) to analyze insect acoustic signals, including preprocessing (e.g., high-pass filter, remove DC offset, down-sampling, etc.). Analytical functions allow the user to automatically extract relevant acoustic features in both spectral and temporal dimensions.">
+<meta property="og:image" content="https://naturewaves.github.io/Rthoptera/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -63,23 +70,12 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><div>
-<img src="C:/R_packages/Rthoptera/assets/img/Rthoptera_logo_darkgrey.png" class="title-logo" alt="Rthoptera Logo"><div class="page-header"><h1 style="display: inline-block; vertical-align: middle;">
-Rthoptera
-</h1></div>
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="rthoptera-">Rthoptera <a class="anchor" aria-label="anchor" href="#rthoptera-"></a>
+</h1>
 </div>
-<div class="section level4">
-<h4 id="standardised-insect-bioacoustics">
-<em>Standardised insect bioacoustics</em><a class="anchor" aria-label="anchor" href="#standardised-insect-bioacoustics"></a>
-</h4>
-<!-- badges: start -->
-<!--
-[![R-CMD-check](https://github.com/naturewaves/Rthoptera/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/naturewaves/Rthoptera/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/naturewaves/Rthoptera/graph/badge.svg)](https://app.codecov.io/gh/naturewaves/Rthoptera)
-&#10;-->
-<!-- badges: end -->
-<p><em>Rthoptera</em> provides interactive Shiny applications for standard analysis of insect sounds. The package is intended to be used on high signal-to-noise recordings, helping researchers make standardized measurements and plots to support the scientific description of the “acoustic types”. We define “acoustic type” as the first description of the calling song of a species, which should be accompanied by a high-quality recording and ideally the voucher specimen identifier in the collection it was deposited. For the convenience of users, we have included functions for pre-processing audio files, which are already available in other packages (e.g., <em>tuneR</em>, <em>seewave</em>), but here they are interactive (Shiny apps). Most of the plotting functions are based on the <em>seewave</em> package, with the convenience of presets and automatic parameter selection (e.g., window length for the spectrograms) to ensure clarity in any Wave regardless of the recording settings. Most of these plots also have interactive versions which can be saved as HTML documents.</p>
-</div>
+<p><em>Rthoptera</em> provides interactive Shiny applications for standard analysis of insect sounds. The package is intended to be used on high signal-to-noise recordings, helping researchers make standardized measurements and plots to support the scientific description of the “acoustic types”, which are the first description of the calling song of a species, which should be accompanied by a high-quality recording and ideally the voucher specimen identifier in the collection it was deposited. For the convenience of users, we have included functions for pre-processing audio files, which are already available in other packages (e.g., <em>tuneR</em>, <em>seewave</em>), but here they are interactive (Shiny apps). Most of the plotting functions are based on the <em>seewave</em> package, with the convenience of presets and automatic parameter selection (e.g., window length for the spectrograms) to ensure clarity in any Wave regardless of the recording settings. Most of these plots also have interactive versions which can be saved as HTML documents.</p>
 <div class="section level2">
 <h2 id="preprocessing">Preprocessing<a class="anchor" aria-label="anchor" href="#preprocessing"></a>
 </h2>
@@ -140,7 +136,7 @@ Rthoptera
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/naturewaves/Rthoptera" class="external-link">Rthoptera</a></span><span class="op">)</span></span></code></pre></div>
 </div>
-
+</div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
