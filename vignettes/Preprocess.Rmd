@@ -14,7 +14,7 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-![](../man/figures/rthoptera_logo_darkgrey.png){width=20%}
+![Rthoptera Logo](../man/figures/rthoptera_logo_darkgrey.png){width=20%}
 
 There are many reasons why bioacousticians edit their recordings before analyzing them. This is especially true when working with field recordings, where non-target sounds may obscure the analyses, often occupying frequencies 
 below the signal of interest. In other cases, the field recordist used an 

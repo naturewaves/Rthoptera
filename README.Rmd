@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-![](../man/figures/Rthoptera_logo_darkgrey.png){width=80%}
+![Rthoptera Logo](../man/figures/Rthoptera_logo_darkgrey.png){width=80%}
 
 
 <!-- badges: start -->
