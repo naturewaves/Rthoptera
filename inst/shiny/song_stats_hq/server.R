@@ -9,7 +9,7 @@ server <- function(input, output, session) {
   result <- shiny::eventReactive(input$run, {
     shiny::req(input$selectedWave)
     wave <- get(input$selectedWave, envir = .GlobalEnv)
-    call_stats_hq(wave,
+    song_stats_hq(wave,
                   specimen_id = shiny::isolate(input$specimen_id),
                   msmooth_window = as.numeric(shiny::isolate(input$msmooth_window)),
                   msmooth_overlap = as.numeric(shiny::isolate(input$msmooth_overlap)),
@@ -17,8 +17,10 @@ server <- function(input, output, session) {
                   lower_detection_threshold = as.numeric(shiny::isolate(input$lower_detection_threshold)),
                   min_train_dur = as.numeric(0.002),
                   max_train_gap = as.numeric(shiny::isolate(input$max_train_gap)),
+                  motif_seq = input$motif_seq,
+                  max_motif_gap = input$max_motif_gap,
                   norm_env = TRUE,
-                  motif_seq = input$motif_seq
+                  db_threshold = 20
     )
   })
 
@@ -66,6 +68,30 @@ server <- function(input, output, session) {
                     pageLength = 1, lengthChange = FALSE, searching = FALSE, paging = FALSE, info = FALSE,
                     columnDefs = list(list(orderable = FALSE, targets = "_all"))
                   ))
+  })
+
+  output$motif_seq_data <- DT::renderDT({
+    if (isTRUE(input$motif_seq)) {
+      shiny::req(result())
+      DT::datatable(
+        result()$motif_seq_data,
+        caption = htmltools::tags$caption(
+          style = "caption-side: top; text-align: left;",
+          class = "caption-top",
+          "Motif Sequence Data"
+        ),
+        options = list(
+          pageLength = 1,
+          lengthChange = FALSE,
+          searching = FALSE,
+          paging = FALSE,
+          info = FALSE,
+          columnDefs = list(list(orderable = FALSE, targets = "_all"))
+        )
+      )
+    } else {
+      NULL
+    }
   })
 
   output$motif_data <- DT::renderDT({
@@ -127,20 +153,23 @@ server <- function(input, output, session) {
     },
     content = function(file) {
       shiny::req(result())
+
       data_list <- list(
-        "Summary" = result()$summary_data)
+        "Summary" = result()$summary_data
+        )
 
-      if (input$motif_seq) {
-
-        data_list <- data_list |>
-          mutate("Motif Sequence Data" = result()$motif_seq_data)
+      if (isTRUE(input$motif_seq)) {
+        data_list[["Motif Sequence Data"]] <- result()$motif_seq_data
       }
 
-      ,
-      "Motif Data" = result()$motif_data,
-      "Train Data" = result()$train_data,
-      "Parameters" = result()$params
-  )
+      data_list <- c(data_list, list(
+        "Motif Data" = result()$motif_data,
+        "Train Data" = result()$train_data,
+        # "Peak Data" = result()$peak_data,
+        "Parameters" = result()$params
+      ))
+
+
   writexl::write_xlsx(data_list, path = file)
     }
   )

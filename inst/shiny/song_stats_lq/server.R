@@ -10,15 +10,18 @@ server <- function(input, output, session) {
   result <- shiny::eventReactive(input$run, {
     shiny::req(input$selectedWave)
     wave <- get(input$selectedWave, envir = .GlobalEnv)
-    temporal_stats_lq(wave,
-                      specimen_id = input$specimen_id,
-                      ssmooth = as.numeric(shiny::isolate(input$ssmooth)),
-                      peakfinder_ws = input$peakfinder_ws,
-                      peakfinder_threshold = input$peakfinder_threshold,
-                      max_train_gap = input$max_train_gap,
-                      max_peak_gap = input$max_peak_gap,
-                      detection_threshold = input$detection_threshold,
-                      norm_env = TRUE)
+    song_stats_lq(wave,
+                  specimen_id = input$specimen_id,
+                  ssmooth = as.numeric(shiny::isolate(input$ssmooth)),
+                  peakfinder_ws = input$peakfinder_ws,
+                  peakfinder_threshold = input$peakfinder_threshold,
+                  max_peak_gap = input$max_peak_gap,
+                  max_train_gap = input$max_train_gap,
+                  motif_seq = input$motif_seq,
+                  max_motif_gap = input$max_motif_gap,
+                  detection_threshold = input$detection_threshold,
+                  norm_env = TRUE,
+                  db_threshold = 20)
   })
 
   shiny::observeEvent(input$preset, {
@@ -42,7 +45,7 @@ server <- function(input, output, session) {
   })
 
   output$audioPlot <- plotly::renderPlotly({
-    shiny::req(result())  # Ensure result is valid
+    shiny::req(result())
 
     tryCatch({
       plot_obj <- result()$plot
@@ -81,6 +84,32 @@ server <- function(input, output, session) {
                     columnDefs = list(list(orderable = FALSE, targets = "_all"))
                   ))
   })
+
+
+  output$motif_seq_data <- DT::renderDT({
+    if (isTRUE(input$motif_seq)) {
+      shiny::req(result())
+      DT::datatable(
+        result()$motif_seq_data,
+        caption = htmltools::tags$caption(
+          style = "caption-side: top; text-align: left;",
+          class = "caption-top",
+          "Motif Sequence Data"
+        ),
+        options = list(
+          pageLength = 1,
+          lengthChange = FALSE,
+          searching = FALSE,
+          paging = FALSE,
+          info = FALSE,
+          columnDefs = list(list(orderable = FALSE, targets = "_all"))
+        )
+      )
+    } else {
+      NULL
+    }
+  })
+
 
   output$motif_data <- DT::renderDT({
     shiny::req(result())
@@ -144,13 +173,22 @@ server <- function(input, output, session) {
     },
     content = function(file) {
       shiny::req(result())
+
       data_list <- list(
-        "Summary Data" = result()$summary_data,
-        "Motif Data" = result()$motif_data,
-        "Train Data" = result()$train_data,
-        "Peak Data" = result()$peak_data,
-        "Parameters" = result()$params
-      )
+        "Summary Data" = result()$summary_data
+        )
+
+      if (isTRUE(input$motif_seq)) {
+        data_list[["Motif Sequence Data"]] <- result()$motif_seq_data
+      }
+
+      data_list <- c(data_list, list(
+          "Motif Data" = result()$motif_data,
+          "Train Data" = result()$train_data,
+          "Peak Data" = result()$peak_data,
+          "Parameters" = result()$params
+        ))
+
       writexl::write_xlsx(data_list, path = file)
     }
   )

@@ -2,7 +2,7 @@ jscode <- "shinyjs.closeWindow = function() { window.close(); }"
 
 ui <- function(request) {
   shiny::tagList(
-    shiny::h1("Temporal Statistics LQ", style = "font-size: 28px; margin-left: 15px;"),
+    shiny::h1("Song Statistics LQ", style = "font-size: 28px; margin-left: 15px;"),
     shiny::fluidPage(
       shinyjs::useShinyjs(),
       shinyjs::extendShinyjs(text = jscode, functions = c("closeWindow")),
@@ -352,12 +352,46 @@ ui <- function(request) {
                       placement = "right",
                       trigger = "click",
                       options = list(container = "body")
-                    )
+                    ),
+
+
+                    shiny::conditionalPanel(
+                      condition = "input.motif_seq == true",
+                      shiny::fluidRow(
+                        shiny::column(12,
+                                      shiny::div(style = "display: flex; align-items: center;",
+                                                 shiny::tagList(
+                                                   shiny::tags$label("Max Motif Gap (s)"),
+                                                   shinyBS::bsButton("max_motif_gap_info", label = "", lib = "font-awesome",
+                                                                     icon = shiny::icon("circle-info"), style = "default",
+                                                                     size = "extra-small", class = "btn-info")
+                                                 )
+                                      ),
+                                      shiny::numericInput("max_motif_gap",
+                                                          label = NULL,
+                                                          value = 1,
+                                                          min = 0.01, max = 5,
+                                                          step = 0.01)
+                        )
+                      ),
+                      shinyBS::bsPopover(
+                        id = "max_motif_gap_info",
+                        title = "Max Motif Gap",
+                        content = shiny::HTML(paste0("Maximum gap allowed between motifs to be considered in the same sequence If the gap exceeds this value, a new sequence is initialized")),
+                        placement = "right",
+                        trigger = "click",
+                        options = list(container = "body")
+                      )
+                    ),
+
+
       ),
 
       shiny::column(10,
                     shiny::fluidRow(
-                      shiny::column(2, shiny::actionButton("run", "Run Analysis")),
+                      shiny::column(2, shiny::actionButton("run", "Run Analysis"),
+                                    shiny::checkboxInput("motif_seq", "Motif Sequences", value = TRUE)
+                      ),
                       shiny::column(2, shiny::downloadButton("saveData", "Export Excel Workbook")),
                       shiny::column(2, shiny::downloadButton("savePlot", "Export HTML Plot")),
                       shiny::column(1, shiny::actionButton("close", "Close App")),
@@ -367,6 +401,10 @@ ui <- function(request) {
                       shiny::column(12,
                                     shinycssloaders::withSpinner(plotly::plotlyOutput("audioPlot")),
                                     DT::DTOutput("summary_data"),
+                                    shiny::conditionalPanel(
+                                      condition = "input.motif_seq == true",
+                                      DT::DTOutput("motif_seq_data"),
+                                    ),
                                     DT::DTOutput("motif_data"),
                                     DT::DTOutput("train_data"),
                                     DT::DTOutput("peak_data"),
