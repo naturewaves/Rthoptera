@@ -29,9 +29,7 @@ knitr::opts_chunk$set(
 
 # Introduction to Rthoptera
 
-
-*Rthoptera* is an R package that provides interactive Shiny applications for standard analysis of insect sounds. The package is intended to be used on high signal-to-noise recordings, helping researchers make standardized measurements and plots to support the scientific description of the "acoustic types". We define "acoustic type" as the first description of the calling song of a species, which should be accompanied by a high-quality recording and ideally the voucher specimen identifier in the collection it was deposited. For the convenience of users, we have included functions for pre-processing audio files, which
-are already available in other packages (e.g., *tuneR*, *seewave*), but here they are interactive (Shiny apps). Most of the plotting functions are based on the *seewave* package, with the convenience of presets and automatic parameter selection (e.g., window length for the spectrograms) to ensure clarity in any Wave regardless of the recording settings. Most of these plots also have interactive versions which can be saved as HTML
+*Rthoptera* is an R package that provides interactive Shiny applications for standard analysis of insect sounds. The package is intended to be used on high signal-to-noise recordings, helping researchers make standardized measurements and plots to support the scientific description of the "acoustic types". We define "acoustic type" as the first description of the calling song of a species, which should be accompanied by a high-quality recording and ideally the voucher specimen identifier in the collection it was deposited. For the convenience of users, we have included functions for pre-processing audio files, which are already available in other packages (e.g., *tuneR*, *seewave*), but here they are interactive (Shiny apps). Most of the plotting functions are based on the *seewave* package, with the convenience of presets and automatic parameter selection (e.g., window length for the spectrograms) to ensure clarity in any Wave regardless of the recording settings. Most of these plots also have interactive versions which can be saved as HTML
 documents.
 
 ## Preprocessing
@@ -73,9 +71,7 @@ into **trains** (e.g., "pulses", "syllables"), **motifs** (e.g.,
 thresholds.
 
 ## Plotting
--   **Multi-Power Spectrum**: An interactive tool that overlays multiple
-power spectrum plots selected from the oscillogram, allowing for
-easy comparison and visualization of spectral features across
+-   **Multi-Power Spectrum**: An interactive tool that overlays multiple power spectrum plots selected from the oscillogram, allowing for easy comparison and visualization of spectral features across
 different time intervals. Each selection is assigned to its own
 color (colorblind-safe) both in the oscillogram and the mean
 spectrum plots.
