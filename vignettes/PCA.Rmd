@@ -1,0 +1,72 @@
+---
+title: "PCA with Rthoptera Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{PCA with Rthoptera Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+<img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
+
+In this demo we will inspect how the different spectral metrics in _Rthoptera_ allow us to discriminate between different acoustic samples (e.g., different species) with a Principal Component Analysis (PCA). Note that this example is just to demonstrate the metrics, while a research-grade analysis assumes that all the recordings were made using the same equipment and protocols (e.g., distance to specimen, temperature, etc.) for the comparisons to be considered accurate. 
+
+
+```{r}
+## 1. Calculating acoustic features with Rthoptera
+
+# Load data analysis and plotting packages:
+library(dplyr)
+library(ggplot2)
+library(ggfortify)
+library(FactoMineR)
+library(factoextra) 
+# Load Rthoptera
+library(Rthoptera)
+library(RthopteraSounds)
+# Load data:
+data("gryllus")
+data("coryphoda")
+data("platycleis")
+
+# Compute spectral statistics:
+spectral.data <- spectral_stats(gryllus, specimen_id="gryllus")$data
+
+spectral.data <- rbind(spectral.data, spectral_stats(coryphoda, specimen_id = "coryphoda")$data)
+
+spectral.data <- rbind(spectral.data, spectral_stats(platycleis, specimen_id = "platycleis")$data)
+
+# Remove unused columns
+spectral.data <- spectral.data |> select(-c(sound.type, par.hpf:par.scale))
+
+# Inspect the results
+spectral.data
+
+## Perform PCA (using FactoMineR)
+pca_result <- PCA(spectral.data[, -1], graph = FALSE) 
+
+# Explore variable contributions:
+pca_result$var$contrib
+
+# Explore the eigenvectors (i.e., loadings)
+pca_result$var$coord
+
+# See which dimension explains most of the variance
+fviz_screeplot(pca_result)
+
+# Visualize the output with factoextra plot
+fviz_pca_var(pca_result, repel = TRUE) 
+
+
+## 2. Including temporal and spectral data
+
+
+```
+
