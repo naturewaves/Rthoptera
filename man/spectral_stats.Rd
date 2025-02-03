@@ -18,7 +18,7 @@ spectral_stats(
 )
 }
 \arguments{
-\item{wave}{A `Wave` object representing the sound data.}
+\item{wave}{A \code{Wave} object representing the sound data.}
 
 \item{specimen_id}{Character string for the specimen identifier.}
 
@@ -44,8 +44,10 @@ Defaults to 0.}
 }
 \value{
 A list containing:
-- `data`: A tibble with calculated statistics.
-- `plot`: An interactive `plotly` plot with frequency and amplitude traces.
+\itemize{
+\item \code{data}: A tibble with calculated statistics.
+\item \code{plot}: An interactive \code{plotly} plot with frequency and amplitude traces.
+}
 }
 \description{
 This function calculates various spectral statistics for a complete Wave

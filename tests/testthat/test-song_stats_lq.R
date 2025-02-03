@@ -1,4 +1,4 @@
-# test-temporal_stats_lq.R
+# test-song_stats_lq.R
 
 library(testthat)
 library(tuneR)
@@ -7,8 +7,8 @@ library(Rthoptera)
 
 data("coryphoda")
 test_wave <- coryphoda
-test_that("temporal_stats_lq runs without errors", {
-  result <- temporal_stats_lq(test_wave, specimen_id = "Test_Specimen")
+test_that("song_stats_lq runs without errors", {
+  result <- song_stats_lq(test_wave, specimen_id = "Test_Specimen")
 
   expect_type(result, "list")
   expect_true("plot" %in% names(result))

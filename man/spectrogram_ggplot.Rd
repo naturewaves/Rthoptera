@@ -20,48 +20,48 @@ spectrogram_ggplot(
 )
 }
 \arguments{
-\item{wave}{A `Wave` object from the `tuneR` package, representing the audio
+\item{wave}{A \code{Wave} object from the \code{tuneR} package, representing the audio
 signal to be analyzed.}
 
-\item{meanspec}{Logical. If `TRUE`, a mean power spectrum is plotted
+\item{meanspec}{Logical. If \code{TRUE}, a mean power spectrum is plotted
 alongside the spectrogram. The spectrum is flipped and positioned to the
 right.}
 
 \item{widths}{A numeric vector of length 2 specifying the relative widths
-of the spectrogram and the mean power spectrum when `meanspec = TRUE`.
-Defaults to `c(10, 1)`.}
+of the spectrogram and the mean power spectrum when \code{meanspec = TRUE}.
+Defaults to \code{c(10, 1)}.}
 
 \item{cutoff}{Numeric. The amplitude cutoff in dB relative to the peak
 amplitude. Any amplitude below this cutoff will not be visible in the
-spectrogram. Defaults to `-35`.}
+spectrogram. Defaults to \code{-35}.}
 
 \item{scale_type}{Character. The scale used for the amplitude.
-Either `"dB"` for decibel scaling or `"Linear"` for a linear amplitude scale.
-Defaults to `"dB"`.}
+Either \code{"dB"} for decibel scaling or \code{"Linear"} for a linear amplitude scale.
+Defaults to \code{"dB"}.}
 
 \item{overlap}{Numeric. The percentage of overlap between successive windows
-for spectrogram calculation. Defaults to `95`.}
+for spectrogram calculation. Defaults to \code{95}.}
 
 \item{zeropad}{Numeric. The number of zero-padding points to add to each
-window to increase frequency resolution. Defaults to `200`.}
+window to increase frequency resolution. Defaults to \code{200}.}
 
 \item{margin_l}{Numeric. The left margin (in points) around the plot.
-Defaults to `10`.}
+Defaults to \code{10}.}
 
 \item{margin_r}{Numeric. The right margin (in points) around the plot.
-Defaults to `0`.}
+Defaults to \code{0}.}
 
 \item{margin_t}{Numeric. The top margin (in points) around the plot.
-Defaults to `0`.}
+Defaults to \code{0}.}
 
 \item{margin_b}{Numeric. The bottom margin (in points) around the plot.
-Defaults to `10`.}
+Defaults to \code{10}.}
 
-\item{show_axis_titles}{Logical. If `TRUE`, axis titles for time and
-frequency will be displayed on the spectrogram. Defaults to `TRUE`.}
+\item{show_axis_titles}{Logical. If \code{TRUE}, axis titles for time and
+frequency will be displayed on the spectrogram. Defaults to \code{TRUE}.}
 }
 \value{
-A `ggplot2` object representing the spectrogram, with the option
+A \code{ggplot2} object representing the spectrogram, with the option
 to include a mean power spectrum on the right side.
 }
 \description{

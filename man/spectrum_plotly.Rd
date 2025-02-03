@@ -39,7 +39,7 @@ spectrum_plotly(
 \item{freq_res}{Numeric, the frequency resolution in Hz per bin. Default is 50.}
 
 \item{db_shade}{Logical, whether to shade the plot based on decibel amplitude.
-Default is `TRUE`.}
+Default is \code{TRUE}.}
 
 \item{ovlp}{Numeric, the overlap between successive windows in percentage.
 Default is 0 (no overlap).}
@@ -51,26 +51,26 @@ Default is 0 (no overlap).}
 "bartlett", "blackman", "flattop", "hamming", or "rectangle". Default is "hanning".}
 
 \item{total_bandwidth}{Logical, whether to calculate the total bandwidth,
-ignoring gaps. Default is `FALSE`.}
+ignoring gaps. Default is \code{FALSE}.}
 
 \item{limit_indices}{Logical, whether to limit the spectrum indices to the
-frequency range between `fmin` and `fmax`. Default is `FALSE`.}
+frequency range between \code{fmin} and \code{fmax}. Default is \code{FALSE}.}
 
 \item{plot_title}{Character, the title of the plot. Default is an empty string.}
 
-\item{italic_title}{Logical, whether to italicize the plot title. Default is `FALSE`.}
+\item{italic_title}{Logical, whether to italicize the plot title. Default is \code{FALSE}.}
 
-\item{fmin}{Numeric, minimum frequency (in kHz) to plot. If `NULL`,
-the entire frequency range is plotted. Default is `NULL`.}
+\item{fmin}{Numeric, minimum frequency (in kHz) to plot. If \code{NULL},
+the entire frequency range is plotted. Default is \code{NULL}.}
 
-\item{fmax}{Numeric, maximum frequency (in kHz) to plot. If `NULL`, it
+\item{fmax}{Numeric, maximum frequency (in kHz) to plot. If \code{NULL}, it
 defaults to the Nyquist frequency.}
 
 \item{add_params}{Logical, whether to add window parameters as a label on the plot.
-Default is `FALSE`.}
+Default is \code{FALSE}.}
 
 \item{add_summary}{Logical, whether to add summary statistics as a label on
-the plot. Default is `TRUE`.}
+the plot. Default is \code{TRUE}.}
 
 \item{x_breaks}{Numeric, the number of breaks on the x-axis (frequency axis). Default is 6.}
 
@@ -80,9 +80,9 @@ the plot. Default is `TRUE`.}
 \item{x_position}{Character, the position of the x-axis, either "top" or
 "bottom". Default is "bottom".}
 
-\item{show_x_title}{Logical, whether to show the x-axis title. Default is `TRUE`.}
+\item{show_x_title}{Logical, whether to show the x-axis title. Default is \code{TRUE}.}
 
-\item{show_y_title}{Logical, whether to show the y-axis title. Default is `TRUE`.}
+\item{show_y_title}{Logical, whether to show the y-axis title. Default is \code{TRUE}.}
 
 \item{color_db}{Character, color for the dB amplitude plot. Default is "grey30".}
 
@@ -95,7 +95,7 @@ the plot. Default is `TRUE`.}
 \item{color_bandwidth}{Character, color for the bandwidth lines. Default is "white".}
 
 \item{show_lines}{Logical, whether to show lines for the carrier frequency
-and bandwidths. Default is `FALSE`.}
+and bandwidths. Default is \code{FALSE}.}
 
 \item{linewidth}{Numeric, the width of the lines in the plot. Default is 1.}
 }

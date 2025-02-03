@@ -7,7 +7,7 @@
 spectrum_df(wave, freq_res = 10, fun = "mean", wn = "hanning")
 }
 \arguments{
-\item{wave}{An object of class `Wave` containing the audio data to be
+\item{wave}{An object of class \code{Wave} containing the audio data to be
 analyzed.}
 
 \item{freq_res}{The frequency resolution to be used for the frequency
@@ -16,23 +16,23 @@ measurements across recordings with different sampling rate. Default is
 10 Hz per frequency bin.}
 
 \item{fun}{Character string indicating the summary function to be applied
-for computing the mean spectrum. Default is `'mean'`. Other options include
-`'median'`, `'sd'` (standard deviation), or `'var'` (variance).}
+for computing the mean spectrum. Default is \code{'mean'}. Other options include
+\code{'median'}, \code{'sd'} (standard deviation), or \code{'var'} (variance).}
 
 \item{wn}{Window filtering function. Choices are:  bartlett, blackman,
-flattop, hamming, hanning, or rectangle. Default is `hanning`.}
+flattop, hamming, hanning, or rectangle. Default is \code{hanning}.}
 }
 \value{
 A list with two tibbles. The first tibble "spec_df" with two columns:
-`frequency` and `amplitude`, and the second tibble "params_df" contains all
+\code{frequency} and \code{amplitude}, and the second tibble "params_df" contains all
 the relevant parameters used to create the spectrum.
-The `frequency` column contains the frequencies in Hertz (Hz), and
-the `amplitude` column contains the corresponding amplitude values.
+The \code{frequency} column contains the frequencies in Hertz (Hz), and
+the \code{amplitude} column contains the corresponding amplitude values.
 }
 \description{
 This function generates a data frame containing the frequency and amplitude
 of a wave object using the mean spectrum method.
-The function leverages the `meanspec` function from the `seewave` package to
+The function leverages the \code{meanspec} function from the \code{seewave} package to
 compute the spectrum.
 }
 \examples{

@@ -15,7 +15,7 @@ multiplot_ggplot(
 )
 }
 \arguments{
-\item{wave}{A `Wave` object. The sound data to be plotted.}
+\item{wave}{A \code{Wave} object. The sound data to be plotted.}
 
 \item{cutoff}{Numeric. Amplitude cutoff in dB below the peak. Values below
 the cutoff will not be visible in the spectrogram. Default is -35 dB.}
@@ -30,7 +30,7 @@ Default is 200.}
 either "dB" or "Linear". Default is "dB".}
 
 \item{heights}{Numeric vector. The relative heights of the spectrogram/mean
-spectrum plot and the oscillogram. Default is `c(7,3)`.}
+spectrum plot and the oscillogram. Default is \code{c(7,3)}.}
 
 \item{oscillo_label}{Character. A title for the Y-axis of the oscillogram.
 Default is an empty string.}

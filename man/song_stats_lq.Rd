@@ -20,7 +20,7 @@ song_stats_lq(
 )
 }
 \arguments{
-\item{wave}{A `Wave` object.}
+\item{wave}{A \code{Wave} object.}
 
 \item{specimen_id}{A character string representing the identifier for the
 specimen (or recording) being analyzed.}
@@ -50,26 +50,26 @@ to consider them part of the same group.}
 considered valid.}
 
 \item{norm_env}{Logical. Whether to normalize the amplitude envelope between
-0 and 1. Defaults to `TRUE`.}
+0 and 1. Defaults to \code{TRUE}.}
 
 \item{db_threshold}{Numeric. Decibel threshold below the peak amplitude for
 calculating low and high frequencies. Defaults to 20 dB.}
 }
 \value{
 A list containing the following components:
-  \item{plot}{An interactive `plotly` object showing the waveform envelope,
-  detected peaks, trains, and motifs.}
-  \item{summary_data}{A tibble with summary statistics for the analyzed
-  waveform.}
-  \item{motif_seq_data}{A tibble summarizing motif sequences. Only produced
-  when motif_seq = TRUE.}
-  \item{motif_data}{A tibble summarizing motifs, including motif duration,
-  train counts, and spectral properties.}
-  \item{train_data}{A tibble detailing detected trains, including start and
-  end times, durations, peak frequencies, and bandwidths.}
-  \item{peak_data}{A tibble containing detected peaks, including their times,
-  periods, and amplitudes.}
-  \item{params}{A tibble summarizing input parameters for the function.}
+\item{plot}{An interactive \code{plotly} object showing the waveform envelope,
+detected peaks, trains, and motifs.}
+\item{summary_data}{A tibble with summary statistics for the analyzed
+waveform.}
+\item{motif_seq_data}{A tibble summarizing motif sequences. Only produced
+when motif_seq = TRUE.}
+\item{motif_data}{A tibble summarizing motifs, including motif duration,
+train counts, and spectral properties.}
+\item{train_data}{A tibble detailing detected trains, including start and
+end times, durations, peak frequencies, and bandwidths.}
+\item{peak_data}{A tibble containing detected peaks, including their times,
+periods, and amplitudes.}
+\item{params}{A tibble summarizing input parameters for the function.}
 }
 \description{
 This function calculates temporal and spectral statistics, identifying motifs

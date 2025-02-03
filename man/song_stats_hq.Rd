@@ -27,7 +27,7 @@ song_stats_hq(
 \item{msmooth_window}{An integer specifying the window size (in milliseconds)
 for smoothing the envelope (default: 100).}
 
-\item{msmooth_overlap}{An integer specifying the overlap (in %) for smoothing
+\item{msmooth_overlap}{An integer specifying the overlap (in \%) for smoothing
 the envelope. Default = 50.}
 
 \item{upper_detection_threshold}{A numeric value representing the upper
@@ -48,12 +48,12 @@ value is FALSE.}
 
 \item{max_motif_gap}{Numeric. Maximum allowed gap (in seconds) between motifs
 to consider them part of the same sequence.
- @param norm_env A logical indicating whether to normalize the envelope
- Default = TRUE.}
+@param norm_env A logical indicating whether to normalize the envelope
+Default = TRUE.}
 }
 \value{
 A list with the following components:
-\item{plot}{An interactive `plotly` plot showing the signal envelope,
+\item{plot}{An interactive \code{plotly} plot showing the signal envelope,
 detected trains, and motifs.}
 \item{summary_data}{A tibble with summary statistics of the acoustic motifs.}
 \item{train_data}{A tibble with details about the detected trains.}

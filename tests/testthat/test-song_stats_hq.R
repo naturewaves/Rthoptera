@@ -1,4 +1,4 @@
-# test-temporal_stats_hq.R
+# test-song_stats_hq.R
 
 library(testthat)
 library(tuneR)
@@ -9,8 +9,8 @@ library(Rthoptera)
 data("gryllus")
 test_wave <- gryllus  # Assign loaded data to test_wave
 
-test_that("temporal_stats_hq runs without errors", {
-  result <- temporal_stats_hq(test_wave, specimen_id = "Test_Specimen")
+test_that("song_stats_hq runs without errors", {
+  result <- song_stats_hq(test_wave, specimen_id = "Test_Specimen")
 
   expect_type(result, "list")
   expect_true("plot" %in% names(result))

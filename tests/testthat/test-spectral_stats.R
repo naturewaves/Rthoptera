@@ -22,7 +22,7 @@ test_that("spectral_stats output contains correct data columns", {
   expect_equal(ncol(result$data), 19)
   expected_columns <- c(
     "specimen.id", "sound.type", "low.f", "high.f", "bandw", "peak.f",
-    "spec.ex", "spec.en", "spec.ent", "spec.flat", "q.factor",
+    "sp.exc", "sp.ene", "sp.ent", "sp.flat", "q.factor",
     "temp", "par.hpf", "par.cutoff", "par.s.rate", "par.wlen",
     "par.freq.res", "par.robust", "par.scale"
   )
@@ -42,10 +42,10 @@ test_that("spectral_stats calculates expected statistics for sine wave", {
   expect_equal(result$data$peak.f, 0.44, tolerance = 0.1)  # Increased tolerance for frequency rounding
 
   # Check other statistics are within reasonable ranges
-  expect_true(result$data$spec.en > 0)
-  expect_true(result$data$spec.ex > 0)
-  expect_true(result$data$spec.ent >= 0 && result$data$spec.ent <= 1)
-  expect_true(result$data$spec.flat >= 0 && result$data$spec.flat <= 1)
+  expect_true(result$data$sp.ene > 0)
+  expect_true(result$data$sp.exc > 0)
+  expect_true(result$data$sp.ent >= 0 && result$data$sp.ent <= 1)
+  expect_true(result$data$sp.flat >= 0 && result$data$sp.flat <= 1)
 })
 
 test_that("spectral_stats handles additional parameters correctly", {

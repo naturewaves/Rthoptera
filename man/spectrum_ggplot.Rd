@@ -36,13 +36,13 @@ spectrum_ggplot(
 )
 }
 \arguments{
-\item{wave}{A Wave object (from `tuneR` package), representing the sound
+\item{wave}{A Wave object (from \code{tuneR} package), representing the sound
 waveform.}
 
-\item{auto_wl}{Logical. If `TRUE`, the window length (`wl`) is automatically
+\item{auto_wl}{Logical. If \code{TRUE}, the window length (\code{wl}) is automatically
 calculated based on the sampling rate of the waveform.}
 
-\item{wl}{Numeric. Window length for the FFT. Ignored if `auto_wl` is `TRUE`.}
+\item{wl}{Numeric. Window length for the FFT. Ignored if \code{auto_wl} is \code{TRUE}.}
 
 \item{ovlp}{Numeric. Overlap between windows in percentage (0 to 100).
 Default is 75.}
@@ -59,7 +59,7 @@ scale plot.}
 
 \item{x_position}{Character. Position of the x-axis: "bottom" or "top".}
 
-\item{flip}{Logical. If `TRUE`, flips the x and y axes.}
+\item{flip}{Logical. If \code{TRUE}, flips the x and y axes.}
 
 \item{color_db}{Character. Color for the dB scale plot.}
 
@@ -76,39 +76,39 @@ default is "mean".}
 
 \item{wn}{Character. Windowing function for the FFT. Default is "blackman".}
 
-\item{show_x_title}{Logical. If `TRUE`, displays the x-axis title.}
+\item{show_x_title}{Logical. If \code{TRUE}, displays the x-axis title.}
 
-\item{show_y_title}{Logical. If `TRUE`, displays the y-axis title.}
+\item{show_y_title}{Logical. If \code{TRUE}, displays the y-axis title.}
 
-\item{add_params}{Logical. If `TRUE`, adds parameter information
+\item{add_params}{Logical. If \code{TRUE}, adds parameter information
 (window size, overlap, etc.) to the plot.}
 
-\item{add_summary}{Logical. If `TRUE`, adds spectral summary statistics
+\item{add_summary}{Logical. If \code{TRUE}, adds spectral summary statistics
 (entropy, flatness, carrier frequency, bandwidth) to the plot.}
 
 \item{plot_title}{Character. Title for the plot.}
 
-\item{italic_title}{Logical. If `TRUE`, italicizes the plot title.}
+\item{italic_title}{Logical. If \code{TRUE}, italicizes the plot title.}
 
 \item{fmin}{Numeric. Minimum frequency to display (in kHz).}
 
-\item{fmax}{Numeric. Maximum frequency to display (in kHz). If `NULL`,
+\item{fmax}{Numeric. Maximum frequency to display (in kHz). If \code{NULL},
 defaults to half the sampling rate (Nyquist frequency).}
 
 \item{linewidth}{Numeric. Line width for the carrier and bandwidth lines.}
 
-\item{total_bandwidth}{Logical. If `TRUE`, calculates the total bandwidth
+\item{total_bandwidth}{Logical. If \code{TRUE}, calculates the total bandwidth
 using a threshold of 0.1.}
 
-\item{show_lines}{Logical. If `TRUE`, displays lines for the carrier
+\item{show_lines}{Logical. If \code{TRUE}, displays lines for the carrier
 frequency and bandwidth.}
 }
 \value{
-A `ggplot` object for the power spectrum plot.
+A \code{ggplot} object for the power spectrum plot.
 }
 \description{
-This function generates a power spectrum plot using `ggplot2` based on the
-provided waveform object (`wave`). The plot can display normalized amplitude
+This function generates a power spectrum plot using \code{ggplot2} based on the
+provided waveform object (\code{wave}). The plot can display normalized amplitude
 values on both dB and linear scales, and includes options for customizing the
 display of the carrier frequency, bandwidth, and other spectral details.
 }

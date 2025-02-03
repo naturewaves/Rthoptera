@@ -21,39 +21,41 @@ broadband_activity(
 )
 }
 \arguments{
-\item{wave}{A `Wave` object containing the audio signal to be analyzed.}
+\item{wave}{A \code{Wave} object containing the audio signal to be analyzed.}
 
 \item{channel}{Character. If Wave is stereo and you want to use only one channel, pass either "left" or "right" to this argument. If you want to analyze a mix of both channels, select "mix". If NULL (default), results are returned for each channel.}
 
 \item{hpf}{Numeric. High-pass filter. The default (500 Hz) should be used always for consistency unless signals of interest are below that threshold.}
 
-\item{rm.offset}{Logical. Should the DC offset be removed from the audio signal? Defaults to `TRUE`.}
+\item{rm.offset}{Logical. Should the DC offset be removed from the audio signal? Defaults to \code{TRUE}.}
 
 \item{freq.res}{Numeric. Frequency resolution in Hz. This value determines the "height" of each frequency bin and, therefore, the window length to be used (sampling rate / frequency resolution).}
 
-\item{cutoff}{Numeric. The amplitude threshold (in dBFS) for removing low-amplitude values in the spectrogram. Default is `-50`.}
+\item{cutoff}{Numeric. The amplitude threshold (in dBFS) for removing low-amplitude values in the spectrogram. Default is \code{-50}.}
 
-\item{click.length}{Numeric. The minimum length (in frequency bins) for a detected click to be kept. Default is `10`.}
+\item{click.length}{Numeric. The minimum length (in frequency bins) for a detected click to be kept. Default is \code{10}.}
 
-\item{difference}{Numeric. The maximum difference in amplitude between adjacent frequency bins to be considered part of a single 'click'. Default is `20`.}
+\item{difference}{Numeric. The maximum difference in amplitude between adjacent frequency bins to be considered part of a single 'click'. Default is \code{20}.}
 
-\item{gap.allowance}{Numeric. The size of gaps (in frequency bins) allowed between contiguous parts of a click. Default is `2`. Gaps larger than this value will split clicks.}
+\item{gap.allowance}{Numeric. The size of gaps (in frequency bins) allowed between contiguous parts of a click. Default is \code{2}. Gaps larger than this value will split clicks.}
 
-\item{spectrogram}{Logical. Should a spectrogram with highlighted clicks be plotted? Default is `TRUE`.}
+\item{spectrogram}{Logical. Should a spectrogram with highlighted clicks be plotted? Default is \code{TRUE}.}
 
-\item{dark.plot}{Logical. Should the plot use a dark theme (black background)? Default is `FALSE`.}
+\item{dark.plot}{Logical. Should the plot use a dark theme (black background)? Default is \code{FALSE}.}
 
-\item{plot.title}{Character. The title for the plot, if `plot` is `TRUE`. Default is `NULL`.}
+\item{plot.title}{Character. The title for the plot, if \code{plot} is \code{TRUE}. Default is \code{NULL}.}
 
 \item{verbose}{Logical. If TRUE, details of dynamic range will be printed on the console.}
 }
 \value{
 A tibble containing the following columns:
-  - `index`: The name of the index. Useful later when merging data with other indices.
-  - `value`: The number of clicks detected in the recording.
-  - `mean`: The mean click height (in frequency bins).
-  - `variance`: The variance of the click height.
-  - `sd`: The standard deviation of the click height.
+\itemize{
+\item \code{index}: The name of the index. Useful later when merging data with other indices.
+\item \code{value}: The number of clicks detected in the recording.
+\item \code{mean}: The mean click height (in frequency bins).
+\item \code{variance}: The variance of the click height.
+\item \code{sd}: The standard deviation of the click height.
+}
 }
 \description{
 This function processes an audio signal to detect broadband activity by

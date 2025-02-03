@@ -22,6 +22,7 @@
 #' data(coryphoda)
 #' spectrogram_plotly(coryphoda)
 #' }
+#' `r lifecycle::badge("stable")`
 spectrogram_plotly <- function(wave,
                                floor = -50,
                                background = "#274C77",
