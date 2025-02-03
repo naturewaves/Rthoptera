@@ -1,0 +1,7 @@
+language: r
+
+r_packages:
+  - covr
+
+after_sucess:
+  -Rscript -e 'library(cover); codecov()'
