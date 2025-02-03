@@ -1,5 +1,5 @@
 ---
-output: github_document
+output: rmarkdown::html_vignette
 editor_options: 
   markdown: 
     wrap: 72

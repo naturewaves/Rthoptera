@@ -1,6 +1,6 @@
 ---
 title: "Summarizing Data with Rthoptera"
-output: html_vignette
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Summarizing Data with Rthoptera}
   %\VignetteEngine{knitr::rmarkdown}
