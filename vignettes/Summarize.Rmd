@@ -5,6 +5,9 @@ vignette: >
   %\VignetteIndexEntry{Summarizing Data with Rthoptera}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+editor_options: 
+  markdown: 
+    wrap: sentence
 ---
 
 
