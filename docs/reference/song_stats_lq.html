@@ -78,7 +78,7 @@ such as peak frequency, low frequency, high frequency, and bandwidth.</p>
 
 
 <dl><dt id="arg-wave">wave<a class="anchor" aria-label="anchor" href="#arg-wave"></a></dt>
-<dd><p>A `Wave` object.</p></dd>
+<dd><p>A <code>Wave</code> object.</p></dd>
 
 
 <dt id="arg-specimen-id">specimen_id<a class="anchor" aria-label="anchor" href="#arg-specimen-id"></a></dt>
@@ -128,7 +128,7 @@ considered valid.</p></dd>
 
 <dt id="arg-norm-env">norm_env<a class="anchor" aria-label="anchor" href="#arg-norm-env"></a></dt>
 <dd><p>Logical. Whether to normalize the amplitude envelope between
-0 and 1. Defaults to `TRUE`.</p></dd>
+0 and 1. Defaults to <code>TRUE</code>.</p></dd>
 
 
 <dt id="arg-db-threshold">db_threshold<a class="anchor" aria-label="anchor" href="#arg-db-threshold"></a></dt>
@@ -140,30 +140,30 @@ calculating low and high frequencies. Defaults to 20 dB.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list containing the following components:</p>
 <dl><dt>plot</dt>
-<dd><p>An interactive `plotly` object showing the waveform envelope,
-  detected peaks, trains, and motifs.</p></dd>
+<dd><p>An interactive <code>plotly</code> object showing the waveform envelope,
+detected peaks, trains, and motifs.</p></dd>
 
-  <dt>summary_data</dt>
+<dt>summary_data</dt>
 <dd><p>A tibble with summary statistics for the analyzed
-  waveform.</p></dd>
+waveform.</p></dd>
 
-  <dt>motif_seq_data</dt>
+<dt>motif_seq_data</dt>
 <dd><p>A tibble summarizing motif sequences. Only produced
-  when motif_seq = TRUE.</p></dd>
+when motif_seq = TRUE.</p></dd>
 
-  <dt>motif_data</dt>
+<dt>motif_data</dt>
 <dd><p>A tibble summarizing motifs, including motif duration,
-  train counts, and spectral properties.</p></dd>
+train counts, and spectral properties.</p></dd>
 
-  <dt>train_data</dt>
+<dt>train_data</dt>
 <dd><p>A tibble detailing detected trains, including start and
-  end times, durations, peak frequencies, and bandwidths.</p></dd>
+end times, durations, peak frequencies, and bandwidths.</p></dd>
 
-  <dt>peak_data</dt>
+<dt>peak_data</dt>
 <dd><p>A tibble containing detected peaks, including their times,
-  periods, and amplitudes.</p></dd>
+periods, and amplitudes.</p></dd>
 
-  <dt>params</dt>
+<dt>params</dt>
 <dd><p>A tibble summarizing input parameters for the function.</p></dd>
 
 </dl></div>

@@ -97,7 +97,7 @@ to decibels full-scale (dBFS).</p>
 
 
 <dl><dt id="arg-wave">wave<a class="anchor" aria-label="anchor" href="#arg-wave"></a></dt>
-<dd><p>A `Wave` object containing the audio signal to be analyzed.</p></dd>
+<dd><p>A <code>Wave</code> object containing the audio signal to be analyzed.</p></dd>
 
 
 <dt id="arg-channel">channel<a class="anchor" aria-label="anchor" href="#arg-channel"></a></dt>
@@ -109,7 +109,7 @@ to decibels full-scale (dBFS).</p>
 
 
 <dt id="arg-rm-offset">rm.offset<a class="anchor" aria-label="anchor" href="#arg-rm-offset"></a></dt>
-<dd><p>Logical. Should the DC offset be removed from the audio signal? Defaults to `TRUE`.</p></dd>
+<dd><p>Logical. Should the DC offset be removed from the audio signal? Defaults to <code>TRUE</code>.</p></dd>
 
 
 <dt id="arg-freq-res">freq.res<a class="anchor" aria-label="anchor" href="#arg-freq-res"></a></dt>
@@ -117,31 +117,31 @@ to decibels full-scale (dBFS).</p>
 
 
 <dt id="arg-cutoff">cutoff<a class="anchor" aria-label="anchor" href="#arg-cutoff"></a></dt>
-<dd><p>Numeric. The amplitude threshold (in dBFS) for removing low-amplitude values in the spectrogram. Default is `-50`.</p></dd>
+<dd><p>Numeric. The amplitude threshold (in dBFS) for removing low-amplitude values in the spectrogram. Default is <code>-50</code>.</p></dd>
 
 
 <dt id="arg-click-length">click.length<a class="anchor" aria-label="anchor" href="#arg-click-length"></a></dt>
-<dd><p>Numeric. The minimum length (in frequency bins) for a detected click to be kept. Default is `10`.</p></dd>
+<dd><p>Numeric. The minimum length (in frequency bins) for a detected click to be kept. Default is <code>10</code>.</p></dd>
 
 
 <dt id="arg-difference">difference<a class="anchor" aria-label="anchor" href="#arg-difference"></a></dt>
-<dd><p>Numeric. The maximum difference in amplitude between adjacent frequency bins to be considered part of a single 'click'. Default is `20`.</p></dd>
+<dd><p>Numeric. The maximum difference in amplitude between adjacent frequency bins to be considered part of a single 'click'. Default is <code>20</code>.</p></dd>
 
 
 <dt id="arg-gap-allowance">gap.allowance<a class="anchor" aria-label="anchor" href="#arg-gap-allowance"></a></dt>
-<dd><p>Numeric. The size of gaps (in frequency bins) allowed between contiguous parts of a click. Default is `2`. Gaps larger than this value will split clicks.</p></dd>
+<dd><p>Numeric. The size of gaps (in frequency bins) allowed between contiguous parts of a click. Default is <code>2</code>. Gaps larger than this value will split clicks.</p></dd>
 
 
 <dt id="arg-spectrogram">spectrogram<a class="anchor" aria-label="anchor" href="#arg-spectrogram"></a></dt>
-<dd><p>Logical. Should a spectrogram with highlighted clicks be plotted? Default is `TRUE`.</p></dd>
+<dd><p>Logical. Should a spectrogram with highlighted clicks be plotted? Default is <code>TRUE</code>.</p></dd>
 
 
 <dt id="arg-dark-plot">dark.plot<a class="anchor" aria-label="anchor" href="#arg-dark-plot"></a></dt>
-<dd><p>Logical. Should the plot use a dark theme (black background)? Default is `FALSE`.</p></dd>
+<dd><p>Logical. Should the plot use a dark theme (black background)? Default is <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-plot-title">plot.title<a class="anchor" aria-label="anchor" href="#arg-plot-title"></a></dt>
-<dd><p>Character. The title for the plot, if `plot` is `TRUE`. Default is `NULL`.</p></dd>
+<dd><p>Character. The title for the plot, if <code>plot</code> is <code>TRUE</code>. Default is <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -150,13 +150,12 @@ to decibels full-scale (dBFS).</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A tibble containing the following columns:
-  - `index`: The name of the index. Useful later when merging data with other indices.
-  - `value`: The number of clicks detected in the recording.
-  - `mean`: The mean click height (in frequency bins).
-  - `variance`: The variance of the click height.
-  - `sd`: The standard deviation of the click height.</p>
-    </div>
+    <p>A tibble containing the following columns:</p><ul><li><p><code>index</code>: The name of the index. Useful later when merging data with other indices.</p></li>
+<li><p><code>value</code>: The number of clicks detected in the recording.</p></li>
+<li><p><code>mean</code>: The mean click height (in frequency bins).</p></li>
+<li><p><code>variance</code>: The variance of the click height.</p></li>
+<li><p><code>sd</code>: The standard deviation of the click height.</p></li>
+</ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

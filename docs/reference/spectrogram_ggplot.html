@@ -72,72 +72,72 @@
 
 
 <dl><dt id="arg-wave">wave<a class="anchor" aria-label="anchor" href="#arg-wave"></a></dt>
-<dd><p>A `Wave` object from the `tuneR` package, representing the audio
+<dd><p>A <code>Wave</code> object from the <code>tuneR</code> package, representing the audio
 signal to be analyzed.</p></dd>
 
 
 <dt id="arg-meanspec">meanspec<a class="anchor" aria-label="anchor" href="#arg-meanspec"></a></dt>
-<dd><p>Logical. If `TRUE`, a mean power spectrum is plotted
+<dd><p>Logical. If <code>TRUE</code>, a mean power spectrum is plotted
 alongside the spectrogram. The spectrum is flipped and positioned to the
 right.</p></dd>
 
 
 <dt id="arg-widths">widths<a class="anchor" aria-label="anchor" href="#arg-widths"></a></dt>
 <dd><p>A numeric vector of length 2 specifying the relative widths
-of the spectrogram and the mean power spectrum when `meanspec = TRUE`.
-Defaults to `c(10, 1)`.</p></dd>
+of the spectrogram and the mean power spectrum when <code>meanspec = TRUE</code>.
+Defaults to <code>c(10, 1)</code>.</p></dd>
 
 
 <dt id="arg-cutoff">cutoff<a class="anchor" aria-label="anchor" href="#arg-cutoff"></a></dt>
 <dd><p>Numeric. The amplitude cutoff in dB relative to the peak
 amplitude. Any amplitude below this cutoff will not be visible in the
-spectrogram. Defaults to `-35`.</p></dd>
+spectrogram. Defaults to <code>-35</code>.</p></dd>
 
 
 <dt id="arg-scale-type">scale_type<a class="anchor" aria-label="anchor" href="#arg-scale-type"></a></dt>
 <dd><p>Character. The scale used for the amplitude.
-Either `"dB"` for decibel scaling or `"Linear"` for a linear amplitude scale.
-Defaults to `"dB"`.</p></dd>
+Either <code>"dB"</code> for decibel scaling or <code>"Linear"</code> for a linear amplitude scale.
+Defaults to <code>"dB"</code>.</p></dd>
 
 
 <dt id="arg-overlap">overlap<a class="anchor" aria-label="anchor" href="#arg-overlap"></a></dt>
 <dd><p>Numeric. The percentage of overlap between successive windows
-for spectrogram calculation. Defaults to `95`.</p></dd>
+for spectrogram calculation. Defaults to <code>95</code>.</p></dd>
 
 
 <dt id="arg-zeropad">zeropad<a class="anchor" aria-label="anchor" href="#arg-zeropad"></a></dt>
 <dd><p>Numeric. The number of zero-padding points to add to each
-window to increase frequency resolution. Defaults to `200`.</p></dd>
+window to increase frequency resolution. Defaults to <code>200</code>.</p></dd>
 
 
 <dt id="arg-margin-l">margin_l<a class="anchor" aria-label="anchor" href="#arg-margin-l"></a></dt>
 <dd><p>Numeric. The left margin (in points) around the plot.
-Defaults to `10`.</p></dd>
+Defaults to <code>10</code>.</p></dd>
 
 
 <dt id="arg-margin-r">margin_r<a class="anchor" aria-label="anchor" href="#arg-margin-r"></a></dt>
 <dd><p>Numeric. The right margin (in points) around the plot.
-Defaults to `0`.</p></dd>
+Defaults to <code>0</code>.</p></dd>
 
 
 <dt id="arg-margin-t">margin_t<a class="anchor" aria-label="anchor" href="#arg-margin-t"></a></dt>
 <dd><p>Numeric. The top margin (in points) around the plot.
-Defaults to `0`.</p></dd>
+Defaults to <code>0</code>.</p></dd>
 
 
 <dt id="arg-margin-b">margin_b<a class="anchor" aria-label="anchor" href="#arg-margin-b"></a></dt>
 <dd><p>Numeric. The bottom margin (in points) around the plot.
-Defaults to `10`.</p></dd>
+Defaults to <code>10</code>.</p></dd>
 
 
 <dt id="arg-show-axis-titles">show_axis_titles<a class="anchor" aria-label="anchor" href="#arg-show-axis-titles"></a></dt>
-<dd><p>Logical. If `TRUE`, axis titles for time and
-frequency will be displayed on the spectrogram. Defaults to `TRUE`.</p></dd>
+<dd><p>Logical. If <code>TRUE</code>, axis titles for time and
+frequency will be displayed on the spectrogram. Defaults to <code>TRUE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A `ggplot2` object representing the spectrogram, with the option
+    <p>A <code>ggplot2</code> object representing the spectrogram, with the option
 to include a mean power spectrum on the right side.</p>
     </div>
 
