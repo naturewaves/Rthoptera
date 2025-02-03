@@ -11,19 +11,20 @@ Encoding: UTF-8
 RoxygenNote: 7.3.2
 Remotes: naturewaves/RthopteraSounds
 Imports:
-  dplyr,
-  tidyr,
-  patchwork,
-  purrr,
-  scales,
-  tibble,
-  htmlwidgets,
-  rlang,
-  fftw,
-  viridis,
-  reshape2,
-  DT,
-  shinycssloaders
+    dplyr,
+    tidyr,
+    patchwork,
+    purrr,
+    scales,
+    tibble,
+    htmlwidgets,
+    rlang,
+    fftw,
+    viridis,
+    reshape2,
+    DT,
+    shinycssloaders,
+    lifecycle
 Suggests:
   mockery,
   writexl,
@@ -41,3 +42,4 @@ VignetteBuilder: knitr
 URL: https://github.com/naturewaves/Rthoptera, https://naturewaves.github.io/Rthoptera/
 BugReports: https://github.com/naturewaves/Rthoptera/issues 
 Config/testthat/edition: 3
+Roxygen: list(markdown = TRUE)
