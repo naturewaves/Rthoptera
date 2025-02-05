@@ -1,15 +1,14 @@
 #' Temporal and Spectral Statistics for HQ (Narrow-band) Songs
 #'
-#' This function analyzes the acoustic characteristics of a wave object by
-#' detecting sounds above a threshold in the envelope created with a mean
-#' smoothing window, grouping them into motifs, and computing various metrics
-#' related to their temporal and spectral structure.
-#' An interactive plot visualizes the results, showing the envelope of the
-#' signal, detected trains, motifs, and key statistics. The plot can be
-#' downloaded as an HTML (interactive) or PNG (static) file.
+#'This function detects trains in the envelope of a Wave, groups them into
+#'hierarchical structures (i.e. motifs, motif sequences), and saves a suite of
+#'temporal and spectral metrics for each detection into several tables. An
+#'interactive plot visualizes the results, showing the envelope of the signal,
+#'detected trains, motifs, and key statistics. The plot can be downloaded as an
+#'HTML (interactive) or PNG (static) file.
 #'
-#' @param wave A Wave object containing the sound data.
-#' @param specimen_id A character string representing the specimen ID.
+#' @param wave A `Wave` object.
+#' @param specimen_id A character string representing the specimen identifier.
 #' @param msmooth_window An integer specifying the window size (in milliseconds)
 #' for smoothing the envelope (default: 100).
 #' @param msmooth_overlap An integer specifying the overlap (in %) for smoothing
@@ -431,6 +430,8 @@ song_stats_hq <- function(wave,
     pci.sd = round(sd(motif_data$pci, na.rm = TRUE), 3),
     duty.cycle.mean = round(mean(motif_data$duty.cycle, na.rm = TRUE), 1),
     duty.cycle.sd = round(sd(motif_data$duty.cycle, na.rm = TRUE), 1),
+    entropy.mean = round(mean(motif_data$props.ent, na.rm = TRUE), 3),
+    entropy.sd = round(sd(motif_data$props.ent, na.rm = TRUE), 3),
     motif.dur.mean = round(mean(motif_data$motif.dur, na.rm = TRUE), 3),
     motif.dur.sd = round(sd(motif_data$motif.dur, na.rm = TRUE), 3),
     n.trains.mean = round(mean(motif_data$n.trains, na.rm = TRUE), 3),
@@ -441,16 +442,14 @@ song_stats_hq <- function(wave,
     train.dur.sd = round(sd(train_data$train.dur, na.rm = TRUE), 3),
     gap.dur.mean = round(mean(train_data$train.gap[train_data$train.gap <= max_train_gap], na.rm = TRUE), 3),
     gap.dur.sd = round(sd(train_data$train.gap[train_data$train.gap <= max_train_gap], na.rm = TRUE), 3),
-    entropy.mean = round(mean(motif_data$props.ent, na.rm = TRUE), 3),
-    entropy.sd = round(sd(motif_data$props.ent, na.rm = TRUE), 3),
-    peak.freq.mean = round(mean(train_data$peak.freq, na.rm = TRUE), 3),
-    peak.freq.sd = round(sd(train_data$peak.freq, na.rm = TRUE), 3),
     low.freq.mean = round(mean(train_data$low.freq, na.rm = TRUE), 3),
     low.freq.sd = round(sd(train_data$low.freq, na.rm = TRUE), 3),
     high.freq.mean = round(mean(train_data$high.freq, na.rm = TRUE), 3),
     high.freq.sd = round(sd(train_data$high.freq, na.rm = TRUE), 3),
     bandw.mean = round(mean(train_data$bandw, na.rm = TRUE), 3),
     bandw.sd = round(sd(train_data$bandw, na.rm = TRUE), 3),
+    peak.freq.mean = round(mean(train_data$peak.freq, na.rm = TRUE), 3),
+    peak.freq.sd = round(sd(train_data$peak.freq, na.rm = TRUE), 3),
     sp.exc.mean = round(mean(train_data$sp.exc, na.rm = TRUE), 3),
     sp.exc.sd = round(sd(train_data$sp.exc, na.rm = TRUE), 3),
     sp.ene.mean = round(mean(train_data$sp.ene, na.rm = TRUE), 3),

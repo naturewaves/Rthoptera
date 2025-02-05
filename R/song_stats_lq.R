@@ -1,12 +1,14 @@
 #' Temporal and Spectral Statistics of LQ (Broad-band) Songs.
 #'
-#' This function calculates temporal and spectral statistics, identifying motifs
-#' and trains in the waveform, detecting peaks, and extracting spectral features
-#' such as peak frequency, low frequency, high frequency, and bandwidth.
+#'This function detects temporal peaks in the envelope of a Wave, groups them
+#'into hierarchical structures (i.e., trains, motifs, motif sequences), and
+#'saves a suite of temporal and spectral metrics for each detection into several
+#'tables. An interactive plot visualizes the results, showing the envelope of
+#'the signal, detected trains, motifs, and key statistics. The plot can be
+#'downloaded as an HTML (interactive) or PNG (static) file.
 #'
 #' @param wave A `Wave` object.
-#' @param specimen_id A character string representing the identifier for the
-#' specimen (or recording) being analyzed.
+#' @param specimen_id A character string representing the specimen identifier.
 #' @param ssmooth Numeric. Smoothing window size (in samples) for the amplitude
 #' envelope.
 #' @param peakfinder_ws Numeric. Window size (in samples) for the peak detection
@@ -476,6 +478,8 @@ song_stats_lq <- function(wave,
     pci.sd = round(sd(motif_data$pci, na.rm = TRUE), 3),
     duty.cycle.mean = round(mean(motif_data$duty.cycle, na.rm = TRUE), 3),
     duty.cycle.sd = round(sd(motif_data$duty.cycle, na.rm = TRUE), 3),
+    entropy.mean = round(mean(motif_data$props.ent, na.rm = TRUE), 3),
+    entropy.sd = round(sd(motif_data$props.ent, na.rm = TRUE), 3),
     motif.dur.mean = round(mean(motif_data$motif.dur, na.rm = TRUE), 3),
     motif.dur.sd = round(sd(motif_data$motif.dur, na.rm = TRUE), 3),
     n.trains.mean = round(mean(motif_data$n.trains, na.rm = TRUE), 3),
@@ -486,20 +490,14 @@ song_stats_lq <- function(wave,
     train.dur.sd = round(sd(train_data$train.dur, na.rm = TRUE), 3),
     gap.dur.mean = round(mean(train_data$train.gap[train_data$train.gap <= max_train_gap], na.rm = TRUE), 3),
     gap.dur.sd = round(sd(train_data$train.gap[train_data$train.gap <= max_train_gap], na.rm = TRUE), 3),
-    temp.exc.mean = round(mean(train_data$tem.exc, na.rm = TRUE), 3),
-    temp.exc.sd = round(sd(train_data$tem.exc, na.rm = TRUE), 3),
-    dyn.exc.mean = round(mean(train_data$dyn.exc, na.rm = TRUE), 3),
-    dyn.exc.sd = round(sd(train_data$dyn.exc, na.rm = TRUE), 3),
-    entropy.mean = round(mean(motif_data$props.ent, na.rm = TRUE), 3),
-    entropy.sd = round(sd(motif_data$props.ent, na.rm = TRUE), 3),
-    peak.freq.mean = round(mean(train_data$peak.freq, na.rm = TRUE), 3),
-    peak.freq.sd = round(sd(train_data$peak.freq, na.rm = TRUE), 3),
     low.freq.mean = round(mean(train_data$low.freq, na.rm = TRUE), 3),
     low.freq.sd = round(sd(train_data$low.freq, na.rm = TRUE), 3),
     high.freq.mean = round(mean(train_data$high.freq, na.rm = TRUE), 3),
     high.freq.sd = round(sd(train_data$high.freq, na.rm = TRUE), 3),
     bandw.mean = round(mean(train_data$bandw, na.rm = TRUE), 3),
     bandw.sd = round(sd(train_data$bandw, na.rm = TRUE), 3),
+    peak.freq.mean = round(mean(train_data$peak.freq, na.rm = TRUE), 3),
+    peak.freq.sd = round(sd(train_data$peak.freq, na.rm = TRUE), 3),
     sp.exc.mean = round(mean(train_data$sp.exc, na.rm = TRUE), 3),
     sp.exc.sd = round(sd(train_data$sp.exc, na.rm = TRUE), 3),
     sp.ene.mean = round(mean(train_data$sp.ene, na.rm = TRUE), 3),
@@ -507,7 +505,11 @@ song_stats_lq <- function(wave,
     sp.ent.mean = round(mean(train_data$sp.ent, na.rm = TRUE), 3),
     sp.ent.sd = round(sd(train_data$sp.ent, na.rm = TRUE), 3),
     sp.flat.mean = round(mean(train_data$sp.flat, na.rm = TRUE), 3),
-    sp.flat.sd = round(sd(train_data$sp.flat, na.rm = TRUE), 3)
+    sp.flat.sd = round(sd(train_data$sp.flat, na.rm = TRUE), 3),
+    temp.exc.mean = round(mean(train_data$tem.exc, na.rm = TRUE), 3),
+    temp.exc.sd = round(sd(train_data$tem.exc, na.rm = TRUE), 3),
+    dyn.exc.mean = round(mean(train_data$dyn.exc, na.rm = TRUE), 3),
+    dyn.exc.sd = round(sd(train_data$dyn.exc, na.rm = TRUE), 3)
   )
 
   if (motif_seq) {

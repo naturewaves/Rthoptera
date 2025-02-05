@@ -16,6 +16,8 @@
 #' `'median'`, `'sd'` (standard deviation), or `'var'` (variance).
 #' @param wn Window filtering function. Choices are:  bartlett, blackman,
 #' flattop, hamming, hanning, or rectangle. Default is `hanning`.
+#' @param verbose Logical. If TRUE, parameter info is printed in the console.
+#' @param ... Other arguments passed to meanspec() from the seewave package.
 #'
 #' @return A list with two tibbles. The first tibble "spec_df" with two columns:
 #' `frequency` and `amplitude`, and the second tibble "params_df" contains all
@@ -33,7 +35,11 @@
 #' # Assuming `wave` is a loaded Wave object
 #' spec_df <- meanspec_df(wave, from = 0, to = 5, wl = 1024, fun = 'mean')
 #' }
-spectrum_df <- function(wave, freq_res = 10, fun = "mean", wn = "hanning") {
+spectrum_df <- function(wave,
+                        freq_res = 10,
+                        fun = "mean",
+                        wn = "hanning",
+                        verbose = FALSE,...) {
 
   # Determine the window length needed to get the desired frequency resolution
   wl <- wave@samp.rate / freq_res
@@ -51,17 +57,20 @@ spectrum_df <- function(wave, freq_res = 10, fun = "mean", wn = "hanning") {
     fun = fun
   )
 
-  cat(paste0("Sampling rate: ", wave@samp.rate, " Hz",
-             "\nFrequency resolution: ", freq_res, " Hz per bin.",
-             "\nWindow length: ", wl, " samples.",
-             "\nWindow type: ", wn, ".",
-             "\nSummary function: ", fun, ".\n"))
+  if (verbose) {
+    cat(paste0("Sampling rate: ", wave@samp.rate, " Hz",
+               "\nFrequency resolution: ", freq_res, " Hz per bin.",
+               "\nWindow length: ", wl, " samples.",
+               "\nWindow type: ", wn, ".",
+               "\nSummary function: ", fun, ".\n"))
+  }
 
   full_spec <- seewave::meanspec(wave,
                                  wl = wl,
                                  FUN = fun,
                                  fftw = TRUE,
-                                 plot = FALSE)
+                                 plot = FALSE,
+                                 ...)
 
   full_spec_df <- tibble(frequency = full_spec[, 1], amplitude = full_spec[, 2])
 
