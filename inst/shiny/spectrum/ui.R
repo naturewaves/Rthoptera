@@ -113,7 +113,7 @@ ui <- function(request){
             }
 
             #plot {
-              border: 2px solid forestgreen; /* Blue contour */
+
               padding: 5px 5px; /* Button (inside) padding */
               border-radius: 5px; /* Optional: Rounded corners */
             }
