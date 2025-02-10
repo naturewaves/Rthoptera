@@ -77,4 +77,5 @@ scale_type = "dB")
 # Create a spectrogram without the mean power spectrum:
 spectrogram_ggplot(coryphoda, meanspec = FALSE)
 }
+`r lifecycle::badge("stable")`
 }

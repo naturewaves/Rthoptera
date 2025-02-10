@@ -20,9 +20,9 @@ song_stats_hq(
 )
 }
 \arguments{
-\item{wave}{A Wave object containing the sound data.}
+\item{wave}{A \code{Wave} object.}
 
-\item{specimen_id}{A character string representing the specimen ID.}
+\item{specimen_id}{A character string representing the specimen identifier.}
 
 \item{msmooth_window}{An integer specifying the window size (in milliseconds)
 for smoothing the envelope (default: 100).}
@@ -61,13 +61,12 @@ detected trains, and motifs.}
 \item{params}{A tibble containing the input parameters.}
 }
 \description{
-This function analyzes the acoustic characteristics of a wave object by
-detecting sounds above a threshold in the envelope created with a mean
-smoothing window, grouping them into motifs, and computing various metrics
-related to their temporal and spectral structure.
-An interactive plot visualizes the results, showing the envelope of the
-signal, detected trains, motifs, and key statistics. The plot can be
-downloaded as an HTML (interactive) or PNG (static) file.
+This function detects trains in the envelope of a Wave, groups them into
+hierarchical structures (i.e. motifs, motif sequences), and saves a suite of
+temporal and spectral metrics for each detection into several tables. An
+interactive plot visualizes the results, showing the envelope of the signal,
+detected trains, motifs, and key statistics. The plot can be downloaded as an
+HTML (interactive) or PNG (static) file.
 }
 \examples{
 \dontrun{

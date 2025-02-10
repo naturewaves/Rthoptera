@@ -29,7 +29,6 @@ Suggests:
   mockery,
   writexl,
   RthopteraSounds,
-  bioacoustics,
   bslib,
   colourpicker,
   cowplot,

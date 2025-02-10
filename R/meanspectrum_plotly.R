@@ -7,8 +7,7 @@
 #' @param hover_fontcolor Color for the hover text.
 #'
 #' @return An interactive Mean Spectrum
-#' @keywords internal
-#' @noRd
+#' @export
 #' @importFrom seewave meanspec
 #' @importFrom plotly plot_ly add_ribbons layout style config
 #' @examples

@@ -48,55 +48,61 @@
 #' }
 spectrum_pop <- function(waves,
                          freq_res = 300,
+                         fun = "mean",
+                         wn = "hanning",
                          loess_span = 0.1,
                          conf_level = 0.95,
                          color = "green4",
-                         line_width = 2,
+                         mean_width = 1,
                          ci_alpha = 0.3,
                          title_y = "",
                          title_x = "Frequency (kHz)",
                          show_x_labs = TRUE,
                          show_n = TRUE,
                          binomial = NULL,
+                         save_to = NULL,
+                         save = FALSE,
+                         width = 960,
+                         height = 540,
+                         dpi = 200,
                          ...) {
 
+  spectra_list <- lapply(waves, function(wave) {
 
-    spectra_list <- lapply(waves, function(wave) {
+    wl = wave@samp.rate/freq_res
 
-      wl = wave@samp.rate/freq_res
+    if (wl %% 2 == 1) {
+      wl <- wl + 1
+    }
 
-      if (wl %% 2 == 1) {
-        wl <- wl + 1
-      }
+    amp_max <- switch(as.character(wave@bit),
+                      "16" = 32768,
+                      "24" = 8388607,
+                      "32" = 2147483647,
+                      stop("Unsupported bit depth: ", wave@bit))
 
-      amp_max <- switch(as.character(wave@bit),
-                        "16" = 32768,
-                        "24" = 8388607,
-                        "32" = 2147483647,
-                        stop("Unsupported bit depth: ", wave@bit))
+    # Suppress messages from meanspec()
+    meanspec_data <- seewave::meanspec(wave,
+                                       f = wave@samp.rate,
+                                       wl = wl,
+                                       ovlp = 50,
+                                       plot = FALSE,
+                                       norm = TRUE,
+                                       dB = "max0",
+                                       wn = wn,
+                                       FUN = fun
+    )
 
-      # Suppress messages from meanspec()
-      meanspec_data <- seewave::meanspec(wave,
-                                         f = wave@samp.rate,
-                                         wl = wl,
-                                         ovlp = 50,
-                                         plot = FALSE,
-                                         norm = FALSE,
-                                         dB = NULL,
-                                         wn = "hanning",
-                                         FUN = "mean"
-      )
+    # Convert matrix to data frame
+    meanspec_df <- as.data.frame(meanspec_data)
+    colnames(meanspec_df) <- c("frequency", "amplitude")
 
-      # Convert matrix to data frame
-      meanspec_df <- as.data.frame(meanspec_data)
-      colnames(meanspec_df) <- c("frequency", "amplitude")
+    # Normalize the amplitude to dB scale
+    # meanspec_df$amplitude <- 20 * log10(abs(meanspec_df$amplitude) / amp_max)
 
-      # Normalize the amplitude to dB scale
-      meanspec_df$amplitude <- 20 * log10(abs(meanspec_df$amplitude) / amp_max)
-
-      # Return the processed spectrum as a data frame
-      meanspec_df
-    })
+    # Return the processed spectrum as a data frame
+    meanspec_df
+  })
 
   # Combine all spectra into a single data frame
   combined_spectra <- bind_rows(spectra_list, .id = "wave_id")
@@ -119,7 +125,7 @@ spectrum_pop <- function(waves,
       method = "loess",
       span = loess_span,
       color = color,
-      linewidth = line_width,
+      linewidth = mean_width,
       se = TRUE,
       level = conf_level,
       fill = color,
@@ -174,17 +180,25 @@ spectrum_pop <- function(waves,
 
   # Add binomial annotation in the top-left corner if binomial is provided
   if (!is.null(binomial)) {
-    p <- p + annotate(
-      "text",
-      x = -Inf, y = Inf,
-      label = paste0("italic(\"", binomial, "\")"),
-      hjust = -0.05, vjust = 1,
-      parse = TRUE,
-      size = 5,
-      color = "black"
-    )
+    p <- p +
+      labs(title = binomial) +
+      theme(plot.title = element_text(face = "italic"))
+  }
+
+  # Save the plot if save is TRUE and save_to is provided
+  if (save) {
+
+    if (is.null(save_to)) {
+      save_to <- getwd()
+    }
+
+    if (!is.null(binomial)) {
+      filename <- file.path(save_to, paste0(gsub(" ", "_", binomial), "_spectrum_pop.png"))
+    } else {
+      filename <- file.path(save_to, "spectrum_pop.png")
+    }
+    ggsave(filename, plot = p, width = width / dpi, height = height / dpi, dpi = dpi, ...)
   }
 
   return(p)
 }
-

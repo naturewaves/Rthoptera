@@ -4,7 +4,14 @@
 \alias{spectrum_df}
 \title{Spectrum Table (Tibble, Data Frame)}
 \usage{
-spectrum_df(wave, freq_res = 10, fun = "mean", wn = "hanning")
+spectrum_df(
+  wave,
+  freq_res = 10,
+  fun = "mean",
+  wn = "hanning",
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{wave}{An object of class \code{Wave} containing the audio data to be
@@ -21,6 +28,10 @@ for computing the mean spectrum. Default is \code{'mean'}. Other options include
 
 \item{wn}{Window filtering function. Choices are:  bartlett, blackman,
 flattop, hamming, hanning, or rectangle. Default is \code{hanning}.}
+
+\item{verbose}{Logical. If TRUE, parameter info is printed in the console.}
+
+\item{...}{Other arguments passed to meanspec() from the seewave package.}
 }
 \value{
 A list with two tibbles. The first tibble "spec_df" with two columns:

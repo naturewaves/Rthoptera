@@ -25,7 +25,9 @@ server = function(input, output, session) {
     shiny::req(input$audioFile)
     audioFilePath(input$audioFile$datapath)
     tryCatch({
-      wave <- bioacoustics::read_audio(input$audioFile$datapath)
+      # wave <- bioacoustics::read_audio(input$audioFile$datapath)
+      wave <- tuneR::readWave(input$audioFile$datapath)
+
       if (wave@stereo) {
         shiny::showModal(shiny::modalDialog(
           title = "Stereo Audio Detected",

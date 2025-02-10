@@ -74,4 +74,5 @@ library(RthopteraSounds)
 data(coryphoda)
 broadband_activity(coryphoda)
 }
+`r lifecycle::badge("stable")`
 }

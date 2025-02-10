@@ -22,8 +22,7 @@ song_stats_lq(
 \arguments{
 \item{wave}{A \code{Wave} object.}
 
-\item{specimen_id}{A character string representing the identifier for the
-specimen (or recording) being analyzed.}
+\item{specimen_id}{A character string representing the specimen identifier.}
 
 \item{ssmooth}{Numeric. Smoothing window size (in samples) for the amplitude
 envelope.}
@@ -72,9 +71,12 @@ periods, and amplitudes.}
 \item{params}{A tibble summarizing input parameters for the function.}
 }
 \description{
-This function calculates temporal and spectral statistics, identifying motifs
-and trains in the waveform, detecting peaks, and extracting spectral features
-such as peak frequency, low frequency, high frequency, and bandwidth.
+This function detects temporal peaks in the envelope of a Wave, groups them
+into hierarchical structures (i.e., trains, motifs, motif sequences), and
+saves a suite of temporal and spectral metrics for each detection into several
+tables. An interactive plot visualizes the results, showing the envelope of
+the signal, detected trains, motifs, and key statistics. The plot can be
+downloaded as an HTML (interactive) or PNG (static) file.
 }
 \examples{
 \dontrun{
