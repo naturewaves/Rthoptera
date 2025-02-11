@@ -40,7 +40,9 @@ multiplot_ggplot <- function(wave,
     scale_type = scale_type
   )
 
-  oscillo_plot <- oscillogram_ggplot(wave, y_title = oscillo_label)
+  oscillo_plot <- oscillogram_ggplot(wave,
+                                     y_title = oscillo_label,
+                                     show_x = FALSE)
 
   final_plot <- combined_spect_mean /
     (oscillo_plot + plot_spacer() + plot_layout(ncol = 2,

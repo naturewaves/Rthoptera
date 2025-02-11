@@ -123,7 +123,7 @@ ui <- function(request) {
                       shiny::selectInput("waveObject", "Select a wave object:", choices = NULL, width = '100%')
         ),
         shiny::column(1,
-                      shiny::selectInput("meanspecScale", "Scale:", selected = "dB", choices = c("linear", "dB"))
+                      shiny::selectInput("meanspecScale", "Scale:", selected = "linear", choices = c("linear", "dB"))
         ),
         shiny::column(1,
                       shiny::numericInput("noise.cutoff", "Cutoff (dB)", value = -35, min = -60, max = -20, step = 5)
