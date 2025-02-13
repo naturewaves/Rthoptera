@@ -43,8 +43,7 @@ server <- function(input, output, session) {
           wave_name,  # Display the wave name
           span(
             class = "remove-wave",
-            style = "position: absolute; top: 0; right: 0; cursor: pointer; color: red; font-weight: bold;",
-            "×",  # "X" button
+            style = "position: absolute; top: 0; right: 0; cursor: pointer; color: red; font-weight: bold;","Ã—",  # "X" button
             onclick = paste0("Shiny.setInputValue('remove_wave', ", index, ")")  # Send index to server
           )
         )
