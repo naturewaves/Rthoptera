@@ -20,7 +20,7 @@ server <- function(input, output, session) {
                   motif_seq = input$motif_seq,
                   max_motif_gap = input$max_motif_gap,
                   detection_threshold = input$detection_threshold,
-                  norm_env = TRUE,
+                  norm_env = input$norm,
                   db_threshold = 20)
   })
 
@@ -40,7 +40,7 @@ server <- function(input, output, session) {
       shiny::updateNumericInput(session, "peakfinder_threshold", value = 0.01)
       shiny::updateNumericInput(session, "max_peak_gap", value = 0.01)
       shiny::updateNumericInput(session, "max_train_gap", value = 0.05)
-      shiny::updateNumericInput(session, "detection_threshold", value = 0.001)
+      shiny::updateNumericInput(session, "detection_threshold", value = 0.1)
     }
   })
 

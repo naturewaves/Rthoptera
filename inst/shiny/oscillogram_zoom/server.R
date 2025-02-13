@@ -277,7 +277,7 @@ server <- function(input, output, session) {
 
   output$saveImage <- shiny::downloadHandler(
     filename = function() {
-      paste(as.character(input$waveObject), "oscillogram.png")
+      paste0(as.character(input$waveObject), "_oscillogram.png")
     },
     content = function(file) {
       if (!is.null(tempImagePath())) {

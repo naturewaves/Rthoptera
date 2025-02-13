@@ -390,7 +390,8 @@ ui <- function(request) {
       shiny::column(10,
                     shiny::fluidRow(
                       shiny::column(2, shiny::actionButton("run", "Run Analysis"),
-                                    shiny::checkboxInput("motif_seq", "Motif Sequences", value = TRUE)
+                                    shiny::checkboxInput("motif_seq", "Motif Sequences", value = TRUE),
+                                    shiny::checkboxInput("norm", "Normalize", value = TRUE)
                       ),
                       shiny::column(2, shiny::downloadButton("saveData", "Export Excel Workbook")),
                       shiny::column(2, shiny::downloadButton("savePlot", "Export HTML Plot")),

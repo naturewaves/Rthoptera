@@ -83,8 +83,10 @@ song_stats_lq <- function(wave,
     ssmooth = ssmooth,
     peakfinder_ws = peakfinder_ws,
     peakfinder_threshold = peakfinder_threshold,
-    max_train_gap = max_train_gap,
     max_peak_gap = max_peak_gap,
+    max_train_gap = max_train_gap,
+    max_motif_gap = max_motif_gap,
+    detection_threshold = detection_threshold,
     norm_env = norm_env
   )
 
@@ -464,8 +466,8 @@ song_stats_lq <- function(wave,
 
     motif_seq_data <- motif_seq_data |>
       mutate(
-        group.dur = group.end - group.start,
-        group.period = lead(group.start) - group.start,
+        group.dur = round((group.end - group.start), 3),
+        group.period = round((lead(group.start) - group.start), 3),
         group.gap = round(lead(group.start) - group.end, 3)
       )
   }
