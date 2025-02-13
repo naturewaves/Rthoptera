@@ -31,7 +31,6 @@ Suggests:
   writexl,
   RthopteraSounds,
   bslib,
-  colourpicker,
   cowplot,
   htmltools,
   knitr,
