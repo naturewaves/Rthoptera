@@ -36,13 +36,17 @@ server <- function(input, output, session) {
       wave = wave,
       cutoff = shiny::isolate(input$noise.cutoff),
       scale.type = shiny::isolate(input$meanspecScale),
+      zeropad = shiny::isolate(input$zeropad),
       heights = heights()
     )
 
     plotVisible(TRUE)
 
     output$specPlotOutput <- shiny::renderUI({
-      shinycssloaders::withSpinner(shiny::plotOutput("specPlot", height = "auto", width = "auto"), type = 1)
+      shinycssloaders::withSpinner(shiny::plotOutput("specPlot",
+                                                     height = "auto",
+                                                     width = "auto"),
+                                   type = 1)
     })
 
     output$specPlot <- shiny::renderPlot({
@@ -51,6 +55,7 @@ server <- function(input, output, session) {
           wave = wave,
           cutoff = shiny::isolate(input$noise.cutoff),
           scale_type = shiny::isolate(input$meanspecScale),
+          zeropad = shiny::isolate(input$zeropad),
           heights = heights()
         )
         print(combined_plot)
@@ -60,7 +65,8 @@ server <- function(input, output, session) {
         bg <- ifelse(input$transparentBg, "transparent", "white")
         ggplot2::ggsave(temp_file,
                         plot = combined_plot,
-                        width = shiny::isolate(input$imgWidth), height = shiny::isolate(input$imgHeight),
+                        width = shiny::isolate(input$imgWidth),
+                        height = shiny::isolate(input$imgHeight),
                         units = "in", dpi = 300, bg = bg
         )
         savedImage(temp_file)

@@ -129,7 +129,8 @@ ui <- function(request) {
                       shiny::numericInput("noise.cutoff", "Cutoff (dB)", value = -35, min = -60, max = -20, step = 5)
         ),
         shiny::column(1,
-                      shiny::numericInput("osc.height", "Oscillogram Height (%)", value = 20, min = 20, max = 80, step = 1)
+                      shiny::numericInput("osc.height", "Oscillogram Height (%)", value = 20, min = 20, max = 80, step = 1),
+                      shiny::numericInput("zeropad", "Zero-padding", value = 200, min = 50, max = 400, step = 10),
         ),
         shiny::column(1,
                       shiny::numericInput("imgWidth", "Width (in):", value = 15, min = 1)
