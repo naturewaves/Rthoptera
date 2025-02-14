@@ -31,18 +31,18 @@ server <- function(input, output, session) {
       shiny::updateTextInput(session, "specimen_id", value = "")
       shiny::updateNumericInput(session, "msmooth_window", value = 100)
       shiny::updateNumericInput(session, "msmooth_overlap", value = 50)
-      shiny::updateNumericInput(session, "lower_detection_threshold", value = 0.08)
+      shiny::updateNumericInput(session, "lower_detection_threshold", value = 0.15)
       shiny::updateNumericInput(session, "upper_detection_threshold", value = 0.2)
-      shiny::updateNumericInput(session, "max_train_gap", value = 0.08)
+      shiny::updateNumericInput(session, "max_train_gap", value = 0.3)
 
     } else if (input$preset == "Tettigoniidae") {
 
       shiny::updateTextInput(session, "specimen_id", value = "")
       shiny::updateNumericInput(session, "msmooth_window", value = 900)
       shiny::updateNumericInput(session, "msmooth_overlap", value = 50)
-      shiny::updateNumericInput(session, "upper_detection_threshold", value = 0.05)
-      shiny::updateNumericInput(session, "lower_detection_threshold", value = 0.02)
-      shiny::updateNumericInput(session, "max_train_gap", value = 0.1)
+      shiny::updateNumericInput(session, "lower_detection_threshold", value = 0.15)
+      shiny::updateNumericInput(session, "upper_detection_threshold", value = 0.2)
+      shiny::updateNumericInput(session, "max_train_gap", value = 0.3)
 
     }
   })

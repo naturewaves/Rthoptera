@@ -287,7 +287,7 @@ ui <- function(request) {
                                                )
                                     ),
                                     shiny::numericInput("lower_detection_threshold", label = NULL,
-                                                        value = 0.1,
+                                                        value = 0.15,
                                                         min = 0.01,
                                                         max = 0.99,
                                                         step = 0.01)
@@ -314,8 +314,9 @@ ui <- function(request) {
                                     ),
                                     shiny::numericInput("max_train_gap",
                                                         label = NULL,
-                                                        value = 0.08,
-                                                        min = 0.01, max = 1,
+                                                        value = 0.3,
+                                                        min = 0.01,
+                                                        max = 1,
                                                         step = 0.01)
                       )
                     ),

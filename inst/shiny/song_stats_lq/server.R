@@ -31,16 +31,16 @@ server <- function(input, output, session) {
       shiny::updateNumericInput(session, "peakfinder_ws", value = 5)
       shiny::updateNumericInput(session, "peakfinder_threshold", value = 0.05)
       shiny::updateNumericInput(session, "max_peak_gap", value = 0.01)
-      shiny::updateNumericInput(session, "max_train_gap", value = 0.05)
-      shiny::updateNumericInput(session, "detection_threshold", value = 0.1)
+      shiny::updateNumericInput(session, "max_train_gap", value = 0.3)
+      shiny::updateNumericInput(session, "detection_threshold", value = 0.15)
 
     } else if (input$preset == "Tettigoniidae") {
       shiny::updateNumericInput(session, "ssmooth", value = 100)
       shiny::updateNumericInput(session, "peakfinder_ws", value = 50)
       shiny::updateNumericInput(session, "peakfinder_threshold", value = 0.01)
       shiny::updateNumericInput(session, "max_peak_gap", value = 0.01)
-      shiny::updateNumericInput(session, "max_train_gap", value = 0.05)
-      shiny::updateNumericInput(session, "detection_threshold", value = 0.1)
+      shiny::updateNumericInput(session, "max_train_gap", value = 0.3)
+      shiny::updateNumericInput(session, "detection_threshold", value = 0.15)
     }
   })
 
