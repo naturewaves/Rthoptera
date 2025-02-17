@@ -205,7 +205,7 @@ spectral_stats <- function(wave,
 
   p <- p |>
     layout(
-      yaxis = list(range = ifelse(db, c(-50, 0), c(0, 1))),
+      yaxis = list(range = ifelse(db, list(-20, 0), list(0, 1))),
       margin = list(l = 50, r = 50, t = 100, b = 50),
       title = list(
         text = sprintf("<i>%s</i>", specimen_id), x = 0, y = 1.1,
@@ -262,7 +262,7 @@ spectral_stats <- function(wave,
           width = 1, dash = "dash"
         ),
         name = "dB Threshold",
-        hovertemplate = paste("-20 dB Threshold <extra></extra>"),
+        hovertemplate = paste("dB Threshold <extra></extra>"),
         showlegend = TRUE
       )
   }
