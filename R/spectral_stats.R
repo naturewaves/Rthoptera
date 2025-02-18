@@ -8,6 +8,8 @@
 #'
 #' @param wave A `Wave` object representing the sound data.
 #' @param specimen_id Character string for the specimen identifier.
+#' @param locality Character. The locality where the specimen was found.
+#' @param sound_type Character string for the type of sound analyzed.
 #' @param total_range Logical, whether to calculate the full frequency range.
 #' @param robust Logical, whether to use a robust frequency resolution (244 Hz).
 #' @param db Logical. If TRUE, a decibel scale is used. If FALSE (default),
@@ -16,7 +18,6 @@
 #' set between 0 and 1. If db = TRUE, set to a negative dB value.
 #' @param lines Logical, whether to add lines for min, max, and peak
 #' frequencies.
-#' @param sound_type Character string for the type of sound analyzed.
 #' @param temp Numeric, optional, temperature in degrees Celsius.
 #' @param hpf Numeric, optional, high-pass filter cutoff frequency in kHz.
 #' Defaults to 0.
@@ -41,12 +42,13 @@
 #' @importFrom htmlwidgets onRender
 spectral_stats <- function(wave,
                            specimen_id = "",
+                           locality = "",
+                           sound_type = "",
                            total_range = FALSE,
                            robust = TRUE,
                            db = FALSE,
                            cutoff = 0.5,
                            lines = TRUE,
-                           sound_type = "",
                            temp = NULL,
                            hpf = 0) {
 
@@ -154,6 +156,7 @@ spectral_stats <- function(wave,
 
   df <- tibble(
     specimen.id = specimen_id,
+    locality = locality,
     sound.type = sound_type,
     low.f = round(minfreq, 1),
     high.f = round(maxfreq, 1),
@@ -178,11 +181,11 @@ spectral_stats <- function(wave,
   # PLOTTING
   p <- plot_ly(spec_df) |>
     add_lines(
-      x = ~Frequency, y = ~Amplitude, name = "Summary Statistics",
+      x = ~Frequency, y = ~Amplitude, name = "Summary",
       hoverinfo = "none", line = list(
         color = "rgba(20, 20, 20, 0)",
         width = 2
-      ), legendgroup = "Summary Stats"
+      ), legendgroup = "Summary"
     ) |>
     add_lines(
     x = ~Frequency,
@@ -190,8 +193,8 @@ spectral_stats <- function(wave,
     type = "scatter",
     mode = "lines",
     line = list(color = 'rgba(0,0,0,0.2)', width = 1),
-    fill = "tozeroy",
-    fillcolor = 'rgba(0,0,0,0.6)',
+    fill = "toself",
+    fillcolor = 'rgba(0,0,0,0.7)',
     hovertemplate = paste(
       "Frequency: %{x:.2f} kHz<br>Amplitude: %{y:.2f}<extra></extra>"
     ),
@@ -199,7 +202,7 @@ spectral_stats <- function(wave,
   )
 
   text_label <- paste(
-    "<b> Summary Statistics</b>",
+    "<b> Summary </b>",
     "<br> Peak Freq:", df$peak.f, "kHz",
     "<br> Low Freq:", df$low.f, "kHz",
     "<br> High Freq:", df$high.f, "kHz",
@@ -214,8 +217,8 @@ spectral_stats <- function(wave,
 
   p <- p |>
     layout(
-      # yaxis = list(range = ifelse(db, c(-10, 0), c(0.5, 1))),  # Set the range for y-axis
-      yaxis = list(range = ifelse(db, list(-10, 0), list(0.5, 1))),
+      yaxis = list(range = if (db) c(-20, 0) else c(0, 1),
+                   fixedrange = FALSE),
       margin = list(l = 50, r = 50, t = 100, b = 50),
       title = list(
         text = sprintf("<i>%s</i>", specimen_id), x = 0, y = 1.1,
@@ -227,13 +230,20 @@ spectral_stats <- function(wave,
         title = ifelse(db, "Amplitude (dB)", "Linear Amplitude")
       ),
       annotations = list(
-        x = 1, y = .95, text = text_label, showarrow = FALSE,
+        x = 1, y = .99, text = text_label, showarrow = FALSE,
         xref = "paper", yref = "paper",
         xanchor = "right", yanchor = "top",
         font = list(size = 12), bgcolor = "rgba(255,255,255,1)",
         bordercolor = "#404040", align = "left"
       )
     )
+
+
+
+
+
+
+
 
   if (lines) {
     p <- p |>

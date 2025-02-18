@@ -173,6 +173,29 @@ ui <- function(request) {
                       options = list(container = "body")
                     ),
 
+
+                    # shiny::column(12, shiny::textInput("locName", "Locality", value = "")),
+                    shiny::fluidRow(
+                      shiny::column(12,
+                                    shiny::tagList(
+                                      shiny::tags$label("Locality"),
+                                      shinyBS::bsButton("locality_info", label = "", lib="font-awesome",
+                                                        shiny::icon("circle-info"), style = "default",
+                                                        size = "extra-small", class = "btn-info")
+                                    ),
+                                    shiny::textInput("locality", label = NULL, value = "")
+                      )
+                    ),
+                    shinyBS::bsPopover(
+                      id = "locality_info",
+                      title = "Locality",
+                      content = shiny::HTML(paste0("The place where the specimen was found.")),
+                      placement = "right",
+                      trigger = "click",
+                      options = list(container = "body")
+                    ),
+
+
                     shiny::fluidRow(
                       shiny::column(12,
                                     shiny::tagList(
@@ -254,7 +277,7 @@ ui <- function(request) {
                                     shiny::selectInput("scale",
                                                        label = NULL,
                                                        choices = list("db", "linear"),
-                                                       selected = 1)
+                                                       selected = "linear")
                       )
                     ),
                     shinyBS::bsPopover(
@@ -276,10 +299,10 @@ ui <- function(request) {
                                     ),
                                     shiny::numericInput("cutoff",
                                                         label = NULL,
-                                                        value = -20,
-                                                        min = -3,
-                                                        max = -100,
-                                                        step = 1)
+                                                        value = 0.4,
+                                                        min = 0.05,
+                                                        max = 0.95,
+                                                        step = 0.05)
                       )
                     ),
                     shinyBS::bsPopover(
@@ -303,14 +326,13 @@ ui <- function(request) {
                                                                                        size = "extra-small", class = "btn-info"))
                                                   ),
                                                   shiny::fluidRow(
-                                                    shiny::column(8, shiny::checkboxInput("robust", "Robust", value = FALSE)),
+                                                    shiny::column(8, shiny::checkboxInput("robust", "Robust", value = TRUE)),
                                                     shiny::column(4, shinyBS::bsButton("robust_info", label = "", lib="font-awesome",
                                                                                        shiny::icon("circle-info"), style = "default",
                                                                                        size = "extra-small", class = "btn-info"))
                                                   )
                                     ),
                                     shiny::column(2, shiny::actionButton("run", "Run Analysis")),
-                                    shiny::column(2, shiny::textInput("dataName", "Table name", value = "")),
                                     shiny::column(2, shiny::verticalLayout(
                                       shiny::actionButton("saveDataEnv", "Table to R"),
                                       shiny::downloadButton("downloadData", "Export CSV"),

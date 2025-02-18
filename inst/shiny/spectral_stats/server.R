@@ -7,6 +7,7 @@ server <- function(input, output, session) {
   shiny::observe({
     values$speciesName <- input$specimen.id
     values$callType <- input$sound.type
+    values$locality <- input$locality
   })
 
   # Observer to update available wave objects in the environment
@@ -20,7 +21,7 @@ server <- function(input, output, session) {
     if (input$scale == "db") {
       shiny::updateNumericInput(session, "cutoff", value = -6, min = -100, max = -3, step = 1)
     } else {
-      shiny::updateNumericInput(session, "cutoff", value = 0.1, min = 0.05, max = 0.95, step = 0.05)
+      shiny::updateNumericInput(session, "cutoff", value = 0.4, min = 0.05, max = 0.95, step = 0.05)
     }
   })
 
@@ -31,6 +32,7 @@ server <- function(input, output, session) {
     spectral_stats(
       wave = wave,
       specimen_id = input$specimen.id,
+      locality = input$locality,
       sound_type = input$sound.type,
       temp = input$temp,
       hpf = input$hpf,
@@ -81,7 +83,12 @@ server <- function(input, output, session) {
   # Download data
   output$downloadData <- shiny::downloadHandler(
     filename = function() {
-      paste0(tolower(values$speciesName), "_", tolower(values$callType), "_spectral_stats.csv")
+      speciesName_clean <- gsub(" ", "_", tolower(values$speciesName))
+      callType_clean <- gsub(" ", "_", tolower(values$callType))
+      locality_clean <- gsub(" ", "_", tolower(values$locality))
+
+
+      paste(values$speciesName_clean, locality_clean, values$callType_clean, "spectral_stats.csv", sep = "_")
     },
     content = function(file) {
       utils::write.csv(result()$data, file, row.names = FALSE)
@@ -90,11 +97,20 @@ server <- function(input, output, session) {
 
   # Save data frame in R environment
   shiny::observeEvent(input$saveDataEnv, {
-    shiny::req(result(), input$dataName)
-    assign(input$dataName, result()$data, envir = .GlobalEnv)
+
+    speciesName_clean <- gsub(" ", "_", tolower(values$speciesName))
+    callType_clean <- gsub(" ", "_", tolower(values$callType))
+    locality_clean <- gsub(" ", "_", tolower(values$locality))
+
+    tableName <- paste(speciesName_clean, locality_clean, callType_clean,  sep = "_")
+
+    # shiny::req(result(), input$dataName)
+    # assign(input$dataName, result()$data, envir = .GlobalEnv)
+    assign(tableName, result()$data, envir = .GlobalEnv)
     shiny::showModal(shiny::modalDialog(
       title = "Saved",
-      paste0("Available as '", input$dataName, "' in the R environment."),
+      # paste0("Available as '", input$dataName, "' in the R environment."),
+      paste0("Available as '", tableName, "' in the R environment."),
       easyClose = TRUE,
       footer = shiny::modalButton("OK")
     ))
