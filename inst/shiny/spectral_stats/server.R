@@ -18,9 +18,9 @@ server <- function(input, output, session) {
 
   shiny::observeEvent(input$scale, {
     if (input$scale == "db") {
-      shiny::updateNumericInput(session, "cutoff", value = -20, min = -100, max = -3, step = 1)
+      shiny::updateNumericInput(session, "cutoff", value = -6, min = -100, max = -3, step = 1)
     } else {
-      shiny::updateNumericInput(session, "cutoff", value = 0.1, min = 0.01, max = 0.99, step = 0.01)
+      shiny::updateNumericInput(session, "cutoff", value = 0.1, min = 0.05, max = 0.95, step = 0.05)
     }
   })
 
@@ -49,7 +49,7 @@ server <- function(input, output, session) {
 
   output$plotlyPlot <- plotly::renderPlotly({
     shiny::req(result())
-    result()$plot %>%
+    result()$plot |>
       plotly::layout(
         margin = list(l = 80, r = 0, t = 80, b = 80),
         annotations = list(

@@ -38,17 +38,17 @@
 #' @importFrom seewave meanspec sh sfm
 #' @importFrom plotly plot_ly add_lines layout add_trace add_markers
 #' @importFrom tibble tibble
+#' @importFrom htmlwidgets onRender
 spectral_stats <- function(wave,
                            specimen_id = "",
                            total_range = FALSE,
-                           robust = FALSE,
-                           db = TRUE,
-                           cutoff = -20,
+                           robust = TRUE,
+                           db = FALSE,
+                           cutoff = 0.5,
                            lines = TRUE,
                            sound_type = "",
                            temp = NULL,
                            hpf = 0) {
-
 
   if (db == FALSE && cutoff <= 0) {
     stop("When db = FALSE, cutoff should be between 0 and 1. The equivalent to
@@ -176,13 +176,22 @@ spectral_stats <- function(wave,
 
 
   # PLOTTING
-  p <- plot_ly(
-    spec_df,
+  p <- plot_ly(spec_df) |>
+    add_lines(
+      x = ~Frequency, y = ~Amplitude, name = "Summary Statistics",
+      hoverinfo = "none", line = list(
+        color = "rgba(20, 20, 20, 0)",
+        width = 2
+      ), legendgroup = "Summary Stats"
+    ) |>
+    add_lines(
     x = ~Frequency,
     y = ~Amplitude,
     type = "scatter",
     mode = "lines",
-    line = list(color = "black", width = 0.5),
+    line = list(color = 'rgba(0,0,0,0.2)', width = 1),
+    fill = "tozeroy",
+    fillcolor = 'rgba(0,0,0,0.6)',
     hovertemplate = paste(
       "Frequency: %{x:.2f} kHz<br>Amplitude: %{y:.2f}<extra></extra>"
     ),
@@ -191,8 +200,8 @@ spectral_stats <- function(wave,
 
   text_label <- paste(
     "<b> Summary Statistics</b>",
-    "<br> Low Freq:", df$low.f, "kHz",
     "<br> Peak Freq:", df$peak.f, "kHz",
+    "<br> Low Freq:", df$low.f, "kHz",
     "<br> High Freq:", df$high.f, "kHz",
     "<br> Bandwidth:", df$bandw, "kHz",
     "<br> Sp. Excursion:", df$sp.exc,
@@ -205,7 +214,8 @@ spectral_stats <- function(wave,
 
   p <- p |>
     layout(
-      yaxis = list(range = ifelse(db, list(-20, 0), list(0, 1))),
+      # yaxis = list(range = ifelse(db, c(-10, 0), c(0.5, 1))),  # Set the range for y-axis
+      yaxis = list(range = ifelse(db, list(-10, 0), list(0.5, 1))),
       margin = list(l = 50, r = 50, t = 100, b = 50),
       title = list(
         text = sprintf("<i>%s</i>", specimen_id), x = 0, y = 1.1,
@@ -230,7 +240,7 @@ spectral_stats <- function(wave,
       add_trace(
         x = c(minfreq, minfreq), y = c(min(spec_df$Amplitude), A_ref),
         type = "scatter", mode = "lines",
-        line = list(color = "#1E90FF", width = 1, dash = "solid"),
+        line = list(color = "#1E90FF", width = 2, dash = "solid"),
         name = "Min Frequency",
         hovertemplate = paste("MinFreq: %{x} kHz <extra></extra>"),
         showlegend = TRUE
@@ -249,7 +259,7 @@ spectral_stats <- function(wave,
       add_trace(
         x = c(maxfreq, maxfreq), y = c(min(spec_df$Amplitude), A_ref),
         type = "scatter", mode = "lines",
-        line = list(color = "#FF7F00", width = 1, dash = "solid"),
+        line = list(color = "#FF7F00", width = 2, dash = "solid"),
         name = "Max Frequency",
         hovertemplate = paste("MaxFreq: %{x} kHz <extra></extra>"),
         showlegend = TRUE
@@ -259,7 +269,7 @@ spectral_stats <- function(wave,
         type = "scatter", mode = "lines",
         line = list(
           color = "forestgreen",
-          width = 1, dash = "dash"
+          width = 1.5, dash = "dash"
         ),
         name = "dB Threshold",
         hovertemplate = paste("dB Threshold <extra></extra>"),
@@ -273,6 +283,24 @@ spectral_stats <- function(wave,
     marker = list(symbol = "triangle-down", color = "#EE0000", size = 10),
     name = "Peak", showlegend = TRUE, hoverinfo = "none", inherit = FALSE
   )
+
+  p <- htmlwidgets::onRender(p, "
+   function(el, x) {
+     el.on('plotly_restyle', function(d) {
+      var traceVisible = x.data[0].visible;
+      var annotations = x.layout.annotations;
+
+      if (traceVisible === true || traceVisible === undefined) {
+        annotations[0].visible = true;
+      } else {
+        annotations[0].visible = false;
+      }
+
+      // Apply the updated annotation visibility
+      Plotly.relayout(el, {annotations: annotations});
+      });
+   }
+   ")
 
 
 
