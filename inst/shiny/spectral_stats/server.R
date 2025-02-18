@@ -87,8 +87,9 @@ server <- function(input, output, session) {
       callType_clean <- gsub(" ", "_", tolower(values$callType))
       locality_clean <- gsub(" ", "_", tolower(values$locality))
 
+      tableName <- paste(speciesName_clean, locality_clean, callType_clean,  sep = "_")
 
-      paste(values$speciesName_clean, locality_clean, values$callType_clean, "spectral_stats.csv", sep = "_")
+      paste0(tableName, "_spectral_stats.csv")
     },
     content = function(file) {
       utils::write.csv(result()$data, file, row.names = FALSE)
@@ -119,7 +120,14 @@ server <- function(input, output, session) {
   # Save plot
   output$savePlot <- shiny::downloadHandler(
     filename = function() {
-      paste0(tolower(values$speciesName), "_", tolower(values$callType), "_spectral_analysis.html")
+      speciesName_clean <- gsub(" ", "_", tolower(values$speciesName))
+      callType_clean <- gsub(" ", "_", tolower(values$callType))
+      locality_clean <- gsub(" ", "_", tolower(values$locality))
+
+      plotName <- paste(speciesName_clean, locality_clean, callType_clean,  sep = "_")
+
+
+      paste0(plotName, "_spectral_analysis.html")
     },
     content = function(file) {
       htmlwidgets::saveWidget(result()$plot, file, selfcontained = TRUE)

@@ -221,7 +221,7 @@ spectral_stats <- function(wave,
                    fixedrange = FALSE),
       margin = list(l = 50, r = 50, t = 100, b = 50),
       title = list(
-        text = sprintf("<i>%s</i>", specimen_id), x = 0, y = 1.1,
+        text = paste(sprintf("<i>%s</i>", specimen_id), locality, sep = " - "), x = 0, y = 1.1,
         xref = "paper", yref = "paper",
         xanchor = "left", yanchor = "top"
       ),

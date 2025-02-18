@@ -139,7 +139,7 @@ ui <- function(request){
           shiny::selectInput("waveObject", "Select a wave object:", choices = NULL),
           shiny::textInput("plotTitle", "Plot title:", value = ""),
           shiny::checkboxInput("italicTitle", "Italicize Title", value = TRUE),
-          shiny::selectInput("wl", "Window Length:", selected = 4096,
+          shiny::selectInput("wl", "Window Length:", selected = 1024,
                              choices = c(128, 256, 512, 1024, 2048, 4096, 8192)),
           shiny::numericInput("ovlp", "Overlap (%):", value = 75, min = 0, max = 100),
           shiny::selectInput("wn", "Window Function:",
@@ -149,7 +149,7 @@ ui <- function(request){
           shiny::selectInput("scale", "Scale:", choices = c("linear", "dB", "dBFS")),
           shiny::conditionalPanel(
             condition = "input.scale == 'dB' || input.scale == 'dBFS'",
-            shiny::numericInput("yMin", "Minimum amplitude (dB):", value = -100),
+            shiny::numericInput("yMin", "Minimum amplitude (dB):", value = -50),
             shiny::textInput("yBreaks", "Amplitude Ticks:", value = "-40, -20, 0")
           ),
           width = 2
@@ -163,7 +163,7 @@ ui <- function(request){
             shiny::column(2, shiny::verticalLayout(
               shiny::checkboxInput("showXTitle", "Show X-axis Title", value = TRUE),
               shiny::checkboxInput("showYTitle", "Show Y-axis Title", value = TRUE),
-              shiny::checkboxInput("addParams", "Add Parameters", value = TRUE),
+              shiny::checkboxInput("addParams", "Add Parameters", value = FALSE),
               shiny::checkboxInput("flip", "Flip Axes", value = FALSE)
             )),
             shiny::column(2, shiny::verticalLayout(
@@ -187,7 +187,7 @@ ui <- function(request){
             shiny::column(2, shiny::numericInput("fmax", "Max. Freq:",
                                                  value = 48, min =10, max=193, step = 1)),
             shiny::column(2, shiny::numericInput("x.breaks", "Nr of Frequency Ticks:",
-                                                 value = 8, min = 4, max = 20))
+                                                 value = 20, min = 4, max = 193, step = 1))
           ),
           width = 10
         )
