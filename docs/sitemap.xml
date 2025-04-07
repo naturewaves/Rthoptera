@@ -13,9 +13,11 @@
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/index.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/launch_app.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/list_waves.html</loc></url>
+<url><loc>https://naturewaves.github.io/Rthoptera/reference/meanspectrum_plotly.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/multiplot_ggplot.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/oscillogram_ggplot.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/oscillogram_plotly.html</loc></url>
+<url><loc>https://naturewaves.github.io/Rthoptera/reference/Rthoptera-package.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/Rthoptera.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/song_stats_hq.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/song_stats_lq.html</loc></url>
@@ -25,6 +27,7 @@
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/spectrum_df.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/spectrum_ggplot.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/spectrum_plotly.html</loc></url>
+<url><loc>https://naturewaves.github.io/Rthoptera/reference/spectrum_pop.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/wave_df.html</loc></url>
 </urlset>
 

@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-The package provides functions (each one with a Shiny App version) to analyze insect acoustic signals, including preprocessing (e.g., high-pass filter, remove DC offset, down-sampling, etc.). Analytical functions allow the user to automatically extract relevant acoustic features in both spectral and temporal dimensions.
+The package provides functions and Shiny Apps to analyze insect acoustic signals, including preprocessing (e.g., high-pass filter, remove DC offset, down-sampling, etc.). Analytical functions allow the user to automatically extract relevant acoustic features in both spectral and temporal dimensions.
 }
 \seealso{
 Useful links:

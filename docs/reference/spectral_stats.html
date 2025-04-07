@@ -15,7 +15,7 @@ to visualize key statistics with lines on the plot."><meta property="og:image" c
 
     <a class="navbar-brand me-2" href="../index.html">Rthoptera</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,12 +66,13 @@ to visualize key statistics with lines on the plot.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">spectral_stats</span><span class="op">(</span></span>
 <span>  <span class="va">wave</span>,</span>
 <span>  specimen_id <span class="op">=</span> <span class="st">""</span>,</span>
-<span>  total_range <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  robust <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  db <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  cutoff <span class="op">=</span> <span class="op">-</span><span class="fl">20</span>,</span>
-<span>  lines <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  locality <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  sound_type <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  total_range <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  robust <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  db <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  cutoff <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  lines <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  temp <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  hpf <span class="op">=</span> <span class="fl">0</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -87,6 +88,14 @@ to visualize key statistics with lines on the plot.</p>
 
 <dt id="arg-specimen-id">specimen_id<a class="anchor" aria-label="anchor" href="#arg-specimen-id"></a></dt>
 <dd><p>Character string for the specimen identifier.</p></dd>
+
+
+<dt id="arg-locality">locality<a class="anchor" aria-label="anchor" href="#arg-locality"></a></dt>
+<dd><p>Character. The locality where the specimen was found.</p></dd>
+
+
+<dt id="arg-sound-type">sound_type<a class="anchor" aria-label="anchor" href="#arg-sound-type"></a></dt>
+<dd><p>Character string for the type of sound analyzed.</p></dd>
 
 
 <dt id="arg-total-range">total_range<a class="anchor" aria-label="anchor" href="#arg-total-range"></a></dt>
@@ -110,10 +119,6 @@ set between 0 and 1. If db = TRUE, set to a negative dB value.</p></dd>
 <dt id="arg-lines">lines<a class="anchor" aria-label="anchor" href="#arg-lines"></a></dt>
 <dd><p>Logical, whether to add lines for min, max, and peak
 frequencies.</p></dd>
-
-
-<dt id="arg-sound-type">sound_type<a class="anchor" aria-label="anchor" href="#arg-sound-type"></a></dt>
-<dd><p>Character string for the type of sound analyzed.</p></dd>
 
 
 <dt id="arg-temp">temp<a class="anchor" aria-label="anchor" href="#arg-temp"></a></dt>
@@ -146,7 +151,7 @@ Defaults to 0.</p></dd>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Author1.</p>
+  <p>Developed by Francisco Rivas.</p>
 </div>
 
 <div class="pkgdown-footer-right">

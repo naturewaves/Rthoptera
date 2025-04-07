@@ -7,12 +7,13 @@
 spectral_stats(
   wave,
   specimen_id = "",
-  total_range = FALSE,
-  robust = FALSE,
-  db = TRUE,
-  cutoff = -20,
-  lines = TRUE,
+  locality = "",
   sound_type = "",
+  total_range = FALSE,
+  robust = TRUE,
+  db = FALSE,
+  cutoff = 0.5,
+  lines = TRUE,
   temp = NULL,
   hpf = 0
 )
@@ -21,6 +22,10 @@ spectral_stats(
 \item{wave}{A \code{Wave} object representing the sound data.}
 
 \item{specimen_id}{Character string for the specimen identifier.}
+
+\item{locality}{Character. The locality where the specimen was found.}
+
+\item{sound_type}{Character string for the type of sound analyzed.}
 
 \item{total_range}{Logical, whether to calculate the full frequency range.}
 
@@ -34,8 +39,6 @@ set between 0 and 1. If db = TRUE, set to a negative dB value.}
 
 \item{lines}{Logical, whether to add lines for min, max, and peak
 frequencies.}
-
-\item{sound_type}{Character string for the type of sound analyzed.}
 
 \item{temp}{Numeric, optional, temperature in degrees Celsius.}
 

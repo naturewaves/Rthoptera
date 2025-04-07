@@ -11,10 +11,10 @@ song_stats_lq(
   peakfinder_ws = 50,
   peakfinder_threshold = 0.005,
   max_peak_gap = 0.01,
-  max_train_gap = 0.5,
+  max_train_gap = 0.3,
   motif_seq = TRUE,
   max_motif_gap = 0.8,
-  detection_threshold = 0.1,
+  detection_threshold = 0.15,
   norm_env = TRUE,
   db_threshold = 20
 )
