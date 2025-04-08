@@ -51,7 +51,7 @@ server <- function(input, output, session) {
       plot_obj <- result()$plot
 
       if (inherits(plot_obj, "plotly")) {
-        plot_obj %>%
+        plot_obj |>
           plotly::layout(title = input$specimen_id,
                          margin = list(l = 80, r = 0, t = 80, b = 80))
 

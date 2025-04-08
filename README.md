@@ -12,11 +12,10 @@
 analysis of insect sounds. The package is intended to be used on high
 signal-to-noise recordings, helping researchers make standardized
 measurements and plots to support the scientific description of the
-“acoustic types”, which are the first description of the calling song of
+"acoustic type". We define "acoustic type" as the first description of the calling song of
 a species, which should be accompanied by a high-quality recording and
-ideally the voucher specimen identifier in the collection it was
-deposited. For the convenience of users, we have included functions for
-pre-processing audio files, which are already available in other
+the catalog number of the voucher specimen. For the convenience of users, we 
+have included functions for pre-processing audio files, which are already available in other
 packages (e.g., *tuneR*, *seewave*), but here they are interactive
 (Shiny apps). Most of the plotting functions are based on the *seewave*
 package, with the convenience of presets and automatic parameter

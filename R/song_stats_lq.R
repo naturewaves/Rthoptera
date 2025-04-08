@@ -223,29 +223,29 @@ song_stats_lq <- function(wave,
   peak_data$peak.period.ms <- round((peak_data$peak.period * 1000), 4)
 
   tem_exc_data <- peak_data |>
-    group_by(train.id) |>
+    group_by(motif.id, train.id) |>
     summarize(tem.exc = round(sum(abs(diff(peak.period.ms)), na.rm = TRUE), 3))
 
   train_data <- train_data |>
-    left_join(tem_exc_data, by = "train.id")
+    left_join(tem_exc_data, by = c("motif.id","train.id"))
 
 
-  # Calculate tynamic excutsion (variability in energy among peaks, per train)
+  # Calculate dynamic excursion (variability in energy among peaks, per train)
   # Create the peak_dyn_data data frame
   peak_dyn_data <- peak_data |>
-    group_by(train.id) |>
+    group_by(motif.id, train.id) |>
     mutate(peak.diff = abs(peak.amp - lag(peak.amp))) |> # Calculate differences between consecutive peak.amp values
     filter(!is.na(peak.diff)) # Remove rows where peak.diff is NA (first peak in each train)
 
   # Sum the absolute differences for each train.id
   dyn_exc_data <- peak_dyn_data |>
-    group_by(train.id) |>
+    group_by(motif.id, train.id) |>
     summarize(dyn.exc = round(sum(peak.diff, na.rm = TRUE), 3))
 
 
   # Add dyn.exc to train_data by matching train.id
   train_data <- train_data |>
-    left_join(dyn_exc_data, by = "train.id")
+    left_join(dyn_exc_data, by = c("motif.id", "train.id"))
 
   train_data <- train_data |>
     relocate(c(tem.exc, dyn.exc), .after = train.id)
@@ -319,8 +319,8 @@ song_stats_lq <- function(wave,
           }
         )
       )
-    ) %>%
-    ungroup() %>%
+    ) |>
+    ungroup() |>
     # Expand the spectral stats into individual columns
     unnest_wider(spectral_stats)
 
@@ -451,9 +451,9 @@ song_stats_lq <- function(wave,
     relocate(motif.seq, .after = motif.id)
 
 
-    motif_data <- motif_data %>%
-      group_by(motif.seq) %>%
-      mutate(motif.id = row_number()) %>%
+    motif_data <- motif_data |>
+      group_by(motif.seq) |>
+      mutate(motif.id = row_number()) |>
       ungroup()
 
     # Create motif.seq data for plotting
@@ -608,7 +608,7 @@ song_stats_lq <- function(wave,
       group_start <- motif_seq_data$group.start[i]
       group_end <- motif_seq_data$group.end[i]
       show_legend <- if (i == 1) TRUE else FALSE
-      p <- p %>%
+      p <- p |>
         add_lines(
           x = c(group_start, group_end), y = c(1.02, 1.02),
           name = "Motif Sequences", line = list(color = "#FF0000", width = 6),

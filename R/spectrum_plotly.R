@@ -56,7 +56,6 @@
 #'
 #' @examples
 #'  \dontrun{
-#' # Example usage:
 #' spectrum_plotly(Coryphoda_albidicollis, db_shade = FALSE,
 #' freq_res = 100, show_lines = TRUE)
 #' }

@@ -397,9 +397,9 @@ song_stats_hq <- function(wave,
       relocate(motif.seq, .after = motif.id)
 
 
-    motif_data <- motif_data %>%
-      group_by(motif.seq) %>%
-      mutate(motif.id = row_number()) %>%
+    motif_data <- motif_data |>
+      group_by(motif.seq) |>
+      mutate(motif.id = row_number()) |>
       ungroup()
 
     # Create motif.seq data for plotting
@@ -559,7 +559,7 @@ song_stats_hq <- function(wave,
       seq_start <- motif_seq_data$seq.start[i]
       seq_end <- motif_seq_data$seq.end[i]
       show_legend <- if (i == 1) TRUE else FALSE
-      p <- p %>%
+      p <- p |>
         add_lines(
           x = c(seq_start, seq_end), y = c(1.02, 1.02),
           name = "Motif Sequences", line = list(color = "#FF0000", width = 6),

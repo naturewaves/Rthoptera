@@ -48,7 +48,6 @@ compute the spectrum.
 }
 \examples{
  \dontrun{
-# Assuming `wave` is a loaded Wave object
 spec_df <- meanspec_df(wave, from = 0, to = 5, wl = 1024, fun = 'mean')
 }
 }
