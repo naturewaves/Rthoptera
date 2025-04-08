@@ -331,7 +331,7 @@ song_stats_lq <- function(wave,
       motif.start = min(train.start),
       motif.end = max(train.end),
       motif.dur = round(motif.end - motif.start, 4),
-      motif.period = round((lead(motif.start) - motif.start), 4),
+      # motif.period = round((lead(motif.start) - motif.start), 4),
       n.trains = n(),
       duty.cycle = round((sum(train.dur) / motif.dur) * 100, 2),
       tem.exc.mean = round(mean(tem.exc), 3),
@@ -371,6 +371,12 @@ song_stats_lq <- function(wave,
     relocate(train.rate, .after = n.trains) |>
     relocate(c(tem.exc.mean:dyn.exc.sd), .after = motif.id) |>
     ungroup()
+
+  motif_data <- motif_data |>
+    mutate(motif.period = round((lead(motif.start) - motif.start), 4),
+           motif.gap = round(lead(motif.start) - motif.end, 3)) |>
+    relocate(motif.period, .after = motif.dur) |>
+    relocate(motif.gap, .after = motif.period)
 
 
   motif_data <- motif_data |>
@@ -441,14 +447,15 @@ song_stats_lq <- function(wave,
       ))
     )
 
-  motif_data <- motif_data |>
-    mutate(
-      motif.period = ifelse(is.na(lead(motif.seq)) | lead(motif.seq) != motif.seq, NA, lead(motif.start) - motif.start),
-      motif.gap = round(lead(motif.start) - motif.end, 3)
-    ) |>
-    relocate(motif.period, .after = motif.dur) |>
-    relocate(motif.gap, .after = motif.period) |>
-    relocate(motif.seq, .after = motif.id)
+  # motif_data <- motif_data |>
+  #   mutate(
+  #     motif.period = ifelse(is.na(lead(motif.seq)) | lead(motif.seq) != motif.seq,
+  #                           NA, lead(motif.start) - motif.start),
+  #     motif.gap = round(lead(motif.start) - motif.end, 3)
+  #   ) |>
+  #   relocate(motif.period, .after = motif.dur) |>
+  #   relocate(motif.gap, .after = motif.period) |>
+  #   relocate(motif.seq, .after = motif.id)
 
 
     motif_data <- motif_data |>
