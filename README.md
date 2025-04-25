@@ -63,21 +63,24 @@ extract spectral and temporal statistics from your audio files:
   elements (“tooth impacts”), trains (syllables), and echemes (groups of
   syllables or trills) in the insect sounds. Two apps are available:
 
-- `call_stats_hq` is optimized to work with “tonal” (i.e., “high-Q”)
+- `song_stats_hq` is optimized to work with “tonal” (i.e., “high-Q”)
   signals, such as those produced by most crickets. It creates an
   envelope of the waveform and measures the duration of **trains**
   (i.e., “pulses”) and gaps based on a user-defined detection threshold,
   then aggregating them into **motifs** (i.e., “echemes”) and,
-  optionally, into **motif sequences**.
+  optionally, into **motif sequences**. This function calculates spectral
+  metrics for each detected train. 
 
-- `call_stats_lq` works better for broadband calls usually produced by
+- `song_stats_lq` ideal to obtain fine temporal metrics on high signal-to-noise 
+  ratio recordings of broadband calls usually produced by
   katydids, bush-crickets, water-bugs, etc, including those with wide
   amplitude variability, where the threshold approach would leave
   fainter sounds undetected or poorly measured. The main difference with
   the “hq” app is the granularity: this app detects each **peak** in the
   envelope, often corresponding to a single tooth impact, and groups
   them into **trains** (e.g., “pulses”, “syllables”), **motifs** (e.g.,
-  “echemes”), and **motif sequences** using user-defined thresholds.
+  “echemes”), and **motif sequences** using user-defined thresholds. This 
+  function also calculates spectral metrics for each detected train. 
 
 ## Visualisation
 
