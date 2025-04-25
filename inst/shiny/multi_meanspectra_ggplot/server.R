@@ -39,13 +39,24 @@ server <- function(input, output, session) {
     return(p)
   }
 
-  extract_meanspec <- function(wave, from = NULL, to = NULL, wl = 1024) {
-    full_spec <- seewave::meanspec(wave, from = from, to = to, plot = FALSE, wl = wl, fftw = TRUE)
+  extract_meanspec <- function(wave, from = NULL, to = NULL,
+                               wl = 1024,
+                               norm = NULL) {
+
+    full_spec <- seewave::meanspec(wave, from = from, to = to,
+                                   plot = FALSE, wl = wl, norm = norm,
+                                   fftw = TRUE)
     tibble::tibble(frequency = full_spec[, 1], amplitude = full_spec[, 2])
   }
 
-  plot_meanspec <- function(wave, brush_data = list(), colors = NULL, opacity = 0.8, wl = 1024, show_total_mean = TRUE) {
-    full_spec <- extract_meanspec(wave, wl = wl)
+  plot_meanspec <- function(wave, brush_data = list(),
+                            colors = NULL,
+                            opacity = 0.8, wl = 1024,
+                            show_total_mean = input$show_total_mean,
+                            normalize = input$norm_each) {
+
+    # Extract full spectrum with same normalization as selections
+    full_spec <- extract_meanspec(wave, wl = wl, norm = normalize)
 
     p <- ggplot2::ggplot(full_spec, ggplot2::aes(x = frequency, y = amplitude)) +
       ggplot2::labs(x = "Frequency (kHz)", y = "Amplitude") +
@@ -53,13 +64,19 @@ server <- function(input, output, session) {
       ggplot2::scale_x_continuous(expand = c(0, 0))
 
     if (show_total_mean) {
-      p <- p + ggplot2::geom_line(color = "black", linewidth = 0.8, ggplot2::aes(x = frequency, y = amplitude))
+      # Add a separate, always-normalized version of the total spectrum
+      norm_spec <- extract_meanspec(wave, wl = wl, norm = TRUE)
+      p <- p + ggplot2::geom_line(data = norm_spec,
+                                  color = "black",
+                                  linewidth = 0.8)
     }
 
+    # Add selection with optional normalization
     if (!is.null(colors) && length(brush_data) > 0) {
       for (i in seq_along(brush_data)) {
         range <- brush_data[[i]]
-        spec <- extract_meanspec(wave, from = range[1], to = range[2], wl = wl)
+        spec <- extract_meanspec(wave, from = range[1], to = range[2],
+                                 wl = wl, norm = normalize)
         p <- p + ggplot2::geom_line(data = spec,
                                     ggplot2::aes(x = frequency,
                                                  y = amplitude),
@@ -73,6 +90,44 @@ server <- function(input, output, session) {
 
     return(p)
   }
+
+  # plot_meanspec <- function(wave, brush_data = list(),
+  #                           colors = NULL,
+  #                           opacity = 0.8, wl = 1024,
+  #                           show_total_mean = input$show_total_mean,
+  #                           normalize = input$norm_each) {
+  #
+  #   full_spec <- extract_meanspec(wave, wl = wl, norm = TRUE)
+  #
+  #   p <- ggplot2::ggplot(full_spec, ggplot2::aes(x = frequency, y = amplitude)) +
+  #     ggplot2::labs(x = "Frequency (kHz)", y = "Amplitude") +
+  #     ggplot2::theme_minimal() +
+  #     ggplot2::scale_x_continuous(expand = c(0, 0))
+  #
+  #   if (show_total_mean) {
+  #     p <- p + ggplot2::geom_line(color = "black", linewidth = 0.8,
+  #                                 ggplot2::aes(x = frequency, y = amplitude))
+  #   }
+  #
+  #   # Add selection
+  #   if (!is.null(colors) && length(brush_data) > 0) {
+  #     for (i in seq_along(brush_data)) {
+  #       range <- brush_data[[i]]
+  #       spec <- extract_meanspec(wave, from = range[1], to = range[2],
+  #                                wl = wl, norm = normalize)
+  #       p <- p + ggplot2::geom_line(data = spec,
+  #                                   ggplot2::aes(x = frequency,
+  #                                                y = amplitude),
+  #                                   color = colors[i], linewidth = 0.5) +
+  #         ggplot2::geom_area(data = spec,
+  #                            ggplot2::aes(x = frequency,
+  #                                         y = amplitude),
+  #                            fill = scales::alpha(colors[i], opacity), color = NA)
+  #     }
+  #   }
+  #
+  #   return(p)
+  # }
 
   selected_wave <- shiny::reactiveVal()
   brushed_ranges <- shiny::reactiveVal(list())

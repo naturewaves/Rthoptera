@@ -1,7 +1,8 @@
 #' Extract the waveform values as a table
 #'
 #' @param wave A Wave object.
-#' @param norm Logical. If true, the amplitude values are rescaled to a range of [-1,1].
+#' @param norm Logical. If true, the amplitude values are rescaled to a range
+#' of -1 to 1.
 #' @return A tibble data frame.
 #' @export
 #'
@@ -17,7 +18,7 @@
 wave_df <- function(wave, norm = TRUE){
 
   if(norm){
-    # Normalize to [-1,1] and remove DC offset (center to 0)
+    # Normalize and remove DC offset (center to 0)
     wave <- tuneR::normalize(wave, unit = "1", center = TRUE)
   } else {
     # Just remove DC offset

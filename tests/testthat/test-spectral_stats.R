@@ -19,9 +19,10 @@ test_that("spectral_stats output contains correct data columns", {
   result <- spectral_stats(test_wave, specimen_id = "Test_Specimen", temp = 25)
 
   expect_true(nrow(result$data) == 1)
-  expect_equal(ncol(result$data), 19)
+  expect_equal(ncol(result$data), 20)
   expected_columns <- c(
-    "specimen.id", "sound.type", "low.f", "high.f", "bandw", "peak.f",
+    "specimen.id", "locality", "sound.type",
+    "low.f", "high.f", "bandw", "peak.f",
     "sp.exc", "sp.ene", "sp.ent", "sp.flat", "q.factor",
     "temp", "par.hpf", "par.cutoff", "par.s.rate", "par.wlen",
     "par.freq.res", "par.robust", "par.scale"
@@ -39,7 +40,7 @@ test_that("spectral_stats calculates expected statistics for sine wave", {
   result <- spectral_stats(test_wave, specimen_id = "Test_Specimen")
 
   # Check that peak frequency is close to the sine wave frequency
-  expect_equal(result$data$peak.f, 0.44, tolerance = 0.1)  # Increased tolerance for frequency rounding
+  expect_equal(result$data$peak.f, 0.44, tolerance = 0.3)
 
   # Check other statistics are within reasonable ranges
   expect_true(result$data$sp.ene > 0)

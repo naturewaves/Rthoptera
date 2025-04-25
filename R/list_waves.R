@@ -1,7 +1,7 @@
 #' List wave files in a directory
 #'
 #' @param folder Character. The path to the folder where the WAV files are stored.
-#'
+#' @param recursive Logical. Whether to search in subfolders.
 #' @return A list of wave files
 #' @export
 #'
@@ -9,7 +9,7 @@
 #' \dontrun{
 #' list_waves()
 #' }
-list_waves <- function(folder = NULL){
+list_waves <- function(folder = NULL, recursive = FALSE){
 
   print_list <- function(list){
     for (i in seq_along(list)) {
@@ -24,7 +24,9 @@ list_waves <- function(folder = NULL){
   }
 
 
-  list <- list.files(pattern = "*.wav$", ignore.case = TRUE)
+  list <- list.files(pattern = "*.wav$",
+                     ignore.case = TRUE,
+                     recursive = recursive)
 
   print_list(list)
 

@@ -61,6 +61,44 @@ song_stats_hq <- function(wave,
                           max_motif_gap = 0.8,
                           norm_env = TRUE,
                           db_threshold = 20) {
+
+  get_mode <- function(x, na.rm = TRUE) {
+    # Handle NA values
+    if (na.rm) {
+      x <- x[!is.na(x)]
+    }
+
+    # If all values are NA (and na.rm = FALSE) or vector is empty, return NA
+    if (length(x) == 0 || all(is.na(x))) {
+      return(NA)
+    }
+
+    # Calculate frequencies
+    freq_table <- table(x)
+    max_freq <- max(freq_table)
+
+    # Get all values with maximum frequency
+    modes <- names(freq_table[freq_table == max_freq])
+
+    # Convert back to original type if numeric
+    if (is.numeric(x)) {
+      modes <- as.numeric(modes)
+    }
+
+    # For factors, return factor with original levels
+    if (is.factor(x)) {
+      modes <- factor(modes, levels = levels(x))
+    }
+
+    # Return single value or vector as appropriate
+    if (length(modes) == 1) {
+      return(modes[1])
+    } else {
+      return(modes)
+    }
+  }
+
+
   # Store input parameters in a tibble
   params <- tibble(
     specimen_id = specimen_id,
@@ -312,8 +350,6 @@ song_stats_hq <- function(wave,
     ungroup() |>
     select(specimen.id, motif.id, pci, everything(), -proportions, proportions)
 
-
-
   motif_data <- motif_data |>
     select(motif.id, n.trains, everything())
 
@@ -407,7 +443,8 @@ song_stats_hq <- function(wave,
       group_by(motif.seq) |>
       reframe(
         seq.start = min(motif.start),
-        seq.end = max(motif.end)
+        seq.end = max(motif.end),
+        n.motifs = n()
       )
 
     motif_seq_data <- motif_seq_data |>
@@ -415,7 +452,8 @@ song_stats_hq <- function(wave,
         seq.dur = seq.end - seq.start,
         seq.period = lead(seq.start) - seq.start,
         seq.gap = round(lead(seq.start) - seq.end, 3)
-      )
+      ) |>
+      select(motif.seq, n.motifs, everything())
   }
 
 
@@ -434,6 +472,9 @@ song_stats_hq <- function(wave,
     entropy.sd = round(sd(motif_data$props.ent, na.rm = TRUE), 3),
     motif.dur.mean = round(mean(motif_data$motif.dur, na.rm = TRUE), 3),
     motif.dur.sd = round(sd(motif_data$motif.dur, na.rm = TRUE), 3),
+    motif.per.mean = round(mean(motif_data$motif.period, na.rm = TRUE), 3),
+    motif.per.sd = round(sd(motif_data$motif.period, na.rm = TRUE), 3),
+    n.trains.mode = get_mode(motif_data$n.trains),
     n.trains.mean = round(mean(motif_data$n.trains, na.rm = TRUE), 3),
     n.trains.sd = round(sd(motif_data$n.trains, na.rm = TRUE), 3),
     train.rate.mean = round(mean(motif_data$train.rate, na.rm = TRUE), 3),
@@ -465,7 +506,9 @@ song_stats_hq <- function(wave,
     summary_data <- summary_data |>
       mutate(
         motif.seq.dur.mean = round(mean(motif_seq_data$seq.dur, na.rm = TRUE), 3),
-        motif.seq.dur.sd = round(sd(motif_seq_data$seq.dur, na.rm = TRUE), 3)
+        motif.seq.dur.sd = round(sd(motif_seq_data$seq.dur, na.rm = TRUE), 3),
+        motif.seq.nmot.mean = round(mean(nrow(motif_seq_data), na.rm = TRUE), 3),
+        motif.seq.nmot.sd = round(mean(nrow(motif_seq_data), na.rm = TRUE), 3)
       )
 
   }
@@ -636,8 +679,8 @@ song_stats_hq <- function(wave,
 
 
   return_list <- c(return_list, list(
-    train_data = train_data,
     motif_data = motif_data,
+    train_data = train_data,
     params = params
   ))
 

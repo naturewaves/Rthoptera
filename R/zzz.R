@@ -8,4 +8,7 @@ utils::globalVariables(c("index", "time", "amplitude", "freq", "mean_amp", "trai
                          "amp_cutoff", "train.id", "n.peaks", "train.period",
                          "peak.period.ms", "peak.amp", "peak.diff", "train.rate",
                          "pci", "temp_file", "Time", "Frequency", "value", "image",
-                         "rect", "axis", "abline", "box", "Color", "Click"))
+                         "rect", "axis", "abline", "box", "Color", "Click",
+                         "motif.seq", "motif.period", "motif.gap",
+                         "seq.end", "seq.start", "n.motifs", "train.id.x",
+                         "train.id.y", "group.end", "group.start", "mean_amplitude"))

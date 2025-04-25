@@ -9,7 +9,8 @@ wave_df(wave, norm = TRUE)
 \arguments{
 \item{wave}{A Wave object.}
 
-\item{norm}{Logical. If true, the amplitude values are rescaled to a range of \link{-1,1}.}
+\item{norm}{Logical. If true, the amplitude values are rescaled to a range
+of -1 to 1.}
 }
 \value{
 A tibble data frame.

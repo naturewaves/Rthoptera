@@ -44,5 +44,4 @@ Interactive Spectrogram with Standardized Resolution
 data(coryphoda)
 spectrogram_plotly(coryphoda)
 }
-`r lifecycle::badge("stable")`
 }

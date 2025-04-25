@@ -108,6 +108,7 @@ ui <- function(request) {
         shiny::column(2, shiny::selectInput("wave_select", "Select a Wave Object:", choices = NULL)),
         shiny::column(1, shiny::verticalLayout(
           shiny::checkboxInput("show_total_mean", "Show Total Mean Spectrum", value = TRUE),
+          shiny::checkboxInput("norm_each", "Normalize Each", value = TRUE),
           shiny::numericInput("opacity", "Fill opacity:", value = 0.9, min = 0.1, max = 1, step = 0.1)
         )),
         shiny::column(1, shiny::selectInput("wl", "Window Length: ", selected = 4096, choices = c(512, 1024, 2048, 4096, 8192), width = '80%')),

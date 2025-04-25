@@ -17,7 +17,7 @@ downloaded as an HTML (interactive) or PNG (static) file."><meta property="og:im
 
     <a class="navbar-brand me-2" href="../index.html">Rthoptera</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,7 +72,9 @@ downloaded as an HTML (interactive) or PNG (static) file.</p>
 <span>  ssmooth <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  peakfinder_ws <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>  peakfinder_threshold <span class="op">=</span> <span class="fl">0.005</span>,</span>
+<span>  min_peaks_train <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  max_peak_gap <span class="op">=</span> <span class="fl">0.01</span>,</span>
+<span>  max_peak_diff <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  max_train_gap <span class="op">=</span> <span class="fl">0.3</span>,</span>
 <span>  motif_seq <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  max_motif_gap <span class="op">=</span> <span class="fl">0.8</span>,</span>
@@ -114,6 +116,11 @@ as a proportion of the maximum amplitude.</p></dd>
 to consider them part of the same train.</p></dd>
 
 
+<dt id="arg-max-peak-diff">max_peak_diff<a class="anchor" aria-label="anchor" href="#arg-max-peak-diff"></a></dt>
+<dd><p>Numeric. Maximum allowed difference (in % amplitude)
+between consecutive peaks to be considered in the same train.</p></dd>
+
+
 <dt id="arg-max-train-gap">max_train_gap<a class="anchor" aria-label="anchor" href="#arg-max-train-gap"></a></dt>
 <dd><p>Numeric. Maximum allowed gap (in seconds) between trains
 to consider them part of the same motif.</p></dd>
@@ -142,6 +149,11 @@ considered valid.</p></dd>
 <dt id="arg-db-threshold">db_threshold<a class="anchor" aria-label="anchor" href="#arg-db-threshold"></a></dt>
 <dd><p>Numeric. Decibel threshold below the peak amplitude for
 calculating low and high frequencies. Defaults to 20 dB.</p></dd>
+
+
+<dt id="arg-min-peak-train">min_peak_train<a class="anchor" aria-label="anchor" href="#arg-min-peak-train"></a></dt>
+<dd><p>Numeric. Minimum number of peaks per train. If a train
+is found to have less than this number, it will be dropped.</p></dd>
 
 </dl></div>
     <div class="section level2">

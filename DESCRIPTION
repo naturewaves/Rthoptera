@@ -1,7 +1,7 @@
 Package: Rthoptera
 Type: Package
 Title: Standardized Insect Bioacoustics
-Version: 1.0.1
+Version: 1.0.3
 Depends: R (>= 3.5.0), shiny (>= 1.0.0), shinyBS, shinyjs, plotly, tuneR, seewave, ggplot2 (>= 3.0)
 Author: Francisco Rivas [aut, cre], Cesare Brizio [ctb], Filippo Maria Buzzetti [ctb], Bryan Pijanowski [ctb]
 Maintainer: Francisco Rivas <fcorivasf@gmail.com>
@@ -25,7 +25,8 @@ Imports:
     DT,
     shinycssloaders,
     lifecycle,
-    colourpicker
+    colourpicker,
+    openxlsx
 Suggests:
   mockery,
   writexl,

@@ -17,6 +17,10 @@
 #' as a proportion of the maximum amplitude.
 #' @param max_peak_gap Numeric. Maximum allowed gap (in seconds) between peaks
 #' to consider them part of the same train.
+#' @param max_peak_diff Numeric. Maximum allowed difference (in % amplitude)
+#' between consecutive peaks to be considered in the same train.
+#' @param min_peak_train Numeric. Minimum number of peaks per train. If a train
+#' is found to have less than this number, it will be dropped.
 #' @param max_train_gap Numeric. Maximum allowed gap (in seconds) between trains
 #' to consider them part of the same motif.
 #' @param motif_seq Logical. If TRUE, add an first-order aggregation of motifs.
@@ -69,7 +73,9 @@ song_stats_lq <- function(wave,
                           ssmooth = 100,
                           peakfinder_ws = 50,
                           peakfinder_threshold = 0.005,
+                          min_peaks_train = 3,
                           max_peak_gap = 0.01,
+                          max_peak_diff = NULL,
                           max_train_gap = 0.3,
                           motif_seq = TRUE,
                           max_motif_gap = 0.8,
@@ -84,6 +90,7 @@ song_stats_lq <- function(wave,
     peakfinder_ws = peakfinder_ws,
     peakfinder_threshold = peakfinder_threshold,
     max_peak_gap = max_peak_gap,
+    max_peak_diff = max_peak_diff,
     max_train_gap = max_train_gap,
     max_motif_gap = max_motif_gap,
     detection_threshold = detection_threshold,
@@ -91,9 +98,7 @@ song_stats_lq <- function(wave,
   )
 
   window_size <- peakfinder_ws
-
   waveDuration <- seewave::duration(wave)
-
 
   if (norm_env) {
     envelope_vector <- seewave::env(wave, ssmooth = ssmooth,
@@ -120,7 +125,6 @@ song_stats_lq <- function(wave,
 
   peaks <- peaks[peaks <= length(time_vector)]
 
-
   # Filter out peaks below the detection threshold
   peak_amplitudes <- envelope_vector[peaks] # Get amplitudes of the detected peaks
   valid_peaks <- which(peak_amplitudes >= detection_threshold) # Only keep peaks above threshold
@@ -128,7 +132,6 @@ song_stats_lq <- function(wave,
   peak_amplitudes <- peak_amplitudes[valid_peaks] # Update amplitudes list
 
   peak_times <- time_vector[peaks]
-
   peak_periods <- diff(peak_times)
   peak_periods[peak_periods > max_peak_gap] <- NA
 
@@ -162,7 +165,18 @@ song_stats_lq <- function(wave,
   peak_counter <- 1
 
   for (i in 2:length(peaks)) {
-    if (peak_times[i] - peak_times[i - 1] > max_peak_gap) {
+    # Check time gap
+    time_gap_too_large <- peak_times[i] - peak_times[i - 1] > max_peak_gap
+
+    # Modified amplitude difference check - only when current peak is smaller than previous
+    amp_diff_too_large <- if (!is.null(max_peak_diff)) {
+      (peak_amplitudes[i] < peak_amplitudes[i - 1]) &&
+        ((peak_amplitudes[i - 1] - peak_amplitudes[i]) > max_peak_diff)
+    } else {
+      FALSE
+    }
+
+    if (time_gap_too_large || amp_diff_too_large) {
       train_end <- peaks[i - 1]
       trains <- append(trains, list(c(train_start, train_end)))
       train_start <- peaks[i]
@@ -186,6 +200,7 @@ song_stats_lq <- function(wave,
         peak.id = ifelse(peak.time == peak_times[i], peak_counter, peak.id)
       )
   }
+
 
   # Round peak.time to 4 decimals
   peak_data <- peak_data |>
@@ -217,9 +232,7 @@ song_stats_lq <- function(wave,
     relocate(train.gap, .after = train.period) |>
     mutate(train.period = round(train.period, 3))
 
-
   # Calculate temporal excursion (variability in timing of peaks, per train)
-  # Add peak period column in milliseconds
   peak_data$peak.period.ms <- round((peak_data$peak.period * 1000), 4)
 
   tem_exc_data <- peak_data |>
@@ -229,25 +242,18 @@ song_stats_lq <- function(wave,
   train_data <- train_data |>
     left_join(tem_exc_data, by = c("motif.id","train.id"))
 
-
   # Calculate dynamic excursion (variability in energy among peaks, per train)
-  # Create the peak_dyn_data data frame
   peak_dyn_data <- peak_data |>
     group_by(motif.id, train.id) |>
-    mutate(peak.diff = abs(peak.amp - lag(peak.amp))) |> # Calculate differences between consecutive peak.amp values
-    filter(!is.na(peak.diff)) # Remove rows where peak.diff is NA (first peak in each train)
+    mutate(peak.diff = abs(peak.amp - lag(peak.amp))) |>
+    filter(!is.na(peak.diff))
 
-  # Sum the absolute differences for each train.id
   dyn_exc_data <- peak_dyn_data |>
     group_by(motif.id, train.id) |>
     summarize(dyn.exc = round(sum(peak.diff, na.rm = TRUE), 3))
 
-
-  # Add dyn.exc to train_data by matching train.id
   train_data <- train_data |>
-    left_join(dyn_exc_data, by = c("motif.id", "train.id"))
-
-  train_data <- train_data |>
+    left_join(dyn_exc_data, by = c("motif.id", "train.id")) |>
     relocate(c(tem.exc, dyn.exc), .after = train.id)
 
   # Add Spectral Statistics for each train
@@ -257,7 +263,6 @@ song_stats_lq <- function(wave,
       spectral_stats = list(
         tryCatch(
           {
-
             spec1 <- meanspec(wave, wl = 128,
                               from = train.start,
                               to = train.end,
@@ -266,7 +271,6 @@ song_stats_lq <- function(wave,
             sp.flat <- round(sfm(spec1), 3)
             rm(spec1)
 
-            # Calculate meanspec for the train
             spec <- meanspec(wave,
                              from = train.start,
                              to = train.end,
@@ -274,55 +278,63 @@ song_stats_lq <- function(wave,
                              dB = "max0",
                              plot = FALSE)
 
-            # Convert the spectrum to a data frame
             spec_df <- as.data.frame(spec)
             names(spec_df) <- c("Frequency", "Amplitude")
 
-            # Identify the peak frequency and peak amplitude
             peak_index <- which.max(spec_df$Amplitude)
             peak.freq <- round(spec_df$Frequency[peak_index], 1)
             peak_amp <- spec_df$Amplitude[peak_index]
-
-            # Determine the threshold (dB below the peak amplitude)
             threshold <- peak_amp - db_threshold
 
-            # Find low frequency (first frequency below threshold moving to lower frequencies)
             low_index <- max(which(spec_df$Amplitude[1:peak_index] < threshold))
             low.freq <- round(spec_df$Frequency[low_index], 1)
 
-            # Find high frequency (first frequency below threshold moving to higher frequencies)
             high_index <- peak_index + min(which(spec_df$Amplitude[peak_index:nrow(spec_df)] < threshold)) - 1
             high.freq <- round(spec_df$Frequency[high_index], 1)
 
-            # Calculate bandwidth
             bandw <- round(high.freq - low.freq, 1)
-
             freq_range <- spec_df[low_index:high_index, ]
 
-
-            # Spectral Excursion (contour length)
             sp.exc <- round(sum(sqrt(diff(freq_range$Frequency)^2 + diff(freq_range$Amplitude)^2)), 3)
-
-            # Spectral energy (area under the curve)
             sp.ene <- round(abs(sum(diff(freq_range$Frequency) * (head(freq_range$Amplitude, -1) + tail(freq_range$Amplitude, -1)) / 2)), 3)
 
-
-
-
             tibble(peak.freq, low.freq, high.freq, bandw, sp.exc, sp.ene, sp.ent, sp.flat)
-
-
-
           },
           error = function(e) {
-
+            tibble(peak.freq = NA_real_, low.freq = NA_real_, high.freq = NA_real_,
+                   bandw = NA_real_, sp.exc = NA_real_, sp.ene = NA_real_,
+                   sp.ent = NA_real_, sp.flat = NA_real_)
           }
         )
       )
     ) |>
     ungroup() |>
-    # Expand the spectral stats into individual columns
     unnest_wider(spectral_stats)
+
+  # Drop trains with lower peak counts
+  train_data <- train_data |>
+    filter(n.peaks > min_peaks_train)
+
+  # Reset train.id index
+  train_data <- train_data |>
+    group_by(motif.id) |>
+    mutate(train.id = row_number()) |>
+    ungroup()
+
+
+  # Update peak_data to match the new train.id assignments
+  peak_data <- peak_data |>
+    inner_join(
+      train_data |>
+        select(specimen.id, motif.id, train.id, train.start, train.end),
+      by = c("specimen.id", "motif.id")
+    ) |>
+    filter(peak.time >= train.start & peak.time <= train.end) |>
+    select(-train.id.x) |>
+    rename(train.id = train.id.y) |>
+    select(names(peak_data)[1:which(names(peak_data) == "train.id")],
+           train.id, everything())
+
 
   # Create tibble for motif measurements
   motif_data <- train_data |>
@@ -331,7 +343,6 @@ song_stats_lq <- function(wave,
       motif.start = min(train.start),
       motif.end = max(train.end),
       motif.dur = round(motif.end - motif.start, 4),
-      # motif.period = round((lead(motif.start) - motif.start), 4),
       n.trains = n(),
       duty.cycle = round((sum(train.dur) / motif.dur) * 100, 2),
       tem.exc.mean = round(mean(tem.exc), 3),
@@ -378,7 +389,6 @@ song_stats_lq <- function(wave,
     relocate(motif.period, .after = motif.dur) |>
     relocate(motif.gap, .after = motif.period)
 
-
   motif_data <- motif_data |>
     mutate(
       proportions = map(motif.id, function(eid) {
@@ -398,10 +408,7 @@ song_stats_lq <- function(wave,
         proportions <- numeric(0)
 
         for (i in seq_along(train_durations)) {
-          # Add train duration as a proportion of the motif duration
           proportions <- c(proportions, train_durations[i] / motif_duration)
-
-          # Check if the gap is not NA and falls within the motif start and end
           if (!is.na(gap_durations[i])) {
             gap_start <- train_data |>
               filter(motif.id == eid) |>
@@ -412,7 +419,6 @@ song_stats_lq <- function(wave,
               pull(train.start) |>
               nth(i + 1)
 
-            # Check if gap_start, gap_end, motif_start, and motif_end are not NA
             if (!is.na(gap_start) && !is.na(gap_end) && !is.na(motif_start) && !is.na(motif_end)) {
               if (gap_start >= motif_start && gap_end <= motif_end) {
                 proportions <- c(proportions, gap_durations[i] / motif_duration)
@@ -420,7 +426,6 @@ song_stats_lq <- function(wave,
             }
           }
         }
-
         round(proportions, 2)
       })
     ) |>
@@ -439,46 +444,29 @@ song_stats_lq <- function(wave,
 
   # Aggregate motifs
   if (motif_seq) {
-  motif_data <- motif_data |>
-    mutate(
-      motif.seq = 1 + cumsum(ifelse(
-        c(0, diff(motif.start)) > max_motif_gap,
-        1, 0
-      ))
-    )
-
-  # motif_data <- motif_data |>
-  #   mutate(
-  #     motif.period = ifelse(is.na(lead(motif.seq)) | lead(motif.seq) != motif.seq,
-  #                           NA, lead(motif.start) - motif.start),
-  #     motif.gap = round(lead(motif.start) - motif.end, 3)
-  #   ) |>
-  #   relocate(motif.period, .after = motif.dur) |>
-  #   relocate(motif.gap, .after = motif.period) |>
-  #   relocate(motif.seq, .after = motif.id)
-
-
     motif_data <- motif_data |>
+      mutate(
+        motif.seq = 1 + cumsum(ifelse(
+          c(0, diff(motif.start)) > max_motif_gap,
+          1, 0
+        ))
+      ) |>
       group_by(motif.seq) |>
       mutate(motif.id = row_number()) |>
       ungroup()
 
-    # Create motif.seq data for plotting
     motif_seq_data <- motif_data |>
       group_by(motif.seq) |>
       reframe(
         group.start = min(motif.start),
         group.end = max(motif.end)
-      )
-
-    motif_seq_data <- motif_seq_data |>
+      ) |>
       mutate(
         group.dur = round((group.end - group.start), 3),
         group.period = round((lead(group.start) - group.start), 3),
         group.gap = round(lead(group.start) - group.end, 3)
       )
   }
-
 
   summary_data <- tibble(
     specimen.id = base::unique(train_data$specimen.id),
@@ -522,13 +510,11 @@ song_stats_lq <- function(wave,
   )
 
   if (motif_seq) {
-
     summary_data <- summary_data |>
       mutate(
-    motif.seq.dur.mean = round(mean(motif_seq_data$group.dur, na.rm = TRUE), 3),
-    motif.seq.dur.sd = round(sd(motif_seq_data$group.dur, na.rm = TRUE), 3)
-        )
-
+        motif.seq.dur.mean = round(mean(motif_seq_data$group.dur, na.rm = TRUE), 3),
+        motif.seq.dur.sd = round(sd(motif_seq_data$group.dur, na.rm = TRUE), 3)
+      )
   }
 
   # Prepare annotations for the plot
@@ -623,9 +609,7 @@ song_stats_lq <- function(wave,
           hoverinfo = "x", text = paste("Time:", round(c(group_start, group_end), 2))
         )
     }
-
   }
-
 
   # Add peak markers
   p <- p |>
@@ -687,8 +671,6 @@ song_stats_lq <- function(wave,
    }
    ")
 
-  p
-
   # Initialize return list
   return_list <- list(
     plot = p,
@@ -708,5 +690,4 @@ song_stats_lq <- function(wave,
 
   # Return the final list
   return(return_list)
-
 }

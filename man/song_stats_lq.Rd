@@ -10,7 +10,9 @@ song_stats_lq(
   ssmooth = 100,
   peakfinder_ws = 50,
   peakfinder_threshold = 0.005,
+  min_peaks_train = 3,
   max_peak_gap = 0.01,
+  max_peak_diff = NULL,
   max_train_gap = 0.3,
   motif_seq = TRUE,
   max_motif_gap = 0.8,
@@ -36,6 +38,9 @@ as a proportion of the maximum amplitude.}
 \item{max_peak_gap}{Numeric. Maximum allowed gap (in seconds) between peaks
 to consider them part of the same train.}
 
+\item{max_peak_diff}{Numeric. Maximum allowed difference (in \% amplitude)
+between consecutive peaks to be considered in the same train.}
+
 \item{max_train_gap}{Numeric. Maximum allowed gap (in seconds) between trains
 to consider them part of the same motif.}
 
@@ -53,6 +58,9 @@ considered valid.}
 
 \item{db_threshold}{Numeric. Decibel threshold below the peak amplitude for
 calculating low and high frequencies. Defaults to 20 dB.}
+
+\item{min_peak_train}{Numeric. Minimum number of peaks per train. If a train
+is found to have less than this number, it will be dropped.}
 }
 \value{
 A list containing the following components:

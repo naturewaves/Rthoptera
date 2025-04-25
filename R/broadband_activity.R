@@ -42,7 +42,7 @@
 #' data(coryphoda)
 #' broadband_activity(coryphoda)
 #' }
-#' `r lifecycle::badge("stable")`
+#'
 broadband_activity <- function(wave,
                  channel = "left",
                  hpf = 0,
