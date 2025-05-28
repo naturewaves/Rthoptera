@@ -1,8 +1,7 @@
 #' Plot a representative spectrum of a population (or subspecies, species, etc.)
 #'
 #' This function generates an averaged Power Spectral Density (PSD) plot multiple
-#' input Waves (e.g., population, species, etc,). The line is soothed with local
-#' regression (LOESS).
+#' input Waves (e.g., population, species, etc,).
 #'
 #' @param wave An object of class `Wave` containing the audio data to be
 #' analyzed.
@@ -13,12 +12,10 @@
 #' per frequency bin.
 #' @param s_rate_out Sample rate of the output summary PSD, in kHz.
 #' @param fun Character. Select a function to compute each power spectrum. Options
-#' are "mean", "min", "max".
+#' are "mean", "median", "sd", and "var".
 #' @param wn  Character. Select a window function to for the FFT. Options are
 #' "hanning" (Default), "hamming", bartlett", "blackaman", "flattop", and "rectangular".
 #' @param flim Numeric list of length 2. Range of the frequency axis (KhZ).
-#' @param loess_span The span of the LOESS smoothing, as a proportion. Higher
-#' values result in smoother lines. Default is 0.05.
 #' @param line_color Character. Color for the line representing the mean PSD.
 #' @param line_width Numeric. Width of the mean line.
 #' @param sd_color Character. Color for the standard deviation ribbon.
@@ -59,10 +56,9 @@ spectrum_pop <- function(waves,
                          binomial = NULL,
                          freq_res = 400,
                          s_rate_out = 96000,
-                         fun = "max",
+                         fun = "mean",
                          wn = "hanning",
                          flim = NULL,
-                         loess_span = 0.1,
                          line_color = "green4",
                          line_width = 1,
                          sd_color = "dodgerblue",
@@ -186,10 +182,10 @@ spectrum_pop <- function(waves,
   # Add annotations
   p <- p +
     annotate("point", x = peak_freq, y = peak_amplitude + 0.05,
-             shape = 25, size = 4, color = "red", fill = "red") +
-    annotate("text", x = peak_freq+3, y = peak_amplitude+0.01,
-             label = paste(round(peak_freq, 1), "kHz"), color = "black",
-             size = 5)
+             shape = 25, size = 3, color = "red", fill = "red") +
+    annotate("text", x = peak_freq+3, y = peak_amplitude+0.05,
+             label = round(peak_freq, 1), color = "black",
+             size = 4)
 
   if (show_n) {
     p <- p + annotate("text", x = Inf, y = Inf,
