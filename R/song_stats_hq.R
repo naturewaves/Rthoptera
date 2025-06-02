@@ -174,6 +174,7 @@ song_stats_hq <- function(wave,
 
 
   # Add Spectral Statistics for each train
+  suppressWarnings({ #Run without warnings if some calculations fail
   train_data <- train_data  |>
     rowwise() |>
     mutate(
@@ -253,6 +254,8 @@ song_stats_hq <- function(wave,
     ungroup()  |>
     # Expand the spectral stats into individual columns
     unnest_wider(spectral_stats)
+
+  })
 
   # Summarize motif data
   motif_data <- train_data |>
@@ -456,6 +459,15 @@ song_stats_hq <- function(wave,
       select(motif.seq, n.motifs, everything())
   }
 
+  if (!motif_seq) {
+    motif_data <- motif_data %>%
+      mutate(
+        motif.period = NA_real_,
+        motif.gap = NA_real_,
+        motif.seq = NA_integer_  # or 1 if you prefer numbering
+      )
+  }
+
 
 
 
@@ -498,7 +510,9 @@ song_stats_hq <- function(wave,
     sp.ent.mean = round(mean(train_data$sp.ent, na.rm = TRUE), 3),
     sp.ent.sd = round(sd(train_data$sp.ent, na.rm = TRUE), 3),
     sp.flat.mean = round(mean(train_data$sp.flat, na.rm = TRUE), 3),
-    sp.flat.sd = round(sd(train_data$sp.flat, na.rm = TRUE), 3)
+    sp.flat.sd = round(sd(train_data$sp.flat, na.rm = TRUE), 3),
+    motif.seq.dur.mean = if (motif_seq) mean(motif_seq_data$seq.dur, na.rm = TRUE) else NA_real_,
+    motif.seq.nmot.mean = if (motif_seq) mean(nrow(motif_seq_data), na.rm = TRUE) else NA_real_
   )
 
   if (motif_seq) {
