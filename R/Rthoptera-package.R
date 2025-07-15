@@ -1,5 +1,12 @@
 #' Rthoptera: A Shiny-powered R package for standard insect bioacoustics
 #'
+#'
+#' @rawNamespace
+#' if (getRversion() >= "3.6.0") {
+#'   importFrom(graphics,plot)
+#'   importFrom(grDevices,rgb)
+#' }
+#'
 #' @description
 #' Rthoptera provides interactive Shiny applications for standard analysis of
 #' insect sounds. The package is intended to be used on high signal-to-noise
@@ -15,6 +22,10 @@
 #' selection (e.g., window length for the spectrograms) to ensure clarity in
 #' any Wave regardless of the recording settings. Most of these plots also have
 #' interactive versions which can be saved as HTML documents.
+#'
+#' \if{html}{
+#' \figure{logo.png}{options: style='float: right' alt='logo' width='120'}
+#' }
 #'
 #' @details
 #' Key features include:
