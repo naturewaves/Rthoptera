@@ -6,63 +6,77 @@
 \usage{
 spectrum_pop(
   waves,
-  freq_res = 300,
+  binomial = NULL,
+  freq_res = 400,
+  s_rate_out = 96000,
   fun = "mean",
   wn = "hanning",
-  loess_span = 0.1,
-  conf_level = 0.95,
-  color = "green4",
-  mean_width = 1,
-  ci_alpha = 0.3,
-  title_y = "",
+  flim = NULL,
+  line_color = "green4",
+  line_width = 1,
+  sd_color = "dodgerblue",
+  sd_alpha = 0.5,
   title_x = "Frequency (kHz)",
+  title_y = "",
   show_x_labs = TRUE,
+  show_y_labs = FALSE,
   show_n = TRUE,
-  binomial = NULL,
   save_to = NULL,
   save = FALSE,
   width = 960,
   height = 540,
-  dpi = 200,
-  ...
+  dpi = 200
 )
 }
 \arguments{
+\item{binomial}{Character. The binomial name of the species. Empty by default.}
+
 \item{freq_res}{Numeric. The frequency resolution to be used for the
 frequency spectrum analysis. Use this argument consistently for standardized
 measurements across recordings with different sampling rate. Default is 10 Hz
 per frequency bin.}
 
-\item{loess_span}{The span of the LOESS smoothing, as a proportion. Higher
-values result in smoother lines. Default is 0.05.}
+\item{s_rate_out}{Sample rate of the output summary PSD, in kHz.}
 
-\item{conf_level}{Numeric. Confidence interval level. Default is 0.95 (95\%).}
+\item{fun}{Character. Select a function to compute each power spectrum. Options
+are "mean", "median", "sd", and "var".}
 
-\item{ci_alpha}{Numeric. Transparency level for the confidence interval
-ribbon. Default is 0.7 (70\%).}
+\item{wn}{Character. Select a window function to for the FFT. Options are
+"hanning" (Default), "hamming", bartlett", "blackaman", "flattop", and "rectangular".}
 
-\item{title_y}{Character. Title for the Y-axis. Empty by default.}
+\item{flim}{Numeric list of length 2. Range of the frequency axis (KhZ).}
+
+\item{line_color}{Character. Color for the line representing the mean PSD.}
+
+\item{line_width}{Numeric. Width of the mean line.}
+
+\item{sd_color}{Character. Color for the standard deviation ribbon.}
+
+\item{sd_alpha}{Numeric. Transparency level for the SD ribbon. Default is 0.3 (30\%).}
 
 \item{title_x}{Character. Title for the X-axis. Default is "Frequency (kHz)".}
+
+\item{title_y}{Character. Title for the Y-axis. Empty by default.}
 
 \item{show_x_labs}{Logical. If TRUE, the labels (i.e., numbers) are shown in
 the X-axis. Defaults to TRUE.}
 
+\item{show_y_labs}{Logical. If TRUE, the labels (i.e., numbers) are shown in
+the Y-axis. Defaults to FALSE}
+
 \item{show_n}{Logical. If TRUE, the number of samples (i.e., recordings) is
 shown as "n=" on the top-right of the plot.}
 
-\item{binomial}{Character. The binomial name of the species. Empty by default.}
+\item{save}{Logical. Whether to save the plot immediately.}
 
-\item{...}{Other arguments passed to meanspec() from the seewave package.}
+\item{width}{Numeric. Relative width of the output plot. Default is 960.}
+
+\item{height}{Numeric. Relative height of the output plot. Default is 540.}
+
+\item{dpi}{Numeric. Resolution in dots per inch. Default is 200.}
 
 \item{wave}{An object of class \code{Wave} containing the audio data to be
 analyzed.}
-
-\item{mean_col}{Character. Color for the line representing the mean PSD.}
-
-\item{line_width}{Numeric. Width of the mean line.}
-
-\item{ci_col}{Character. Color for the confidence interval ribbon.}
 }
 \value{
 An averaged and smoothed power spectral density plot representing all
@@ -72,9 +86,8 @@ the scientific name of the species as provided in the \code{binomial} argument,
 and the number of samples (Wave objects) from which the mean was calculated.
 }
 \description{
-This function generates a Power Spectral Density (PSD) plot from
-the average of multiple input Waves (e.g., population, species, etc,). The
-line is soothed with local regression (LOESS).
+This function generates an averaged Power Spectral Density (PSD) plot multiple
+input Waves (e.g., population, species, etc,).
 }
 \examples{
  \dontrun{
