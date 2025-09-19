@@ -1,6 +1,7 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://naturewaves.github.io/Rthoptera/404.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/articles/Apps.html</loc></url>
+<url><loc>https://naturewaves.github.io/Rthoptera/articles/BBAI.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/articles/Compare.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/articles/index.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/articles/Preprocess.html</loc></url>
@@ -8,8 +9,10 @@
 <url><loc>https://naturewaves.github.io/Rthoptera/articles/Summarize.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/authors.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/index.html</loc></url>
+<url><loc>https://naturewaves.github.io/Rthoptera/reference/audioplot.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/batch_song_stats.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/broadband_activity.html</loc></url>
+<url><loc>https://naturewaves.github.io/Rthoptera/reference/broadband_activity2.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/clean_wave.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/export_stats.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/get_mode.html</loc></url>
@@ -21,7 +24,6 @@
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/oscillogram_ggplot.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/oscillogram_plotly.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/Rthoptera-package.html</loc></url>
-<url><loc>https://naturewaves.github.io/Rthoptera/reference/Rthoptera.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/song_stats_hq.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/song_stats_lq.html</loc></url>
 <url><loc>https://naturewaves.github.io/Rthoptera/reference/spectral_stats.html</loc></url>

@@ -1,13 +1,14 @@
-pandoc: '3.2'
-pkgdown: 2.1.0
+pandoc: '3.4'
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   Apps: Apps.html
+  BBAI: BBAI.html
   Compare: Compare.html
   Preprocess: Preprocess.html
   Rthoptera: Rthoptera.html
   Summarize: Summarize.html
-last_built: 2025-04-25T15:33Z
+last_built: 2025-09-19T05:49Z
 urls:
   reference: https://naturewaves.github.io/Rthoptera/reference
   article: https://naturewaves.github.io/Rthoptera/articles

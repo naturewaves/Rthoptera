@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Standardized Insect Bioacoustics • Rthoptera</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" sizes="any" href="favicon.ico">
+<link rel="manifest" href="site.webmanifest">
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -44,6 +43,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="articles/Apps.html">Launching Shiny Apps with Rthoptera</a></li>
+    <li><a class="dropdown-item" href="articles/BBAI.html">The Broadband Activity Index</a></li>
     <li><a class="dropdown-item" href="articles/Compare.html">Comparing Rthoptera with other workflows</a></li>
     <li><a class="dropdown-item" href="articles/Preprocess.html">Preprocessing Audio with Rthoptera</a></li>
     <li><a class="dropdown-item" href="articles/Summarize.html">Summarizing Data with Rthoptera</a></li>
@@ -95,8 +95,8 @@
 <ul>
 <li><p><strong>Spectral Statistics</strong>: Automatically calculate spectral metrics based on the mean power spectrum of a Wave object.</p></li>
 <li><p><strong>Temporal Statistics</strong>: Automatically extract temporal metrics from your audio recordings. This includes identifying and analyzing elements (“tooth impacts”), trains (syllables), and echemes (groups of syllables or trills) in the insect sounds. Two apps are available:</p></li>
-<li><p><code>call_stats_hq</code> is optimized to work with “tonal” (i.e., “high-Q”) signals, such as those produced by most crickets. It creates an envelope of the waveform and measures the duration of <strong>trains</strong> (i.e., “pulses”) and gaps based on a user-defined detection threshold, then aggregating them into <strong>motifs</strong> (i.e., “echemes”) and, optionally, into <strong>motif sequences</strong>.</p></li>
-<li><p><code>call_stats_lq</code> works better for broadband calls usually produced by katydids, bush-crickets, water-bugs, etc, including those with wide amplitude variability, where the threshold approach would leave fainter sounds undetected or poorly measured. The main difference with the “hq” app is the granularity: this app detects each <strong>peak</strong> in the envelope, often corresponding to a single tooth impact, and groups them into <strong>trains</strong> (e.g., “pulses”, “syllables”), <strong>motifs</strong> (e.g., “echemes”), and <strong>motif sequences</strong> using user-defined thresholds.</p></li>
+<li><p><code>song_stats_hq</code> is optimized to work with “tonal” (i.e., “high-Q”) signals, such as those produced by most crickets. It creates an envelope of the waveform and measures the duration of <strong>trains</strong> (i.e., “pulses”) and gaps based on a user-defined detection threshold, then aggregating them into <strong>motifs</strong> (i.e., “echemes”) and, optionally, into <strong>motif sequences</strong>. This function calculates spectral metrics for each detected train.</p></li>
+<li><p><code>song_stats_lq</code> ideal to obtain fine temporal metrics on high signal-to-noise ratio recordings of broadband calls usually produced by katydids, bush-crickets, water-bugs, etc, including those with wide amplitude variability, where the threshold approach would leave fainter sounds undetected or poorly measured. The main difference with the “hq” app is the granularity: this app detects each <strong>peak</strong> in the envelope, often corresponding to a single tooth impact, and groups them into <strong>trains</strong> (e.g., “pulses”, “syllables”), <strong>motifs</strong> (e.g., “echemes”), and <strong>motif sequences</strong> using user-defined thresholds. This function also calculates spectral metrics for each detected train.</p></li>
 </ul>
 </div>
 <div class="section level2">
@@ -163,7 +163,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Francisco Rivas <br><small class="roles"> Maintainer </small>  </li>
+<li>Francisco Rivas <br><small class="roles"> Maintainer </small>   </li>
 </ul>
 </div>
 
@@ -178,7 +178,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>

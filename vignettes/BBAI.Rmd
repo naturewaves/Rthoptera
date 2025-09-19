@@ -11,13 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction
 
-The Broadband Activity Index (BBAI) is an acoustic index designed to detect and quantify broadband acoustic activity by identifying 'clicks' in audio recordings. Originally developed for monitoring non-stridulating pests in stored food or wood, this index has broader applications in environmental acoustic monitoring and bioacoustic research.
-
-# How the Index Works
-
-## Conceptual Overview
-
-The BBAI operates on the principle that many acoustic events of interest (such as insect movement, feeding sounds, or environmental disturbances) produce broadband acoustic signatures that appear as vertical "clicks" in a spectrogram. These clicks span multiple frequency bins simultaneously and represent rapid, broadband acoustic events.
+The Broadband Activity Index (BBAI) is an acoustic index designed to detect and quantify broadband acoustic activity by identifying 'clicks' in audio recordings. Originally developed for monitoring environmental noise such as rain and wind in soundscape recordings, this index has broader applications in environmental acoustic monitoring and bioacoustic research, including quantification of stridulation activity by Orthoptera (crickets, grasshoppers, etc.), non-stridulating pests in stored food or wood, among others. The BBAI follows the principle that most of these sounds have broadband acoustic signatures that appear as vertical "clicks" in a spectrogram. These clicks span multiple frequency bins simultaneously and represent rapid, broadband acoustic events, also known as transient sounds.
 
 ## Step-by-Step Process
 
@@ -64,11 +58,8 @@ For each detected click, the algorithm calculates:
 The detected clicks are analyzed within four frequency bands, with the following default ranges:
 
 -   Low-Frequency Activity (LFA): 0-2 kHz
-
 -   Mid-Frequency Activity (MFA): 2-8 kHz
-
 -   High-Frequency Activity (HFA): 8-15 kHz
-
 -   Ultra-Frequency Activity (UFA): 15-22 kHz
 
 ### 6. Index Calculation
@@ -81,7 +72,7 @@ BBAI = (Total Click Cells / Total Spectrogram Cells) × 100
 
 # Usage Example
 
-```{r}
+```{r,warning=FALSE,message=FALSE}
 if (!require("RthopteraSounds")) install.packages("RthopteraSounds")
 library(RthopteraSounds)  
 library(Rthoptera)
@@ -89,18 +80,22 @@ library(Rthoptera)
 data(coryphoda)  
 # Basic usage 
 result <- broadband_activity2(coryphoda, 
-                             spectrogram = TRUE, 
-                             verbose = TRUE)  
+                              freq.res = 100,
+                              cutoff = -50,
+                              spectrogram = TRUE, 
+                              verbose = TRUE)  
 
 # Advanced usage with custom frequency bands 
-result <- broadband_activity2(coryphoda,  
-                             lf_roof = 1.5, # 0-1.5 kHz low freq
-                             mf_roof = 6,  # 1.5-6 kHz mid freq   
-                             hf_roof = 12, # 6-12 kHz high freq  
-                             uf_roof = 20,# 12-20 kHz ultra freq 
-                             click.length = 15, # Longer minimum
-                             difference = 8,    # Stricter difference threshold       
-                             spectrogram = TRUE)  
+result <- broadband_activity2(coryphoda, 
+                              freq.res = 100,
+                              cutoff = -50,
+                              lf_roof = 1.5, # 0-1.5 kHz low freq
+                              mf_roof = 6,  # 1.5-6 kHz mid freq   
+                              hf_roof = 12, # 6-12 kHz high freq  
+                              uf_roof = 20,# 12-20 kHz ultra freq 
+                              click.length = 15, # Longer minimum
+                              difference = 8,    # Stricter difference threshold       
+                              spectrogram = TRUE)  
 
 # View results table 
 print(result$summary) 
