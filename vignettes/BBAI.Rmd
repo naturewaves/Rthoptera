@@ -1,0 +1,256 @@
+---
+title: "The Broadband Activity Index"
+author: "Francisco Rivas"
+date: "2025-09-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+The Broadband Activity Index (BBAI) is an acoustic index designed to detect and quantify broadband acoustic activity by identifying 'clicks' in audio recordings. Originally developed for monitoring non-stridulating pests in stored food or wood, this index has broader applications in environmental acoustic monitoring and bioacoustic research.
+
+# How the Index Works
+
+## Conceptual Overview
+
+The BBAI operates on the principle that many acoustic events of interest (such as insect movement, feeding sounds, or environmental disturbances) produce broadband acoustic signatures that appear as vertical "clicks" in a spectrogram. These clicks span multiple frequency bins simultaneously and represent rapid, broadband acoustic events.
+
+## Step-by-Step Process
+
+### 1. Signal Preprocessing
+
+The function begins by preprocessing the audio signal: - **DC Offset Removal**: Eliminates any constant bias in the signal - **High-Pass Filtering**: Optional filtering to remove low-frequency noise (default 0 Hz, commonly set to 500 Hz for consistency)
+
+### 2. Spectrogram Generation
+
+A spectrogram is created using the `spectrogram_cutoff()` function with: - **Frequency Resolution**: Determined by the `freq.res` parameter (default 50 Hz) - **Noise Reduction**: Row-wise noise reduction is applied - **Amplitude Cutoff**: Values below the threshold (default -60 dBFS) are removed - **dBFS Conversion**: Amplitude values are converted to decibels full-scale
+
+### 3. Click Detection Algorithm
+
+The core detection algorithm works **column-wise** (time-frame by time-frame) through the spectrogram:
+
+1.  Calculate differences between adjacent frequency bins
+
+2.  Identify contiguous regions where differences are small
+
+3.  Allow small gaps within clicks
+
+4.  Keep only regions longer than minimum click length
+
+#### Key Detection Parameters:
+
+-   **`difference`**: Maximum amplitude difference (dB) between adjacent frequency bins to be considered part of the same click (default 10 dB)
+
+-   **`click.length`**: Minimum length in frequency bins for a valid click (default 10 bins)
+
+-   **`gap.allowance`**: Maximum gap size (in frequency bins) allowed within a single click (default 2 bins
+
+### 4. Click Characterization
+
+For each detected click, the algorithm calculates:
+
+-   **Height**: Number of frequency bins spanned
+
+-   **Spectral Centroid**: Frequency-weighted center of the click
+
+-   **Temporal Position**: Time frame location
+
+### 5. Frequency Band Analysis
+
+The detected clicks are analyzed within four frequency bands, with the following default ranges:
+
+-   Low-Frequency Activity (LFA): 0-2 kHz
+
+-   Mid-Frequency Activity (MFA): 2-8 kHz
+
+-   High-Frequency Activity (HFA): 8-15 kHz
+
+-   Ultra-Frequency Activity (UFA): 15-22 kHz
+
+### 6. Index Calculation
+
+The final BBAI value is the percent of spectrogram cells that belong to a click:
+
+```         
+BBAI = (Total Click Cells / Total Spectrogram Cells) × 100 
+```
+
+# Usage Example
+
+```{r}
+if (!require("RthopteraSounds")) install.packages("RthopteraSounds")
+library(RthopteraSounds)  
+library(Rthoptera)
+# Load example data 
+data(coryphoda)  
+# Basic usage 
+result <- broadband_activity2(coryphoda, 
+                             spectrogram = TRUE, 
+                             verbose = TRUE)  
+
+# Advanced usage with custom frequency bands 
+result <- broadband_activity2(coryphoda,  
+                             lf_roof = 1.5, # 0-1.5 kHz low freq
+                             mf_roof = 6,  # 1.5-6 kHz mid freq   
+                             hf_roof = 12, # 6-12 kHz high freq  
+                             uf_roof = 20,# 12-20 kHz ultra freq 
+                             click.length = 15, # Longer minimum
+                             difference = 8,    # Stricter difference threshold       
+                             spectrogram = TRUE)  
+
+# View results table 
+print(result$summary) 
+
+```
+
+# Output Column Explanations
+
+## Core Identification Columns
+
+**`index`**: The name of the index being calculated. Always "bbai" (Broadband Activity Index). This is useful when merging results with other acoustic indices.
+
+**`channel`**: Indicates which audio channel was analyzed ("left", "right", "mix", or "each" for stereo processing).
+
+## Primary Activity Measures
+
+**`value`**: The main Broadband Activity Index value, expressed as a percentage. This represents the proportion of spectrogram cells that were classified as part of a "click" relative to the total number of cells in the spectrogram. Higher values indicate more broadband acoustic activity.
+
+**`nclicks`**: The total number of discrete clicks detected in the recording. A click is defined as a contiguous sequence of frequency bins that meet the detection criteria (minimum length, amplitude difference thresholds, etc.).
+
+## Temporal Distribution Measures
+
+**`prop.clicks`**: The proportion of time frames that contain at least one click, expressed as a decimal (0-1). This indicates how temporally distributed the clicks are throughout the recording.
+
+**`click.rate`**: The rate of click occurrence per second (clicks/second). This provides a temporal density measure of acoustic activity.
+
+**`mean.click.dist`**: The mean distance (in time frames) between consecutive clicks. This helps characterize the temporal clustering of acoustic events.
+
+## Click Morphology Measures
+
+**`mean.length`**: The average length of detected clicks, measured in frequency bins. This indicates the typical frequency span of broadband events.
+
+**`var.length`**: The variance in click lengths. High variance suggests clicks of very different frequency spans, while low variance indicates more uniform click sizes.
+
+**`sd.length`**: The standard deviation of click lengths. This is the square root of `var.length` and provides a more interpretable measure of click length variability.
+
+## Spectral Centroid Measures
+
+**`mean.centroid`**: The average spectral centroid of all detected clicks, expressed in kHz. The spectral centroid represents the "center of mass" of the frequency spectrum for each click, indicating where most of the acoustic energy is concentrated.
+
+**`sd.centroid`**: The standard deviation of click centroids. This measures how much the frequency center of clicks varies across the recording.
+
+**`var.centroid`**: The variance of click centroids. High values suggest clicks with very different spectral characteristics.
+
+## Frequency Band Activity Measures
+
+**`lfa`** (Low-Frequency Activity): The percentage of cells classified as clicks in the low-frequency band (0 to `lf_roof` kHz, default 0-2 kHz). This captures activity in the lower portion of the frequency spectrum, often associated with larger organisms or environmental sounds.
+
+**`mfa`** (Mid-Frequency Activity): The percentage of cells classified as clicks in the mid-frequency band (`lf_roof` to `mf_roof` kHz, default 2-8 kHz). This band often captures vocal activity from many animals and some mechanical sounds.
+
+**`hfa`** (High-Frequency Activity): The percentage of cells classified as clicks in the high-frequency band (`mf_roof` to `hf_roof` kHz, default 8-15 kHz). This range often includes insect activity, bird calls, and higher-pitched mechanical sounds.
+
+**`ufa`** (Ultra-Frequency Activity): The percentage of cells classified as clicks in the ultra-high frequency band (`hf_roof` to `uf_roof` kHz, default 15-22 kHz). This captures very high-frequency sounds like ultrasonic insect calls, bat echolocation, or high-frequency electronic noise. Will be set to `NA` if `hf_roof` exceeds the Nyquist frequency.
+
+## Stereo Processing Additional Columns
+
+When processing stereo recordings with `channel = "each"`, the function returns separate values for left (\_l) and right (\_r) channels, plus averaged values (\_avg) for each measure:
+
+-   `value_l`, `value_r`, `value_avg`
+
+-   `n_clicks_l`, `n_clicks_r`, `n_clicks_avg`
+
+-   And so on for all measures...
+
+# Frequency Band Configuration
+
+## Default Thresholds
+
+The frequency bands are defined by the threshold parameters:
+
+-   **Low-Frequency Band (LFA)**: 0 kHz to `lf_roof` (default 2 kHz)
+
+-   **Mid-Frequency Band (MFA)**: `lf_roof` to `mf_roof` (default 2-8 kHz)
+
+-   **High-Frequency Band (HFA)**: `mf_roof` to `hf_roof` (default 8-15 kHz)
+
+-   **Ultra-Frequency Band (UFA)**: `hf_roof` to `uf_roof` (default 15-22 kHz)
+
+## Automatic Adjustments
+
+The function includes intelligent fallback logic:
+
+1.  **`uf_roof` Adjustment**: If `uf_roof` is set higher than the Nyquist frequency (sampling rate ÷ 2), it is automatically adjusted to the Nyquist frequency to prevent analysis beyond the available frequency range.
+
+2.  **`hf_roof` Adjustment**: If `hf_roof` exceeds the Nyquist frequency, it is adjusted to the Nyquist frequency, and `ufa` is set to `NA` since no ultra-frequency band would be available.
+
+3.  **Empty Bands**: If a frequency band contains no frequency bins (e.g., if thresholds are set inappropriately), the corresponding activity measure will be 0.
+
+# Parameter Tuning Guidelines
+
+## Detection Sensitivity
+
+-   **Increase `click.length`**: Makes detection more conservative (fewer, longer clicks)
+-   **Decrease `difference`**: Makes detection more sensitive (detects subtler amplitude changes)
+-   **Adjust `cutoff`**: Lower values (more negative) include quieter sounds
+
+## Frequency Resolution Trade-offs
+
+-   **Lower `freq.res`**: Better frequency resolution, longer processing time
+-   **Higher `freq.res`**: Faster processing, coarser frequency resolution
+
+# Interpretation Guidelines
+
+## Activity Level Interpretation
+
+-   **BBAI \< 1%**: Very low broadband activity
+-   **BBAI 1-5%**: Low to moderate activity
+-   **BBAI 5-15%**: High activity
+-   **BBAI \> 15%**: Very high activity (may indicate noise or equipment issues)
+
+## Frequency Band Patterns
+
+-   **High LFA**: Large organisms, wind noise, equipment noise
+-   **High MFA**: Crickets
+-   **High HFA**: Katydids
+-   **High UFA**: Ultrasonic insects, bats, electronic noise
+
+## Morphological Indicators
+
+-   **Large `mean.length`**: Broadband events (impacts, broadband noises)
+-   **High `var.length`**: Diverse acoustic events
+-   **High `mean.centroid`**: Activity concentrated in higher frequencies
+-   **High `click.rate`**: Frequent, brief acoustic events
+
+# Limitations and Considerations
+
+## Technical Limitations
+
+-   **Sampling Rate Dependency**: Higher sampling rates provide access to ultrasonic frequencies
+-   **Frequency Resolution Trade-off**: Better resolution requires longer processing time
+-   **Amplitude Sensitivity**: Performance depends on appropriate cutoff thresholds
+
+## Biological Considerations
+
+-   **Species Specificity**: Different organisms produce different acoustic signatures
+-   **Environmental Noise**: Background noise can inflate BBAI values
+-   **Seasonal Variation**: Activity patterns change with environmental conditions
+
+## Best Practices
+
+1.  **Consistent Parameters**: Use identical parameters when comparing recordings
+
+2.  **Quality Control**: Monitor for equipment-generated artifacts
+
+3.  **Validation**: Cross-validate with manual inspection of spectrograms
+
+4.  **Documentation**: Record all parameter settings and environmental conditions
+
+# Conclusion
+
+The Broadband Activity Index provides a powerful tool for quantifying acoustic activity across multiple frequency bands. Its ability to detect broadband "clicks" makes it particularly valuable for monitoring non-vocal organisms and environmental disturbances. The enhanced frequency band analysis allows researchers to understand not only the overall level of acoustic activity but also its spectral distribution, providing deeper ecological insights.
+
+By understanding the underlying detection algorithm and properly tuning parameters for specific applications, researchers can effectively use the BBAI for a wide range of acoustic monitoring and analysis tasks.
