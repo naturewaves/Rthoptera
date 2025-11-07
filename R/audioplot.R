@@ -8,16 +8,23 @@
 #' @param overlap Overlap between windows (0 to 95%)
 #' @param window Type of window function ("hann", "hamming", "blackman")
 #' @param contrast Controls the dynamic range for visualization (0-100%)
-#' @param flim Numeric list of length 2. Frequency limits, in kHz.
+#' @param flim Numeric vector of length 2. Frequency limits, in kHz.
+#' @param tlim Numeric vector of length 2. Time limits, in seconds.
 #' @param zero.pad Zero-padding factor
 #' @param output.file Optional file path to save the spectrogram
-#' @param use.ragg Whether to use RAGG for GPU-accelerated rendering
-#' @param palette Color palette for spectrogram
 #' @param plot.title Plot title
+#' @param use.ragg Whether to use RAGG for GPU-accelerated rendering
+#' @param palette Color palette for spectrogram. Can be a character string
+#' (palette name from \code{hcl.colors}) or a function that returns a color vector.
+#' @param palette_rev Logical. Whether to reverse the color palette. Default is FALSE.
+#' Useful for grayscale palettes where you want white background with darker signals.
 #' @param osc.show Whether to show the oscillogram
 #' @param osc.color Color for the pseudo-oscillogram
 #' @param osc.height Relative height of oscillogram (0-1)
 #' @param spec.show Whether to show the power spectrum
+#' @param spec.fun Function to apply across frequency bins for power spectrum
+#' calculation. Default is "mean". Can also be "median", "max", "min", or any
+#' function that takes a vector and returns a single value.
 #' @param spec.color Color for the power spectrum.
 #' @param spec.width Relative width of power spectrum (0-1)
 #' @param spec.linear Whether to show the power spectrum in linear scale. Default
@@ -40,26 +47,31 @@
 #' data("coryphoda")
 #' data("gryllus")
 #' audioplot(coryphoda, enhance = "time",
-#' osc.show = F, palette = 'Zissou 1')
-#' audioplot(coryphoda, enhance = 'time', osc.show = F,
-#' spec.linear = T) # great
+#' osc.show = FALSE, palette = 'Zissou 1')
+#' audioplot(coryphoda, enhance = 'time', osc.show = FALSE,
+#' spec.linear = TRUE) # great
 #' audioplot(coryphoda, enhance = "time")
 #' audioplot(gryllus, enhance = "freq")
-#' audioplot(gryllus, enhance = "time")}
+#' audioplot(gryllus, enhance = "time")
+#'
+#' # Grayscale with white background
+#' audioplot(coryphoda, palette = "Grays", palette_rev = TRUE)
+#' }
 #' @return Invisible list containing spectrogram data
 audioplot <- function(wave,
                       fft = "auto",
                       enhance = "time",
                       overlap = 75,
                       window = "hann",
-                      contrast = 60,
+                      contrast = 50,
                       flim = NULL,
                       tlim = NULL,
                       zero.pad = 8,
                       output.file = NULL,
                       plot.title = "",
                       use.ragg = TRUE,
-                      palette = "inferno",
+                      palette = "Mako",
+                      palette_rev = FALSE,
                       osc.show = TRUE,
                       osc.color = "black",
                       osc.height = 0.25,
@@ -68,7 +80,16 @@ audioplot <- function(wave,
                       spec.color = "black",
                       spec.width = 0.15,
                       spec.linear = TRUE
-                      ) {
+) {
+
+  # Ensure graphics state is always reset on exit or error
+  on.exit({
+    # Reset layout to default
+    tryCatch(graphics::layout(1), error = function(e) NULL)
+    # Reset par to defaults
+    tryCatch(par(mar = c(5, 4, 4, 2) + 0.1), error = function(e) NULL)
+  }, add = TRUE)
+
 
 
   if (enhance == "freq"){
@@ -108,7 +129,7 @@ audioplot <- function(wave,
 
       fft <- fft + 1
 
-      }
+    }
 
   }
 
@@ -195,7 +216,7 @@ audioplot <- function(wave,
       # spec_data <- (spec_data - min(spec_data)) / (max(spec_data) - min(spec_data))
 
 
-      } else {
+    } else {
 
       # Power spectrum: SD per frequency bin (row-wise)
       spec_data <- apply(spectrogram, 1, spec.fun)
@@ -203,7 +224,7 @@ audioplot <- function(wave,
 
       # spec_data <- spec_data / max(spec_data) # Normalize
 
-      }
+    }
 
 
 
@@ -224,12 +245,25 @@ audioplot <- function(wave,
 
   # Create color palette
   if (is.character(palette)) {
-    colors <- grDevices::hcl.colors(256, palette = palette)
+    # Try to create the palette and catch errors
+    tryCatch({
+      colors <- grDevices::hcl.colors(256, palette = palette, rev = palette_rev)
+    }, error = function(e) {
+      # Get available palettes
+      available_palettes <- grDevices::hcl.pals()
+      stop(sprintf("Invalid palette name: '%s'\nAvailable palettes are:\n%s\n\nDid you mean 'Grays' instead of 'greys'?",
+                   palette,
+                   paste(strwrap(paste(available_palettes, collapse = ", "), width = 70), collapse = "\n")),
+           call. = FALSE)
+    })
   } else if (is.function(palette)) {
     colors <- palette(256)
+    if (palette_rev) {
+      colors <- rev(colors)
+    }
   } else {
     warning("Invalid palette specified. Using 'viridis' as default.")
-    colors <- grDevices::hcl.colors(256, palette = "viridis")
+    colors <- grDevices::hcl.colors(256, palette = "viridis", rev = palette_rev)
   }
 
   # Set up multi-panel layout
@@ -237,22 +271,22 @@ audioplot <- function(wave,
     layout_matrix <- matrix(c(1, 3, 2, 4),
                             nrow = 2, ncol = 2,
                             byrow = TRUE)
-    layout(layout_matrix,
-           widths = c(1 - spec.width, spec.width),
-           heights = c(1 - osc.height, osc.height))
+    graphics::layout(layout_matrix,
+                     widths = c(1 - spec.width, spec.width),
+                     heights = c(1 - osc.height, osc.height))
   } else if (osc.show) {
     layout_matrix <- matrix(c(1, 2), nrow = 2, ncol = 1)
-    layout(layout_matrix, heights = c(1 - osc.height, osc.height))
+    graphics::layout(layout_matrix, heights = c(1 - osc.height, osc.height))
   } else if (spec.show) {
     layout_matrix <- matrix(c(1, 2), nrow = 1, ncol = 2)
-    layout(layout_matrix, widths = c(1 - spec.width, spec.width))
+    graphics::layout(layout_matrix, widths = c(1 - spec.width, spec.width))
   } else {
-    layout(1)
+    graphics::layout(1)
   }
 
   # Main spectrogram plot
   par(mgp = c(1.4, 0.5, 0), mar = c(ifelse(osc.show, 0.5, 4), 4, 4,
-              ifelse(spec.show, 0.5, 5)))
+                                    ifelse(spec.show, 0.5, 5)))
   # par(mgp = c(3, 0.3, 0))
   image(x = time_axis,
         y = freq_axis/1000,
@@ -280,6 +314,9 @@ audioplot <- function(wave,
 
   # Add the modified y-axis
   axis(2, at = y_ticks)
+
+  # Add box around spectrogram
+  box()
 
   # Pseudo-oscillogram (below spectrogram) - CLEAN STYLE
   if (osc.show) {
@@ -333,7 +370,7 @@ audioplot <- function(wave,
   }
 
   # Reset layout to default
-  layout(1)
+  graphics::layout(1)
   par(mar = c(5, 4, 4, 2) + 0.1)
 
   # Return spectrogram data invisibly
