@@ -9,7 +9,7 @@ broadband_activity(
   channel = "left",
   hpf = 0,
   rm.offset = TRUE,
-  freq.res = 50,
+  freq.res = 100,
   cutoff = -60,
   click.length = 10,
   difference = 10,
@@ -19,6 +19,7 @@ broadband_activity(
   hf_roof = 15,
   uf_roof = 22,
   spectrogram = FALSE,
+  ggplot = FALSE,
   dark.plot = FALSE,
   plot.title = NULL,
   verbose = TRUE
@@ -52,6 +53,8 @@ broadband_activity(
 \item{uf_roof}{Numeric. Maximum frequency threshold (in kHz) for ultra-frequency activity (ufa). Default is 22 kHz. Floor is hf_roof. Automatically adjusted to Nyquist frequency if set higher.}
 
 \item{spectrogram}{Logical. Should a spectrogram with highlighted clicks be plotted? Default is \code{TRUE}.}
+
+\item{ggplot}{Logical. Should the plot use ggplot? Defaults to FALSE for faster base R plot.}
 
 \item{dark.plot}{Logical. Should the plot use a dark theme (black background)? Default is \code{FALSE}.}
 

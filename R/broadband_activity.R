@@ -24,6 +24,7 @@
 #' @param hf_roof Numeric. Maximum frequency threshold (in kHz) for high-frequency activity (hfa). Default is 15 kHz. Floor is mf_roof.
 #' @param uf_roof Numeric. Maximum frequency threshold (in kHz) for ultra-frequency activity (ufa). Default is 22 kHz. Floor is hf_roof. Automatically adjusted to Nyquist frequency if set higher.
 #' @param spectrogram Logical. Should a spectrogram with highlighted clicks be plotted? Default is `TRUE`.
+#' @param ggplot Logical. Should the plot use ggplot? Defaults to FALSE for faster base R plot.
 #' @param dark.plot Logical. Should the plot use a dark theme (black background)? Default is `FALSE`.
 #' @param plot.title Character. The title for the plot, if `plot` is `TRUE`. Default is `NULL`.
 #' @param verbose Logical. If TRUE, details of dynamic range will be printed on the console.
@@ -64,7 +65,7 @@ broadband_activity <- function(wave,
                                channel = "left",
                                hpf = 0,
                                rm.offset = TRUE,
-                               freq.res = 50,
+                               freq.res = 100,
                                cutoff = -60,
                                click.length = 10,
                                difference = 10,
@@ -74,6 +75,7 @@ broadband_activity <- function(wave,
                                hf_roof = 15,
                                uf_roof = 22,
                                spectrogram = FALSE,
+                               ggplot = FALSE,
                                dark.plot = FALSE,
                                plot.title = NULL,
                                verbose = TRUE) {
@@ -126,6 +128,7 @@ broadband_activity <- function(wave,
                         hf_roof,
                         uf_roof,
                         spectrogram,
+                        ggplot,
                         dark.plot,
                         plot.title){
 
@@ -314,56 +317,117 @@ broadband_activity <- function(wave,
       time_values <- seq(0, total_duration, length.out = n_time_frames)
       freq_values <- seq(0, samp_rate / 2, length.out = n_freq_bins) / 1000  # Frequency in kHz
 
-      # Create a combined matrix to overlay clicks in red
-      combined_matrix <- matrix
-      combined_matrix[click_matrix] <- 0  # Set click positions to 0 dB for clarity
+      if (ggplot) {
+        # ggplot2 implementation
+        # Create a combined matrix to overlay clicks in red
+        combined_matrix <- matrix
+        combined_matrix[click_matrix] <- 0  # Set click positions to 0 dB for clarity
 
-      # Convert matrix to a dataframe for plotting
-      plot_data <- as.data.frame(combined_matrix)
-      colnames(plot_data) <- time_values
-      plot_data <- cbind(Frequency = freq_values, plot_data)
+        # Convert matrix to a dataframe for plotting
+        plot_data <- as.data.frame(combined_matrix)
+        colnames(plot_data) <- time_values
+        plot_data <- cbind(Frequency = freq_values, plot_data)
 
-      # Reshape for ggplot
-      plot_data <- reshape2::melt(plot_data, id.vars = "Frequency", variable.name = "Time", value.name = "dB")
-      plot_data$Time <- as.numeric(as.character(plot_data$Time))
+        # Reshape for ggplot
+        plot_data <- reshape2::melt(plot_data, id.vars = "Frequency", variable.name = "Time", value.name = "dB")
+        plot_data$Time <- as.numeric(as.character(plot_data$Time))
 
-      # Mark clicks as a separate layer in the data
-      plot_data$Click <- as.vector(click_matrix)
+        # Mark clicks as a separate layer in the data
+        plot_data$Click <- as.vector(click_matrix)
 
-      # Set color gradient function for dB values, with transparent `na.value`
-      color_func <- scales::col_numeric(palette = c(if (dark.plot) "black" else "white", "#2c7bb6","#00a6ca","#00ccbc","#90eb9d",
-                                                    "#ffff8c", "#f9d057", "#f29e2e","#e76818","#d7191c"),
-                                        domain = c(cutoff, 0), na.color = "transparent")
+        # Set color gradient function for dB values, with transparent `na.value`
+        color_func <- scales::col_numeric(palette = c(if (dark.plot) "black" else "white", "#2c7bb6","#00a6ca","#00ccbc","#90eb9d",
+                                                      "#ffff8c", "#f9d057", "#f29e2e","#e76818","#d7191c"),
+                                          domain = c(cutoff, 0), na.color = "transparent")
 
-      plot_data$Color <- color_func(plot_data$dB)
+        plot_data$Color <- color_func(plot_data$dB)
 
-      # Create the base plot
-      p <- ggplot(plot_data, aes(x = Time, y = Frequency)) +
-        geom_tile(aes(fill = Color), color = NA) +
-        scale_fill_identity(na.value = "transparent") +  # Make NA values transparent
-        labs(x = "Time (s)", y = "Frequency (kHz)", title = plot.title) +
-        theme_bw() +
-        theme(legend.position = "none")
+        # Create the base plot
+        p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = Time, y = Frequency)) +
+          ggplot2::geom_tile(ggplot2::aes(fill = Color), color = NA) +
+          ggplot2::scale_fill_identity(na.value = "transparent") +  # Make NA values transparent
+          ggplot2::labs(x = "Time (s)", y = "Frequency (kHz)", title = plot.title) +
+          ggplot2::theme_bw() +
+          ggplot2::theme(legend.position = "none")
 
-      # Highlight clicks in red
-      p <- p + geom_tile(data = subset(plot_data, Click == TRUE), fill = "red", color = NA) +
-        scale_x_continuous(expand = c(0,0)) +
-        scale_y_continuous(expand = c(0,0))
+        # Highlight clicks in red
+        p <- p + ggplot2::geom_tile(data = subset(plot_data, Click == TRUE), fill = "red", color = NA) +
+          ggplot2::scale_x_continuous(expand = c(0,0)) +
+          ggplot2::scale_y_continuous(expand = c(0,0))
 
-      if (dark.plot) {
-        p <- p + theme(
-          plot.background = element_rect(fill = "black", color = NA),
-          panel.background = element_rect(fill = "black", color = NA),
-          axis.text = element_text(color = "white"),
-          axis.title = element_text(color = "white"),
-          axis.line = element_line(color = "white"),
-          axis.ticks = element_line(color = "white"),
-          panel.grid.major = element_line(color = scales::alpha("white", 0.2), linetype = "solid", linewidth = 0.3),
-          panel.grid.minor = element_line(color = scales::alpha("white", 0.2), linetype = "solid", linewidth = 0.05),
-          plot.title = element_text(color = "white", face = "bold", size = 14)
-        )
+        if (dark.plot) {
+          p <- p + ggplot2::theme(
+            plot.background = ggplot2::element_rect(fill = "black", color = NA),
+            panel.background = ggplot2::element_rect(fill = "black", color = NA),
+            axis.text = ggplot2::element_text(color = "white"),
+            axis.title = ggplot2::element_text(color = "white"),
+            axis.line = ggplot2::element_line(color = "white"),
+            axis.ticks = ggplot2::element_line(color = "white"),
+            panel.grid.major = ggplot2::element_line(color = scales::alpha("white", 0.2), linetype = "solid", linewidth = 0.3),
+            panel.grid.minor = ggplot2::element_line(color = scales::alpha("white", 0.2), linetype = "solid", linewidth = 0.05),
+            plot.title = ggplot2::element_text(color = "white", face = "bold", size = 14)
+          )
+        }
+        print(p)
+
+      } else {
+        # Base R implementation
+        # Set up color palette
+        color_palette <- colorRampPalette(c(if (dark.plot) "black" else "white", "#2c7bb6","#00a6ca","#00ccbc","#90eb9d",
+                                            "#ffff8c", "#f9d057", "#f29e2e","#e76818","#d7191c"))
+        n_colors <- 100
+        colors <- color_palette(n_colors)
+
+        # Map dB values to colors
+        db_range <- seq(cutoff, 0, length.out = n_colors)
+        color_matrix <- matrix
+        for (i in 1:nrow(color_matrix)) {
+          for (j in 1:ncol(color_matrix)) {
+            if (!is.na(color_matrix[i, j])) {
+              color_idx <- which.min(abs(db_range - color_matrix[i, j]))
+              color_matrix[i, j] <- color_idx
+            } else {
+              color_matrix[i, j] <- NA
+            }
+          }
+        }
+
+        # Set up plotting parameters
+        if (dark.plot) {
+          par(bg = "black", col.axis = "white", col.lab = "white", col.main = "white", fg = "white")
+        }
+
+        # Create the image plot
+        image(x = time_values,
+              y = freq_values,
+              z = t(color_matrix),
+              col = colors,
+              xlab = "Time (s)",
+              ylab = "Frequency (kHz)",
+              main = plot.title,
+              useRaster = TRUE,
+              axes = FALSE)
+
+        # Add axes
+        axis(1, col = if (dark.plot) "white" else "black", col.axis = if (dark.plot) "white" else "black")
+        axis(2, col = if (dark.plot) "white" else "black", col.axis = if (dark.plot) "white" else "black")
+        box(col = if (dark.plot) "white" else "black")
+
+        # Overlay clicks in red
+        for (i in 1:nrow(click_matrix)) {
+          for (j in 1:ncol(click_matrix)) {
+            if (click_matrix[i, j]) {
+              rect(xleft = time_values[j] - (time_values[2] - time_values[1]) / 2,
+                   xright = time_values[j] + (time_values[2] - time_values[1]) / 2,
+                   ybottom = freq_values[i] - (freq_values[2] - freq_values[1]) / 2,
+                   ytop = freq_values[i] + (freq_values[2] - freq_values[1]) / 2,
+                   col = "red", border = NA)
+            }
+          }
+        }
+
+        p <- NULL  # No ggplot object to return
       }
-      print(p)
 
       return(list(summary = summary, spectrogram = p))
 
@@ -390,6 +454,7 @@ broadband_activity <- function(wave,
                            hf_roof = hf_roof,
                            uf_roof = uf_roof,
                            spectrogram = spectrogram,
+                           ggplot = ggplot,
                            dark.plot = dark.plot,
                            plot.title = plot.title)
     bbai_right <- bbai_mono(wave.right,
@@ -405,6 +470,7 @@ broadband_activity <- function(wave,
                             hf_roof = hf_roof,
                             uf_roof = uf_roof,
                             spectrogram = spectrogram,
+                            ggplot = ggplot,
                             dark.plot = dark.plot,
                             plot.title = plot.title)
 
@@ -491,6 +557,7 @@ broadband_activity <- function(wave,
                              hf_roof = hf_roof,
                              uf_roof = uf_roof,
                              spectrogram = spectrogram,
+                             ggplot = ggplot,
                              dark.plot = dark.plot,
                              plot.title = plot.title)
 
