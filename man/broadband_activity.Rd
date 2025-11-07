@@ -14,6 +14,10 @@ broadband_activity(
   click.length = 10,
   difference = 10,
   gap.allowance = 2,
+  lf_roof = 2,
+  mf_roof = 8,
+  hf_roof = 15,
+  uf_roof = 22,
   spectrogram = FALSE,
   dark.plot = FALSE,
   plot.title = NULL,
@@ -39,6 +43,14 @@ broadband_activity(
 
 \item{gap.allowance}{Numeric. The size of gaps (in frequency bins) allowed between contiguous parts of a click. Default is \code{2}. Gaps larger than this value will split clicks.}
 
+\item{lf_roof}{Numeric. Maximum frequency threshold (in kHz) for low-frequency activity (lfa). Default is 2 kHz. Floor is hard-coded to 0 kHz.}
+
+\item{mf_roof}{Numeric. Maximum frequency threshold (in kHz) for mid-frequency activity (mfa). Default is 8 kHz. Floor is lf_roof.}
+
+\item{hf_roof}{Numeric. Maximum frequency threshold (in kHz) for high-frequency activity (hfa). Default is 15 kHz. Floor is mf_roof.}
+
+\item{uf_roof}{Numeric. Maximum frequency threshold (in kHz) for ultra-frequency activity (ufa). Default is 22 kHz. Floor is hf_roof. Automatically adjusted to Nyquist frequency if set higher.}
+
 \item{spectrogram}{Logical. Should a spectrogram with highlighted clicks be plotted? Default is \code{TRUE}.}
 
 \item{dark.plot}{Logical. Should the plot use a dark theme (black background)? Default is \code{FALSE}.}
@@ -51,10 +63,23 @@ broadband_activity(
 A tibble containing the following columns:
 \itemize{
 \item \code{index}: The name of the index. Useful later when merging data with other indices.
-\item \code{value}: The number of clicks detected in the recording.
-\item \code{mean}: The mean click height (in frequency bins).
-\item \code{variance}: The variance of the click height.
-\item \code{sd}: The standard deviation of the click height.
+\item \code{channel}: The channel or channels that were processed.
+\item \code{value} : The global value for BBAI, which corresponds to the
+percent of cells that are part of a click in the spectrogram.
+\item \code{nclicks}: The number of clicks detected in the recording.
+\item \code{prop.clicks}: The proportion of time frames with clicks.
+\item \code{click.rate}: The number of clicks per second.
+\item \code{mean.length}: The average height (or length) of the clicks.
+\item \code{sd.length}: The standard deviation of click lengths.
+\item \code{var.length}: The variance of the click lengths.
+\item \code{mean.centroid}: The mean spectral centroid.
+\item \code{sd.centroid}: The standard deviation of spectral centroids.
+\item \code{var.centroid}: The variance of spectral centroids.
+\item \code{mean.click.dist}: The mean distance between clicks, in time frames.
+\item \code{lfa}: The low-frequency broadband activity.
+\item \code{mfa}: The mid-frequency broadband activity.
+\item \code{hfa}: The high-frequency broadband activity.
+\item \code{ufa}: The ultra-frequency broadband activity.
 }
 }
 \description{

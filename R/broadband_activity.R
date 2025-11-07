@@ -19,6 +19,10 @@
 #' @param click.length Numeric. The minimum length (in frequency bins) for a detected click to be kept. Default is `10`.
 #' @param difference Numeric. The maximum difference in amplitude between adjacent frequency bins to be considered part of a single 'click'. Default is `20`.
 #' @param gap.allowance Numeric. The size of gaps (in frequency bins) allowed between contiguous parts of a click. Default is `2`. Gaps larger than this value will split clicks.
+#' @param lf_roof Numeric. Maximum frequency threshold (in kHz) for low-frequency activity (lfa). Default is 2 kHz. Floor is hard-coded to 0 kHz.
+#' @param mf_roof Numeric. Maximum frequency threshold (in kHz) for mid-frequency activity (mfa). Default is 8 kHz. Floor is lf_roof.
+#' @param hf_roof Numeric. Maximum frequency threshold (in kHz) for high-frequency activity (hfa). Default is 15 kHz. Floor is mf_roof.
+#' @param uf_roof Numeric. Maximum frequency threshold (in kHz) for ultra-frequency activity (ufa). Default is 22 kHz. Floor is hf_roof. Automatically adjusted to Nyquist frequency if set higher.
 #' @param spectrogram Logical. Should a spectrogram with highlighted clicks be plotted? Default is `TRUE`.
 #' @param dark.plot Logical. Should the plot use a dark theme (black background)? Default is `FALSE`.
 #' @param plot.title Character. The title for the plot, if `plot` is `TRUE`. Default is `NULL`.
@@ -26,11 +30,24 @@
 
 #' @return A tibble containing the following columns:
 #'   - `index`: The name of the index. Useful later when merging data with other indices.
-#'   - `value`: The number of clicks detected in the recording.
-#'   - `mean`: The mean click height (in frequency bins).
-#'   - `variance`: The variance of the click height.
-#'   - `sd`: The standard deviation of the click height.
-
+#'   - `channel`: The channel or channels that were processed.
+#'   - `value` : The global value for BBAI, which corresponds to the
+#'   percent of cells that are part of a click in the spectrogram.
+#'   - `nclicks`: The number of clicks detected in the recording.
+#'   - `prop.clicks`: The proportion of time frames with clicks.
+#'   - `click.rate`: The number of clicks per second.
+#'   - `mean.length`: The average height (or length) of the clicks.
+#'   - `sd.length`: The standard deviation of click lengths.
+#'   - `var.length`: The variance of the click lengths.
+#'   - `mean.centroid`: The mean spectral centroid.
+#'   - `sd.centroid`: The standard deviation of spectral centroids.
+#'   - `var.centroid`: The variance of spectral centroids.
+#'   - `mean.click.dist`: The mean distance between clicks, in time frames.
+#'   - `lfa`: The low-frequency broadband activity.
+#'   - `mfa`: The mid-frequency broadband activity.
+#'   - `hfa`: The high-frequency broadband activity.
+#'   - `ufa`: The ultra-frequency broadband activity.
+#'
 #' @export
 #'
 #' @importFrom seewave duration rmoffset fir
@@ -44,18 +61,22 @@
 #' }
 #'
 broadband_activity <- function(wave,
-                 channel = "left",
-                 hpf = 0,
-                 rm.offset = TRUE,
-                 freq.res = 50,
-                 cutoff = -60,
-                 click.length = 10,
-                 difference = 10,
-                 gap.allowance = 2,
-                 spectrogram = FALSE,
-                 dark.plot = FALSE,
-                 plot.title = NULL,
-                 verbose = TRUE) {
+                               channel = "left",
+                               hpf = 0,
+                               rm.offset = TRUE,
+                               freq.res = 50,
+                               cutoff = -60,
+                               click.length = 10,
+                               difference = 10,
+                               gap.allowance = 2,
+                               lf_roof = 2,
+                               mf_roof = 8,
+                               hf_roof = 15,
+                               uf_roof = 22,
+                               spectrogram = FALSE,
+                               dark.plot = FALSE,
+                               plot.title = NULL,
+                               verbose = TRUE) {
 
   if (!channel %in% c("left", "right", "mix", "each")) {
     stop("Invalid channel selected. Choose from 'left', 'right', 'mix', or 'each' (for stereo).")
@@ -66,7 +87,6 @@ broadband_activity <- function(wave,
     if (channel == "right") return(tuneR::channel(wave, "right"))
     if (channel == "mix") return(tuneR::mono(wave, "both"))
   }
-
 
   # Check if the wave is stereo
   # Check if wave is stereo
@@ -101,12 +121,35 @@ broadband_activity <- function(wave,
                         click.length,
                         difference,
                         gap.allowance,
+                        lf_roof,
+                        mf_roof,
+                        hf_roof,
+                        uf_roof,
                         spectrogram,
                         dark.plot,
                         plot.title){
 
     total_duration <- seewave::duration(wave)
     samp_rate <- wave@samp.rate
+    nyquist_freq <- samp_rate / 2000  # Nyquist frequency in kHz
+
+    # Adjust frequency thresholds based on Nyquist frequency
+    if (uf_roof > nyquist_freq) {
+      uf_roof <- nyquist_freq
+      if (verbose) {
+        cat("uf_roof adjusted to Nyquist frequency:", round(nyquist_freq, 2), "kHz\n")
+      }
+    }
+
+    if (hf_roof > nyquist_freq) {
+      hf_roof <- nyquist_freq
+      ufa_available <- FALSE
+      if (verbose) {
+        cat("hf_roof adjusted to Nyquist frequency:", round(nyquist_freq, 2), "kHz. ufa will be set to NA.\n")
+      }
+    } else {
+      ufa_available <- TRUE
+    }
 
     # Remove DC offset
     if (rm.offset) {
@@ -209,12 +252,43 @@ broadband_activity <- function(wave,
     broadband_activity <- round((click_sum / total_cells) * 100, 1)
 
     click_frames_prop <- round(click_time_frames / n_time_frames, 1)
-
     click_rate <- round(click_time_frames / total_duration, 1)
-
     n_clicks <- length(click_heights)
 
+    # Calculate frequency band activities
+    # Define frequency band indices
+    lf_indices <- which(freq_values >= 0 & freq_values <= lf_roof)
+    mf_indices <- which(freq_values > lf_roof & freq_values <= mf_roof)
+    hf_indices <- which(freq_values > mf_roof & freq_values <= hf_roof)
+    uf_indices <- if (ufa_available) which(freq_values > hf_roof & freq_values <= uf_roof) else integer(0)
+
+    # Calculate clicks in each frequency band
+    lfa_clicks <- sum(click_matrix[lf_indices, , drop = FALSE])
+    mfa_clicks <- sum(click_matrix[mf_indices, , drop = FALSE])
+    hfa_clicks <- sum(click_matrix[hf_indices, , drop = FALSE])
+    ufa_clicks <- if (ufa_available) sum(click_matrix[uf_indices, , drop = FALSE]) else 0
+
+    # Calculate total cells in each frequency band
+    lfa_total_cells <- length(lf_indices) * n_time_frames
+    mfa_total_cells <- length(mf_indices) * n_time_frames
+    hfa_total_cells <- length(hf_indices) * n_time_frames
+    ufa_total_cells <- if (ufa_available) length(uf_indices) * n_time_frames else 0
+
+    # Calculate percentage of clicks in each band
+    lfa <- if (lfa_total_cells > 0) round((lfa_clicks / lfa_total_cells) * 100, 1) else 0
+    mfa <- if (mfa_total_cells > 0) round((mfa_clicks / mfa_total_cells) * 100, 1) else 0
+    hfa <- if (hfa_total_cells > 0) round((hfa_clicks / hfa_total_cells) * 100, 1) else 0
+    ufa <- if (ufa_available && ufa_total_cells > 0) round((ufa_clicks / ufa_total_cells) * 100, 1) else NA
+
     cat("Broadband Activity: ", broadband_activity, "\n")
+    cat("Low-frequency Activity (0 -", lf_roof, "kHz):", lfa, "%\n")
+    cat("Mid-frequency Activity (", lf_roof, "-", mf_roof, "kHz):", mfa, "%\n")
+    cat("High-frequency Activity (", mf_roof, "-", hf_roof, "kHz):", hfa, "%\n")
+    if (ufa_available) {
+      cat("Ultra-frequency Activity (", hf_roof, "-", uf_roof, "kHz):", ufa, "%\n")
+    } else {
+      cat("Ultra-frequency Activity: NA (hf_roof exceeds Nyquist frequency)\n")
+    }
 
     summary <- tibble(
       index = "bbai",
@@ -228,9 +302,12 @@ broadband_activity <- function(wave,
       mean.centroid = mean_centroid,
       sd.centroid = sd_centroid,
       var.centroid = var_centroid,
-      mean.click.dist = mean_all_click_dist
+      mean.click.dist = mean_all_click_dist,
+      lfa = lfa,
+      mfa = mfa,
+      hfa = hfa,
+      ufa = ufa
     )
-
 
     if(spectrogram){
 
@@ -260,7 +337,6 @@ broadband_activity <- function(wave,
 
       plot_data$Color <- color_func(plot_data$dB)
 
-
       # Create the base plot
       p <- ggplot(plot_data, aes(x = Time, y = Frequency)) +
         geom_tile(aes(fill = Color), color = NA) +
@@ -273,7 +349,6 @@ broadband_activity <- function(wave,
       p <- p + geom_tile(data = subset(plot_data, Click == TRUE), fill = "red", color = NA) +
         scale_x_continuous(expand = c(0,0)) +
         scale_y_continuous(expand = c(0,0))
-
 
       if (dark.plot) {
         p <- p + theme(
@@ -310,6 +385,10 @@ broadband_activity <- function(wave,
                            click.length = click.length,
                            difference = difference,
                            gap.allowance = gap.allowance,
+                           lf_roof = lf_roof,
+                           mf_roof = mf_roof,
+                           hf_roof = hf_roof,
+                           uf_roof = uf_roof,
                            spectrogram = spectrogram,
                            dark.plot = dark.plot,
                            plot.title = plot.title)
@@ -321,6 +400,10 @@ broadband_activity <- function(wave,
                             click.length = click.length,
                             difference = difference,
                             gap.allowance = gap.allowance,
+                            lf_roof = lf_roof,
+                            mf_roof = mf_roof,
+                            hf_roof = hf_roof,
+                            uf_roof = uf_roof,
                             spectrogram = spectrogram,
                             dark.plot = dark.plot,
                             plot.title = plot.title)
@@ -354,7 +437,19 @@ broadband_activity <- function(wave,
       var_centroid_avg = round((bbai_left$summary$var.centroid + bbai_right$summary$var.centroid) / 2, 1),
       mean_click_dist_l = bbai_left$summary$mean.click.dist,
       mean_click_dist_r = bbai_right$summary$mean.click.dist,
-      mean_click_dist_avg = round((bbai_left$summary$mean.click.dist + bbai_right$summary$mean.click.dist) / 2, 1)
+      mean_click_dist_avg = round((bbai_left$summary$mean.click.dist + bbai_right$summary$mean.click.dist) / 2, 1),
+      lfa_l = bbai_left$summary$lfa,
+      lfa_r = bbai_right$summary$lfa,
+      lfa_avg = round((bbai_left$summary$lfa + bbai_right$summary$lfa) / 2, 1),
+      mfa_l = bbai_left$summary$mfa,
+      mfa_r = bbai_right$summary$mfa,
+      mfa_avg = round((bbai_left$summary$mfa + bbai_right$summary$mfa) / 2, 1),
+      hfa_l = bbai_left$summary$hfa,
+      hfa_r = bbai_right$summary$hfa,
+      hfa_avg = round((bbai_left$summary$hfa + bbai_right$summary$hfa) / 2, 1),
+      ufa_l = bbai_left$summary$ufa,
+      ufa_r = bbai_right$summary$ufa,
+      ufa_avg = if (is.na(bbai_left$summary$ufa) || is.na(bbai_right$summary$ufa)) NA else round((bbai_left$summary$ufa + bbai_right$summary$ufa) / 2, 1)
     )
 
     if(verbose){
@@ -362,17 +457,12 @@ broadband_activity <- function(wave,
     }
 
     if(spectrogram){
-
       invisible(list(summary = bbai_global,
                      spectrogram_l = bbai_left$spectrogram,
                      spectrogram_r = bbai_right$spectrogram))
-
     } else {
-
       invisible(bbai_global)
-
     }
-
 
   } else {
     # Only one channel
@@ -380,16 +470,14 @@ broadband_activity <- function(wave,
     if (verbose) {
       if(channel == 'left'){
         cat("Calculating Broadband Activity Index on the left channel... \n")
-
       }else if(channel == 'right'){
         cat("Calculating Broadband Activity Index on the right channel... \n")
-
       }else if(channel == 'mix'){
         cat("Calculating Broadband Activity Index on a mix of the two channels... \n")
       }
     }
 
-    # Calulate NBAI
+    # Calculate BBAI
     bbai_global <- bbai_mono(wave,
                              rm.offset = rm.offset,
                              hpf = hpf,
@@ -398,6 +486,10 @@ broadband_activity <- function(wave,
                              click.length = click.length,
                              difference = difference,
                              gap.allowance = gap.allowance,
+                             lf_roof = lf_roof,
+                             mf_roof = mf_roof,
+                             hf_roof = hf_roof,
+                             uf_roof = uf_roof,
                              spectrogram = spectrogram,
                              dark.plot = dark.plot,
                              plot.title = plot.title)
@@ -408,17 +500,12 @@ broadband_activity <- function(wave,
 
     if(verbose){
       print(bbai_global$summary)
-
     }
 
     if(spectrogram){
       invisible(list(summary = bbai_global$summary, spectrogram = bbai_global$spectrogram))
-
     } else {
-
       invisible(bbai_global$summary)
     }
-
   }
-
 }
