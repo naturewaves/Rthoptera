@@ -9,16 +9,18 @@ audioplot(
   fft = "auto",
   enhance = "time",
   overlap = 75,
-  window = "hann",
-  contrast = 60,
+  window = "hanning",
+  contrast = 50,
   flim = NULL,
   tlim = NULL,
   zero.pad = 8,
   output.file = NULL,
   plot.title = "",
   use.ragg = TRUE,
-  palette = "inferno",
+  palette = "Mako",
+  palette_rev = FALSE,
   osc.show = TRUE,
+  osc.fun = "mean",
   osc.color = "black",
   osc.height = 0.25,
   spec.show = TRUE,
@@ -29,45 +31,59 @@ audioplot(
 )
 }
 \arguments{
-\item{wave}{Wave object from tuneR package}
+\item{wave}{A Wave object created with tuneR package (e.g., readWave).}
 
-\item{fft}{Size of FFT window (must be power of 2). Default is "auto", which
-automatically calculates a proper length (see q.factor options).}
+\item{fft}{Numeric. Size of FFT window (must be power of 2). Default is
+"auto", which automatically calculates a proper length based on 'enhance'.}
 
-\item{enhance}{Either 'freq' to prioritize frequency resolution or 'time' to
-prioritize temporal resolution.}
+\item{enhance}{Character. Either 'freq' to prioritize frequency
+resolution or 'time' to prioritize temporal resolution when fft="auto".}
 
-\item{overlap}{Overlap between windows (0 to 95\%)}
+\item{overlap}{Numeric. Overlap between windows (0 to 95\%)}
 
-\item{window}{Type of window function ("hann", "hamming", "blackman")}
+\item{window}{Character. Type of window function. Default is "hanning".
+Also accepts "hamming" and "blackman".}
 
-\item{contrast}{Controls the dynamic range for visualization (0-100\%)}
+\item{contrast}{Numeric. Dynamic range for visualization (0-100\%).}
 
-\item{flim}{Numeric list of length 2. Frequency limits, in kHz.}
+\item{flim}{Numeric vector of length 2. Frequency limits, in kHz.}
 
-\item{zero.pad}{Zero-padding factor}
+\item{tlim}{Numeric vector of length 2. Time limits, in seconds.}
 
-\item{output.file}{Optional file path to save the spectrogram}
+\item{zero.pad}{Numeric. Zero-padding factor.}
 
-\item{plot.title}{Plot title}
+\item{output.file}{Character. Optional file path to save the spectrogram.}
 
-\item{use.ragg}{Whether to use RAGG for GPU-accelerated rendering}
+\item{plot.title}{Character. Plot title}
 
-\item{palette}{Color palette for spectrogram}
+\item{use.ragg}{Logical. Whether to use RAGG for GPU-accelerated rendering.}
 
-\item{osc.show}{Whether to show the oscillogram}
+\item{palette}{Character. Color palette for spectrogram. Can be a
+character string (palette name from \code{hcl.colors}) or a function
+that returns a color vector.}
 
-\item{osc.color}{Color for the pseudo-oscillogram}
+\item{palette_rev}{Logical. Whether to reverse the color palette. To obtain
+a white background with dark signals, set to TRUE and use palette="Grays".}
 
-\item{osc.height}{Relative height of oscillogram (0-1)}
+\item{osc.show}{Logical. Whether to show the pseudo-oscillogram}
 
-\item{spec.show}{Whether to show the power spectrum}
+\item{osc.fun}{Character. Name of the summary statistic used to create
+the pseudo-oscillogram (e.g., "mean", "max", "sd", etc.)}
 
-\item{spec.color}{Color for the power spectrum.}
+\item{osc.color}{Character. Color for the pseudo-oscillogram}
 
-\item{spec.width}{Relative width of power spectrum (0-1)}
+\item{osc.height}{Numeric. Relative height of oscillogram (0-1)}
 
-\item{spec.linear}{Whether to show the power spectrum in linear scale. Default
+\item{spec.show}{Logical. Whether to show the power spectrum}
+
+\item{spec.fun}{Character. Summary function to apply across frequency
+bins for power spectrum calculation (e.g., "mean", "max", "sd", etc.).}
+
+\item{spec.color}{Characer. Color for the power spectrum.}
+
+\item{spec.width}{Numeric. Relative width of power spectrum (0-1).}
+
+\item{spec.linear}{Logical. Whether to show the power spectrum in linear scale. Default
 is TRUE.}
 }
 \value{
@@ -89,10 +105,14 @@ library(RthopteraSounds)
 data("coryphoda")
 data("gryllus")
 audioplot(coryphoda, enhance = "time",
-osc.show = F, palette = 'Zissou 1')
-audioplot(coryphoda, enhance = 'time', osc.show = F,
-spec.linear = T) # great
+osc.show = FALSE, palette = 'Zissou 1')
+audioplot(coryphoda, enhance = 'time', osc.show = FALSE,
+spec.linear = TRUE) # great
 audioplot(coryphoda, enhance = "time")
 audioplot(gryllus, enhance = "freq")
-audioplot(gryllus, enhance = "time")}
+audioplot(gryllus, enhance = "time")
+
+# Grayscale with white background
+audioplot(coryphoda, palette = "Grays", palette_rev = TRUE)
+}
 }

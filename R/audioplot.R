@@ -1,33 +1,36 @@
 #' Fast Spectrogram with Derived Pseudo-Oscillogram and Power Spectrum
 #'
-#' @param wave Wave object from tuneR package
-#' @param fft Size of FFT window (must be power of 2). Default is "auto", which
-#' automatically calculates a proper length (see q.factor options).
-#' @param enhance Either 'freq' to prioritize frequency resolution or 'time' to
-#' prioritize temporal resolution.
-#' @param overlap Overlap between windows (0 to 95%)
-#' @param window Type of window function ("hann", "hamming", "blackman")
-#' @param contrast Controls the dynamic range for visualization (0-100%)
+#' @param wave A Wave object created with tuneR package (e.g., readWave).
+#' @param fft Numeric. Size of FFT window (must be power of 2). Default is
+#' "auto", which automatically calculates a proper length based on 'enhance'.
+#' @param enhance Character. Either 'freq' to prioritize frequency
+#' resolution or 'time' to prioritize temporal resolution when fft="auto".
+#' @param overlap Numeric. Overlap between windows (0 to 95%)
+#' @param window Character. Type of window function. Default is "hanning".
+#' Also accepts "hamming" and "blackman".
+#' @param contrast Numeric. Dynamic range for visualization (0-100%).
 #' @param flim Numeric vector of length 2. Frequency limits, in kHz.
 #' @param tlim Numeric vector of length 2. Time limits, in seconds.
-#' @param zero.pad Zero-padding factor
-#' @param output.file Optional file path to save the spectrogram
-#' @param plot.title Plot title
-#' @param use.ragg Whether to use RAGG for GPU-accelerated rendering
-#' @param palette Color palette for spectrogram. Can be a character string
-#' (palette name from \code{hcl.colors}) or a function that returns a color vector.
-#' @param palette_rev Logical. Whether to reverse the color palette. Default is FALSE.
-#' Useful for grayscale palettes where you want white background with darker signals.
-#' @param osc.show Whether to show the oscillogram
-#' @param osc.color Color for the pseudo-oscillogram
-#' @param osc.height Relative height of oscillogram (0-1)
-#' @param spec.show Whether to show the power spectrum
-#' @param spec.fun Function to apply across frequency bins for power spectrum
-#' calculation. Default is "mean". Can also be "median", "max", "min", or any
-#' function that takes a vector and returns a single value.
-#' @param spec.color Color for the power spectrum.
-#' @param spec.width Relative width of power spectrum (0-1)
-#' @param spec.linear Whether to show the power spectrum in linear scale. Default
+#' @param zero.pad Numeric. Zero-padding factor.
+#' @param output.file Character. Optional file path to save the spectrogram.
+#' @param plot.title Character. Plot title
+#' @param use.ragg Logical. Whether to use RAGG for GPU-accelerated rendering.
+#' @param palette Character. Color palette for spectrogram. Can be a
+#' character string (palette name from \code{hcl.colors}) or a function
+#' that returns a color vector.
+#' @param palette_rev Logical. Whether to reverse the color palette. To obtain
+#' a white background with dark signals, set to TRUE and use palette="Grays".
+#' @param osc.show Logical. Whether to show the pseudo-oscillogram
+#' @param osc.fun Character. Name of the summary statistic used to create
+#' the pseudo-oscillogram (e.g., "mean", "max", "sd", etc.)
+#' @param osc.color Character. Color for the pseudo-oscillogram
+#' @param osc.height Numeric. Relative height of oscillogram (0-1)
+#' @param spec.show Logical. Whether to show the power spectrum
+#' @param spec.fun Character. Summary function to apply across frequency
+#' bins for power spectrum calculation (e.g., "mean", "max", "sd", etc.).
+#' @param spec.color Characer. Color for the power spectrum.
+#' @param spec.width Numeric. Relative width of power spectrum (0-1).
+#' @param spec.linear Logical. Whether to show the power spectrum in linear scale. Default
 #' is TRUE.
 #'
 #' @importFrom fields image.plot
@@ -62,7 +65,7 @@ audioplot <- function(wave,
                       fft = "auto",
                       enhance = "time",
                       overlap = 75,
-                      window = "hann",
+                      window = "hanning",
                       contrast = 50,
                       flim = NULL,
                       tlim = NULL,
@@ -73,6 +76,7 @@ audioplot <- function(wave,
                       palette = "Mako",
                       palette_rev = FALSE,
                       osc.show = TRUE,
+                      osc.fun = "mean",
                       osc.color = "black",
                       osc.height = 0.25,
                       spec.show = TRUE,
@@ -144,7 +148,7 @@ audioplot <- function(wave,
 
   # Calculate window function
   window <- switch(window,
-                   "hann" = 0.5 * (1 - cos(2 * pi * seq(0, 1, length.out = fft))),
+                   "hanning" = 0.5 * (1 - cos(2 * pi * seq(0, 1, length.out = fft))),
                    "hamming" = 0.54 - 0.46 * cos(2 * pi * seq(0, 1, length.out = fft)),
                    "blackman" = 0.42 - 0.5 * cos(2 * pi * seq(0, 1, length.out = fft)) +
                      0.08 * cos(4 * pi * seq(0, 1, length.out = fft)),
@@ -198,8 +202,13 @@ audioplot <- function(wave,
 
   # Calculate derived visualizations FROM THE SPECTROGRAM MATRIX USING SD
   if (osc.show) {
-    # Pseudo-oscillogram: SD per time frame (column-wise)
-    osc_data <- apply(spectrogram, 2, sd)
+    if(osc.fun == "mean"){
+      # Convert dB to linear scale before averaging
+      linear_spec <- 10^(spectrogram/20)
+      osc_data <- apply(linear_spec, 2, mean)
+    } else {
+      osc_data <- apply(spectrogram, 2, osc.fun)
+    }
     osc_data <- osc_data / max(osc_data)  # Normalize
   }
 
@@ -213,7 +222,6 @@ audioplot <- function(wave,
 
       spec_data_linear <- (spec_data_linear - min(spec_data_linear)) / (max(spec_data_linear) - min(spec_data_linear))
 
-      # spec_data <- (spec_data - min(spec_data)) / (max(spec_data) - min(spec_data))
 
 
     } else {
@@ -222,7 +230,6 @@ audioplot <- function(wave,
       spec_data <- apply(spectrogram, 1, spec.fun)
       spec_data <- (spec_data - min(spec_data)) / (max(spec_data) - min(spec_data))
 
-      # spec_data <- spec_data / max(spec_data) # Normalize
 
     }
 
@@ -320,9 +327,17 @@ audioplot <- function(wave,
 
   # Pseudo-oscillogram (below spectrogram) - CLEAN STYLE
   if (osc.show) {
+
+    osc.label <- switch(osc.fun,
+                    "mean" = "Mean Amp.",
+                    "sd" = "SD Amp.",
+                    "max" = "Max Amp.",
+                    "median" = "Median Amp.",
+                    "Amplitude")
+
     par(mar = c(4, 4, 0.1, ifelse(spec.show, 0.5, 5)))
     plot(time_axis, osc_data, type = "n",
-         xlab = "Time (s)", ylab = "SD Amp.",
+         xlab = "Time (s)", ylab = osc.label,
          ylim = c(0, 1), xlim = tlim,
          xaxs = "i", yaxs = "i", yaxt = "n",
          bty = "o")
@@ -383,5 +398,6 @@ audioplot <- function(wave,
     spec_data = if (spec.show) spec_data else NULL
   ))
 }
+
 
 
