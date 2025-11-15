@@ -37,6 +37,8 @@
 #' @importFrom fftw planFFT FFT
 #' @importFrom ragg agg_png
 #'
+#' @export
+#'
 #' @details
 #' When fft is set to 'auto' (recommended), the function takes the 'enhance'
 #' argument to decide whether to enhance spectral or temporal resolution. We
