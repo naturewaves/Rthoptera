@@ -8,6 +8,9 @@
 
 # Rthoptera <img src="man/figures/rthoptera_logo_darkgrey.png" align="right" height="150" alt="" /></a>
 
+**BIG NEWS!** 
+We are translating Rthoptera from R to Rust and implementing it with Tauri to give you a simple, self-contained desktop app. Given that the Rust version uses precompiled sound libraries, it works much, much faster than the original R implementation. The installers of our first release, which already includes temporal and spectral metrics, can be downloaded here: [Rthoptera Desktop](https://github.com/panchorivasf/Rthoptera_2.0/releases).
+
 *Rthoptera* provides interactive Shiny applications for standard
 analysis of insect sounds. The package is intended to be used on high
 signal-to-noise recordings, helping researchers make standardized
